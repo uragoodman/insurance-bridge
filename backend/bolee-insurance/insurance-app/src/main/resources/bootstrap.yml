@@ -1,0 +1,91 @@
+#服务配置
+server:
+  #端口
+  port: 7065
+  #服务编码
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  mvc:
+    async:
+      request-timeout: 150000
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  profiles:
+    active: dev
+  #应用配置
+  application:
+    #应用名称
+    name: insurance-app
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDRESS:127.0.0.1:18848} # nacos注册中心
+        group: SEATA_GROUP
+        service: ${spring.application.name}
+      config:
+        server-addr: ${NACOS_ADDRESS:127.0.0.1:18848} # nacos配置中心地址
+        group: SEATA_GROUP
+        file-extension: yml
+        shared-configs: # 共享配置
+          - data-id: shared-spring-seata.yml #配置文件名-DataId
+            group: SEATA_GROUP
+            refresh: false
+          - data-id: shared-spring-task.yml #配置文件名-DataId
+            group: SEATA_GROUP
+            refresh: false
+          - data-id: shared-redisson.yml #配置文件名-DataId
+            group: SEATA_GROUP
+            refresh: false
+          - data-id: shared-mybatis-plus.yml #配置文件名-DataId
+            group: SEATA_GROUP
+            refresh: false
+          - data-id: shared-stream-rabbit-basic.yml #配置文件名-DataId
+            group: SEATA_GROUP
+            refresh: false
+          - data-id: shared-stream-rabbit-source-warranty.yml #配置文件名-DataId
+            group: SEATA_GROUP
+            refresh: false
+logging:
+  config: classpath:log4j2-spring.xml
+urule:
+  resporityServerUrl: http://localhost:8090
+  knowledgeUpdateCycle: 1
+agno:
+  enabled: ${AGNO_ENABLED:false}
+  service-url: ${AGNO_SERVICE_URL:http://127.0.0.1:8000}
+  oauth:
+    token-url: ${AGNO_OAUTH_CHAT_TOKEN_URL:http://127.0.0.1:7078/oauth/service-token}
+    token-key-url: ${AGNO_OAUTH_CHAT_TOKEN_KEY_URL:http://127.0.0.1:7078/oauth/token_key}
+    tools-token-key-url: ${AGNO_JAVA_OAUTH_TOKEN_KEY_URL:http://127.0.0.1:7078/oauth/token_key}
+    tools-client-id: ${AGNO_OAUTH_CLIENT_ID:}
+    tools-scope: ${AGNO_OAUTH_SCOPE:product.catalog.read}
+    chat-client-id: ${AGNO_CHAT_OAUTH_CLIENT_ID:}
+    chat-client-secret: ${AGNO_CHAT_OAUTH_CLIENT_SECRET:}
+    chat-scope: ${AGNO_CHAT_OAUTH_SCOPE:agent.chat}
+    operator-client-id: ${AGNO_OPERATOR_CLEANUP_OAUTH_CLIENT_ID:}
+    operator-client-secret: ${AGNO_OPERATOR_CLEANUP_OAUTH_CLIENT_SECRET:}
+    operator-scope: ${AGNO_OPERATOR_CLEANUP_OAUTH_SCOPE:agent.operator}
+    tag-generation-client-id: ${AGNO_TAG_GENERATION_CLIENT_ID:}
+    tag-generation-client-secret: ${AGNO_TAG_GENERATION_CLIENT_SECRET:}
+    tag-generation-scope: ${AGNO_TAG_GENERATION_SCOPE:product.tags.generate}
+  connect-timeout-ms: ${AGNO_CONNECT_TIMEOUT_MS:3000}
+  read-timeout-ms: ${AGNO_READ_TIMEOUT_MS:120000}
+ai:
+  persistence:
+    enabled: ${AI_PERSISTENCE_ENABLED:false}
+    cleanup-interval-ms: ${AI_PERSISTENCE_CLEANUP_INTERVAL_MS:5000}
+    trace-cleanup-cron: ${AI_PERSISTENCE_TRACE_CLEANUP_CRON:0 17 3 * * *}
+  retention:
+    conversation-days: ${AI_RETENTION_CONVERSATION_DAYS:}
+    trace-days: ${AI_RETENTION_TRACE_DAYS:}
+    cleanup-task-days: ${AI_RETENTION_CLEANUP_TASK_DAYS:}
+  idempotency:
+    encryption-key: ${AI_IDEMPOTENCY_ENCRYPTION_KEY:}
+  deletion-ledger:
+    path: ${AI_DELETION_LEDGER_PATH:}
+    replay-on-startup: ${AI_DELETION_LEDGER_REPLAY_ON_STARTUP:false}
+

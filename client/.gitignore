@@ -1,0 +1,22 @@
+# Runtime artifacts
+/logs/
+/temp/
+/*.pid
+/on
+/conf/nginx-demo.generated.conf
+*.log
+
+# Local secrets and machine-specific files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# OS/editor artifacts
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

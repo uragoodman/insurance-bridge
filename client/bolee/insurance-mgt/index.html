@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="./assets/brand-mark.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>保顾通 · 保险运营管理</title>
+  <script type="module" crossorigin src="./assets/index.2e8e7470.js"></script>
+  <link rel="stylesheet" href="./assets/index.ea9ea839.css">
+</head>
+<body>
+  <div id="app"></div>
+  <a href="./ai-recommendation.html" style="position:fixed;right:20px;bottom:20px;z-index:9999;padding:10px 16px;border-radius:8px;background:#2563eb;color:#fff;text-decoration:none;font:14px sans-serif;box-shadow:0 4px 14px #1e3a8a44">AI 推荐配置</a>
+  <script>
+    (function () {
+      function replaceLogoImage(image) {
+        if (!image || !image.matches || !image.matches('img[src]')) return;
+        var source = image.getAttribute('src') || '';
+        if (/\/assets\/logo(?:full)?\.[^/]+\.png(?:$|\?)/i.test(source)) {
+          image.src = source.toLowerCase().includes('logofull') ? './assets/brand-logo.svg' : './assets/brand-mark.svg';
+        }
+      }
+      function replaceLogoImages(node) {
+        if (!node || node.nodeType !== 1) return;
+        replaceLogoImage(node);
+        if (node.querySelectorAll) node.querySelectorAll('img[src]').forEach(replaceLogoImage);
+      }
+      replaceLogoImages(document.documentElement);
+      new MutationObserver(function (records) {
+        records.forEach(function (record) { record.addedNodes.forEach(replaceLogoImages); });
+      }).observe(document.documentElement, { childList: true, subtree: true });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+#服务配置
+server:
+  #端口
+  port: 7072
+  #服务编码
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  config:
+    activate:
+      on-profile:
+        - test
+  #应用配置
+  application:
+    #应用名称
+    name: task-job
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDRESS:${NACOS_ADDRESS:127.0.0.1:18848}} # nacos注册中心
+        group: SEATA_GROUP
+        service: ${spring.application.name}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:}
+      config:
+        server-addr: ${NACOS_ADDRESS:${NACOS_ADDRESS:127.0.0.1:18848}} # nacos注册中心
+        group: SEATA_GROUP
+        file-extension: yml
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:}
+logging:
+  config: classpath:logback.xml
+

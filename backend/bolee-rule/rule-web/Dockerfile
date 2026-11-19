@@ -1,0 +1,20 @@
+FROM openjdk:11-jdk
+
+# 时区修改为东八区
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+WORKDIR /rule-web
+ARG JAR_FILE=target/*.jar
+ADD ${JAR_FILE} rule-web.jar
+
+EXPOSE 8080
+
+ENV JAVA_OPTS="\
+-server \
+-Xms256m \
+-Xmx1024m \
+-XX:MetaspaceSize=256m \
+-XX:MaxMetaspaceSize=512m\
+-Dspring.profiles.active=test"
+ENTRYPOINT ["sh","-c","java -Djava.security.egd=file:/dev/./urandom -jar $JAVA_OPTS rule-web.jar"]

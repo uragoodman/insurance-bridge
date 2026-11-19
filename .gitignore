@@ -1,0 +1,44 @@
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+*.crt
+
+# Local databases, dumps, runtime state and logs
+**/mysql/data/**
+**/redis/data/**
+**/influxdb/data/**
+**/postgres/**/data/**
+**/*.sql.gz
+**/*.dump
+**/*.bak.sql
+**/*.ibd
+**/*.ibdata*
+**/*.log
+**/logs/
+**/target/
+**/node_modules/
+**/.venv/
+**/__pycache__/
+
+# Machine-specific local configuration
+**/generrator.properties
+**/singleServerConfig-test.yaml
+/backend/deploy/local-run/
+
+# Build output, maps and copied backups
+/client/nginx.exe
+/client/conf/nginx-demo.generated.conf
+/client/bolee/insurance-app-bak/
+/client/bolee/insurance-mgt-bak/
+/client/bolee/insurance-app/**/*.map
+/client/bolee/insurance-mgt/**/*.map

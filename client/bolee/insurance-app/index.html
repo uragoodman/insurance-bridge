@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <link rel="stylesheet" href="/assets/uni.4132af1b.css">
+    <link rel="icon" type="image/svg+xml" href="/static/brand-mark.svg">
+    <style>
+      #bolee-brand-header { display:flex; align-items:center; gap:8px; padding:12px 20px 0; color:#173b48; }
+      #bolee-brand-header img { width:28px; height:28px; flex:0 0 28px; }
+      #bolee-brand-header div { display:flex; flex-direction:column; gap:1px; }
+      #bolee-brand-header strong { font-size:15px; line-height:18px; }
+      #bolee-brand-header span { color:#68818a; font-size:9px; line-height:12px; }
+    </style>
+
+    <meta charset="UTF-8" />
+    <script>
+      var coverSupport = 'CSS' in window && typeof CSS.supports === 'function' && (CSS.supports('top: env(a)') ||
+        CSS.supports('top: constant(a)'))
+      document.write(
+        '<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' +
+        (coverSupport ? ', viewport-fit=cover' : '') + '" />')
+    </script>
+    <title>保顾通 · 智能保险服务平台</title>
+    <!--preload-links-->
+    <!--app-context-->
+    <script type="module" crossorigin src="/assets/index-255ffb73.js"></script>
+    <link rel="stylesheet" href="/assets/index-0b95505d.css">
+  </head>
+  <body>
+    <div id="app"><!--app-html--></div>
+    <script>
+      (function () {
+        var localBrandImage = '/static/brand-images/';
+        document.addEventListener('error', function (event) {
+          var image = event.target;
+          if (!(image instanceof HTMLImageElement)) return;
+          var source = image.currentSrc || image.src || '';
+          if (!source.startsWith('https://itheima-sh-oss.oss-cn-shanghai.aliyuncs.com/')) return;
+          if (image.dataset.localAssetFallback === '1') return;
+          image.dataset.localAssetFallback = '1';
+          var path = source;
+          try { path = decodeURIComponent(source).toLowerCase(); } catch (_) { path = source.toLowerCase(); }
+          var asset = 'family-protection.jpeg';
+          if (/旅游|航班|travel/.test(path)) asset = 'senior-travel.jpeg';
+          else if (/自驾|汽车|car|交通意外/.test(path)) asset = 'auto-travel.jpeg';
+          else if (/医疗|重疾|防癌|medical|health/.test(path)) asset = 'health-consultation.jpeg';
+          image.src = localBrandImage + asset;
+        }, true);
+
+        function readUserInfo() {
+          try {
+            var raw = localStorage.getItem('userInfo');
+            if (!raw) return null;
+            var value = JSON.parse(raw);
+            return value && typeof value === 'object' && 'type' in value && 'data' in value ? value.data : value;
+          } catch (_) { return null; }
+        }
+        function applyAppBranding() {
+          if (document.title && !document.title.startsWith('保顾通')) document.title = '保顾通 · ' + document.title;
+          var home = document.querySelector('.container.home');
+          var search = home && home.querySelector('.searchBox');
+          if (home && search && !home.querySelector('#bolee-brand-header')) {
+            var header = document.createElement('div');
+            header.id = 'bolee-brand-header';
+            header.innerHTML = '<img src="/static/brand-mark.svg" alt=""><div><strong>保顾通</strong><span>智能保险服务平台</span></div>';
+            home.insertBefore(header, search);
+          }
+        }
+        function syncAiChatEntry() {
+          applyAppBranding();
+          var existing = document.getElementById('bolee-ai-chat-entry');
+          var existingTab = document.getElementById('bolee-ai-chat-tab');
+          var loggedIn = !!(readUserInfo() && readUserInfo().userToken);
+          if (!loggedIn) {
+            if (existing) existing.remove();
+            if (existingTab) existingTab.remove();
+            return;
+          }
+          if (!document.body) return;
+          var tabbar = document.querySelector('.uni-tabbar');
+          if (tabbar) {
+            if (existing) existing.remove();
+            if (existingTab && existingTab.parentElement === tabbar) return;
+            if (existingTab) existingTab.remove();
+            var template = tabbar.querySelector(':scope > .uni-tabbar__item');
+            if (!template) return;
+            var item = template.cloneNode(true);
+            item.id = 'bolee-ai-chat-tab';
+            item.classList.add('bolee-ai-chat-tab');
+            item.setAttribute('role', 'link');
+            item.setAttribute('aria-label', '打开 AI 保险顾问');
+            item.setAttribute('tabindex', '0');
+            item.style.cursor = 'pointer';
+            var label = item.querySelector('.uni-tabbar__label');
+            if (label) {
+              label.textContent = 'AI客服';
+              label.style.color = '#595959';
+            }
+            var iconBox = item.querySelector('.uni-tabbar__icon');
+            if (iconBox) {
+              iconBox.replaceChildren();
+              var icon = document.createElement('span');
+              icon.setAttribute('aria-hidden', 'true');
+              icon.textContent = '✦';
+              icon.style.cssText = 'display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#e5f5f4;color:#0b8995;font-size:15px;line-height:1;';
+              iconBox.appendChild(icon);
+            }
+            var openChat = function () { window.location.href = '/ai-chat.html'; };
+            item.addEventListener('click', openChat);
+            item.addEventListener('keydown', function (event) {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openChat();
+              }
+            });
+            tabbar.appendChild(item);
+            return;
+          }
+          if (existingTab) existingTab.remove();
+          if (existing) return;
+          var link = document.createElement('a');
+          link.id = 'bolee-ai-chat-entry';
+          link.href = '/ai-chat.html';
+          link.setAttribute('aria-label', '打开 AI 保险顾问');
+          link.innerHTML = '<span class="bolee-ai-chat-icon" aria-hidden="true">✦</span><span>AI 客服</span>';
+          link.style.cssText = 'position:fixed;right:16px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:7px;padding:11px 15px;border:1px solid rgba(255,255,255,.7);border-radius:999px;background:linear-gradient(135deg,#0b8995,#086e7b);box-shadow:0 8px 22px rgba(5,103,117,.28);color:#fff;font:600 13px -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;text-decoration:none;';
+          var icon = link.querySelector('.bolee-ai-chat-icon');
+          icon.style.cssText = 'display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:rgba(255,255,255,.19);font-size:13px;';
+          document.body.appendChild(link);
+        }
+        syncAiChatEntry();
+        if (document.documentElement && window.MutationObserver) {
+          new MutationObserver(syncAiChatEntry).observe(document.documentElement, { childList: true, subtree: true });
+        }
+        window.setInterval(syncAiChatEntry, 500);
+        window.addEventListener('storage', syncAiChatEntry);
+      })();
+    </script>
+  </body>
+</html>

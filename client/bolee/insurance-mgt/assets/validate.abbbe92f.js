@@ -1,0 +1,1 @@
+const r=e=>!!(/^[0-9]*$/.test(e)&&e<=999&&e>=0),n=e=>!!(e&&e.length>=5&&e.length<=50),s=e=>!!(e&&e.length>=2&&e.length<=10),u=e=>!!/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/.test(e),a=e=>!!/^\d{6}$/.test(e);export{a,r as b,s as c,n as d,u as v};

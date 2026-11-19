@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>支付结果 · 保顾通</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f7f8; color: #18323b; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 480px; min-height: 100vh; margin: auto; padding: 24px 18px; display: flex; flex-direction: column; justify-content: center; }
+    section { padding: 28px 22px; border-radius: 16px; background: #fff; box-shadow: 0 4px 18px #16384412; text-align: center; }
+    h1 { margin: 0 0 12px; font-size: 22px; }
+    p { color: #617780; }
+    button { width: 100%; margin-top: 14px; border: 0; border-radius: 10px; padding: 13px; color: #fff; background: #00a9c8; font-size: 16px; }
+    button.secondary { color: #167184; background: #eaf8fa; }
+    .small { font-size: 12px; color: #87999f; }
+  </style>
+</head>
+<body>
+<main>
+  <section>
+    <h1 id="title">正在确认支付状态</h1>
+    <p id="message">正在向支付服务查询这笔订单，请稍候。</p>
+    <button id="refresh">查询支付状态</button>
+    <button class="secondary" onclick="location.href='/#/pages/user/myWarranty'">返回我的保单</button>
+    <p class="small">支付结果以服务端核验为准，页面回跳本身不代表付款成功。</p>
+  </section>
+</main>
+<script>
+(() => {
+  const orderId = new URLSearchParams(location.search).get('orderId');
+  const title = document.getElementById('title');
+  const message = document.getElementById('message');
+  const refresh = document.getElementById('refresh');
+
+  function getUserToken() {
+    try {
+      const raw = localStorage.getItem('userInfo');
+      if (!raw) return '';
+      const stored = JSON.parse(raw);
+      const user = stored && stored.type === 'object' && 'data' in stored ? stored.data : stored;
+      return user && user.userToken ? user.userToken : '';
+    } catch (_) { return ''; }
+  }
+
+  async function queryStatus() {
+    if (!orderId) {
+      title.textContent = '缺少订单信息';
+      message.textContent = '请从保单页面重新发起支付。';
+      refresh.disabled = true;
+      return;
+    }
+    const token = getUserToken();
+    if (!token) {
+      title.textContent = '登录状态已失效';
+      message.textContent = '请返回并登录后，在“我的保单”中查看支付状态。';
+      return;
+    }
+    refresh.disabled = true;
+    refresh.textContent = '正在查询…';
+    try {
+      const response = await fetch('/api/insurance-app/insure/payment-status/' + encodeURIComponent(orderId), {
+        method: 'GET',
+        headers: { 'user-token': token, 'Accept': 'application/json' },
+        cache: 'no-store'
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload || payload.code !== 200 || !payload.data) {
+        throw new Error((payload && payload.msg) || '状态查询失败');
+      }
+      const status = payload.data.paymentStatus;
+      message.textContent = payload.data.message || '支付状态已更新。';
+      if (status === 'SUCCESS') {
+        title.textContent = '支付成功';
+        refresh.textContent = '再次核对';
+      } else if (status === 'CLOSED') {
+        title.textContent = '订单已关闭';
+        refresh.textContent = '重新查询';
+      } else if (status === 'NOT_FOUND') {
+        title.textContent = '未找到支付记录';
+        refresh.textContent = '重新查询';
+      } else {
+        title.textContent = status === 'UNKNOWN' ? '暂时无法确认' : '等待支付确认';
+        refresh.textContent = '再次查询';
+      }
+    } catch (error) {
+      title.textContent = '暂时无法确认支付';
+      message.textContent = error.message || '请稍后重试，或返回我的保单查看状态。';
+      refresh.textContent = '重试查询';
+    } finally {
+      refresh.disabled = false;
+    }
+  }
+
+  refresh.addEventListener('click', queryStatus);
+  queryStatus();
+})();
+</script>
+</body>
+</html>

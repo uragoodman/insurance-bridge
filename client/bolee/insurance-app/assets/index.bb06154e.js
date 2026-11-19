@@ -1,0 +1,1 @@
+import{r as s}from"./request.b4a6e0fd.js";const r=r=>s({url:"/security-oauth/oauth/token",method:"post",params:r}),e=r=>s({url:"/security-web/customer/register-user",method:"post",params:r}),t=r=>s({url:`/security-web/customer/loginCode/${r}`,method:"post",params:r}),o=r=>s({url:"/insurance-app/mined/ocr-access",method:"post",params:r});export{t as a,o as g,r as p,e as r};

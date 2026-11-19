@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 推荐产品</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f4f6fa;color:#172033;font:14px "Microsoft YaHei",sans-serif}.wrap{max-width:1120px;margin:36px auto;padding:0 20px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.head h1{margin:0;font-size:24px}.hint{color:#64748b;margin-top:8px}.card{background:white;border:1px solid #e5eaf1;border-radius:12px;padding:20px}.filters{display:flex;gap:10px}.filters select,.filters input{height:40px;border:1px solid #cbd5e1;border-radius:7px;padding:0 10px;background:white}.filters select{min-width:220px}.filters input{flex:1}.button{border:0;border-radius:7px;padding:10px 15px;background:#2563eb;color:#fff;cursor:pointer}.button.secondary{background:#e8eef8;color:#172033}.button:disabled{opacity:.6;cursor:wait}.notice{margin:14px 0;color:#b42318}.notice.ok{color:#087443}.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{text-align:left;padding:13px 10px;border-bottom:1px solid #edf0f4}.table th{color:#64748b;font-weight:600}.pill{display:inline-block;background:#e9f8ef;color:#087443;border-radius:99px;padding:4px 9px}.off{background:#f1f5f9;color:#64748b}.switch{display:inline-flex;align-items:center;gap:9px;cursor:pointer}.switch input{width:18px;height:18px;accent-color:#2563eb}.empty{text-align:center;color:#64748b;padding:34px}.footer{margin-top:14px;color:#64748b;font-size:12px}dialog{border:0;border-radius:12px;box-shadow:0 18px 60px #17203344;width:min(850px,94vw);padding:0}dialog::backdrop{background:#0f172a88}.dialog-head,.dialog-foot{padding:16px 20px;border-bottom:1px solid #edf0f4;display:flex;justify-content:space-between;align-items:center}.dialog-foot{border-top:1px solid #edf0f4;border-bottom:0;justify-content:flex-end;gap:8px}.dialog-body{padding:16px 20px;max-height:65vh;overflow:auto}.dialog-body input,.dialog-body select{width:100%;height:38px;border:1px solid #cbd5e1;border-radius:6px;padding:0 8px}.tag-table{width:100%;border-collapse:collapse}.tag-table th,.tag-table td{padding:7px 5px;text-align:left}.tag-actions{display:flex;gap:8px}.small{padding:7px 10px;font-size:12px}@media(max-width:650px){.wrap{margin:20px auto;padding:0 12px}.head{align-items:flex-start}.filters{flex-direction:column}.filters select{width:100%}.table th:nth-child(2),.table td:nth-child(2){display:none}.tag-table th:nth-child(3),.tag-table td:nth-child(3){display:none}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header class="head"><div><h1>AI 推荐产品</h1><div class="hint">打开开关后，产品会进入 Agent 的候选列表；关闭后会立即从候选列表移除。</div></div><button class="button secondary" onclick="location.href='./'">返回管理端</button></header>
+  <section class="card">
+    <div class="filters"><select id="category"><option value="">全部类别</option></select><input id="keyword" placeholder="搜索保险产品名称"><button class="button" id="search">查询</button></div>
+    <div id="notice" class="notice"></div>
+    <table class="table"><thead><tr><th>保险产品</th><th>类别</th><th>状态</th><th>AI 推荐</th><th>检索标签</th></tr></thead><tbody id="rows"></tbody></table>
+    <div class="footer">Agent 仅会检索已开启推荐且当前在售的保险。产品描述来自保险后台现有的标签、投保说明、点评和描述字段。</div>
+  </section>
+</main>
+<dialog id="tagDialog">
+  <div class="dialog-head"><div><strong id="tagTitle">产品检索标签</strong><div class="hint" id="tagVersion"></div></div><button class="button secondary small" id="closeTags">关闭</button></div>
+  <div class="dialog-body">
+    <div class="tag-actions"><button class="button small" id="generateTags">AI生成并应用</button><button class="button secondary small" id="addTag">新增标签</button></div>
+    <div id="tagNotice" class="notice"></div>
+    <table class="tag-table"><thead><tr><th style="width:150px">类型</th><th style="width:200px">标签</th><th>产品描述依据</th><th></th></tr></thead><tbody id="tagRows"></tbody></table>
+  </div>
+  <div class="dialog-foot"><button class="button secondary" id="cancelTags">取消</button><button class="button" id="saveTags">保存人工标签</button></div>
+</dialog>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const token = localStorage.getItem('czri');
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const api = async (path, options = {}) => {
+    if (!token) throw new Error('请先登录保险管理端，再打开此页面。');
+    const response = await fetch(`/api/ai-recommendation${path}`, { ...options,
+      headers: { 'Content-Type':'application/json', 'user-token':token, ...(options.headers || {}) }
+    });
+    const body = await response.json();
+    if (!response.ok || body.code !== 200) throw new Error(body.msg || `请求失败 (${response.status})`);
+    return body.data;
+  };
+  const show = (text, ok = false) => { $('notice').textContent = text || ''; $('notice').className = `notice${ok ? ' ok' : ''}`; };
+  const tagDialog = $('tagDialog');
+  let activeProductId = null;
+  const typeOptions = [['PRODUCT_TYPE','产品类型'],['AUDIENCE','适用人群'],['SCENARIO','使用场景'],['KEYWORD','关键词']];
+  function addTagRow(tag = {}) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><select>${typeOptions.map(([value,label])=>`<option value="${value}" ${tag.tagType===value?'selected':''}>${label}</option>`).join('')}</select></td><td><input maxlength="128" value="${esc(tag.tagValue)}" placeholder="例如：团体运动"></td><td><input maxlength="512" value="${esc(tag.evidence)}" placeholder="来自产品描述的依据"></td><td><button type="button" class="button secondary small remove-tag">删除</button></td>`;
+    tr.querySelector('.remove-tag').addEventListener('click', () => tr.remove());
+    $('tagRows').appendChild(tr);
+  }
+  async function openTags(product) {
+    activeProductId = product.productId;
+    $('tagTitle').textContent = `${product.productName} · 检索标签`;
+    $('tagRows').innerHTML = '';
+    $('tagNotice').textContent = '';
+    try {
+      const set = await api(`/products/${activeProductId}/search-tags`);
+      (set.tags || []).forEach(addTagRow);
+      $('tagVersion').textContent = `版本 ${set.version || 0} · 来源 ${set.sourceType || '暂无标签'}${set.modelId ? ` · ${set.modelId} / ${set.promptVersion}` : ''}`;
+      tagDialog.showModal();
+    } catch (error) { show(error.message); }
+  }
+  async function loadCategories() {
+    const list = await api('/categories');
+    $('category').innerHTML = '<option value="">全部类别</option>' + list.map(c => `<option value="${c.categoryId}">${esc(c.categoryName)}</option>`).join('');
+  }
+  async function loadProducts() {
+    show('');
+    const params = new URLSearchParams({limit:'200'});
+    if ($('category').value) params.set('categoryId', $('category').value);
+    if ($('keyword').value.trim()) params.set('keyword', $('keyword').value.trim());
+    try {
+      const products = await api(`/products?${params}`);
+      $('rows').innerHTML = products.length ? products.map(p => `<tr><td>${esc(p.productName)}<br><span class="hint">备案号 ${esc(p.publishNumber || '-')}</span></td><td>${esc(p.categoryName)}</td><td><span class="pill ${p.aiRecommendEnabled ? '' : 'off'}">${p.aiRecommendEnabled ? '已加入候选' : '未加入'}</span><br><span class="hint">${p.insuranceState === '0' ? '在售' : '已下架'}</span></td><td><label class="switch"><input type="checkbox" data-id="${esc(p.productId)}" ${p.aiRecommendEnabled ? 'checked' : ''} ${p.insuranceState !== '0' && !p.aiRecommendEnabled ? 'disabled' : ''}><span>${p.aiRecommendEnabled ? '已开启' : p.insuranceState === '0' ? '加入 AI 推荐' : '下架产品不能加入'}</span></label></td><td><button class="button secondary small" data-tag-id="${esc(p.productId)}" data-tag-name="${esc(p.productName)}">管理标签</button></td></tr>`).join('') : '<tr><td class="empty" colspan="5">没有符合条件的保险产品</td></tr>';
+      $('rows').querySelectorAll('input[type=checkbox]').forEach(input => input.addEventListener('change', () => toggle(input)));
+      $('rows').querySelectorAll('[data-tag-id]').forEach(button => button.addEventListener('click', () => openTags({productId:button.dataset.tagId,productName:button.dataset.tagName})));
+    } catch (error) { show(error.message); }
+  }
+  async function toggle(input) {
+    const next = input.checked;
+    input.disabled = true;
+    try {
+      await api(`/products/${input.dataset.id}/recommendation`, {method:'PUT', body:JSON.stringify({enabled:next})});
+      show(next ? '已加入 Agent 推荐候选。' : '已从 Agent 推荐候选中移除。', true);
+      await loadProducts();
+    } catch (error) { input.checked = !next; show(error.message); }
+    finally { input.disabled = false; }
+  }
+  $('addTag').addEventListener('click', () => addTagRow());
+  $('closeTags').addEventListener('click', () => tagDialog.close());
+  $('cancelTags').addEventListener('click', () => tagDialog.close());
+  $('generateTags').addEventListener('click', async () => {
+    const button = $('generateTags'); button.disabled = true;
+    try {
+      const set = await api(`/products/${activeProductId}/search-tags/generate`, {method:'POST'});
+      $('tagRows').innerHTML = ''; (set.tags || []).forEach(addTagRow);
+      $('tagVersion').textContent = `版本 ${set.version} · 来源 AI · ${set.modelId} / ${set.promptVersion}`;
+      $('tagNotice').textContent = 'AI 标签已生成并立即用于检索；可以继续编辑后保存。'; $('tagNotice').className = 'notice ok';
+    } catch (error) { $('tagNotice').textContent = error.message; $('tagNotice').className = 'notice'; }
+    finally { button.disabled = false; }
+  });
+  $('saveTags').addEventListener('click', async () => {
+    const tags = Array.from($('tagRows').querySelectorAll('tr')).map(row => {
+      const cells = row.querySelectorAll('select,input');
+      return {tagType:cells[0].value, tagValue:cells[1].value.trim(), evidence:cells[2].value.trim() || null};
+    }).filter(tag => tag.tagValue);
+    const button = $('saveTags'); button.disabled = true;
+    try {
+      const set = await api(`/products/${activeProductId}/search-tags`, {method:'PUT', body:JSON.stringify({tags})});
+      $('tagRows').innerHTML = ''; (set.tags || []).forEach(addTagRow);
+      $('tagVersion').textContent = `版本 ${set.version} · 来源 人工维护`;
+      $('tagNotice').textContent = '标签已保存并用于检索。'; $('tagNotice').className = 'notice ok';
+    } catch (error) { $('tagNotice').textContent = error.message; $('tagNotice').className = 'notice'; }
+    finally { button.disabled = false; }
+  });
+  $('search').addEventListener('click', loadProducts);
+  $('category').addEventListener('change', loadProducts);
+  $('keyword').addEventListener('keydown', event => { if (event.key === 'Enter') loadProducts(); });
+  Promise.all([loadCategories(), loadProducts()]).catch(error => show(error.message));
+})();
+</script>
+</body>
+</html>

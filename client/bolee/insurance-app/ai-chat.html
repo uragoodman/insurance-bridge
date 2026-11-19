@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5fbfc">
+  <title>保顾通 · AI 保险顾问</title>
+  <style>
+    :root { color-scheme: light; --ink:#15323b; --muted:#71848a; --teal:#087d8c; --teal-dark:#075e6a; --line:#e4edef; --surface:#fff; --bg:#f4f8f9; --warning:#fff7e6; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--bg); }
+    body { min-height:100dvh; }
+    button,textarea { font:inherit; }
+    button { cursor:pointer; }
+    .app { width:min(100%,860px); height:100dvh; min-height:100dvh; margin:0 auto; display:flex; flex-direction:column; overflow:hidden; background:linear-gradient(180deg,#f7fbfc 0%,#f3f7f8 100%); }
+    .topbar { position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:12px; padding:calc(12px + env(safe-area-inset-top)) 18px 12px; background:rgba(255,255,255,.92); border-bottom:1px solid var(--line); backdrop-filter:blur(12px); }
+    .back { width:38px; height:38px; border:0; border-radius:13px; background:#eff6f7; color:var(--ink); font-size:23px; line-height:1; }
+    .brand { flex:1; min-width:0; }
+    .brand-mark { width:34px; height:34px; flex:0 0 34px; }
+    .brand-title { font-size:16px; font-weight:700; letter-spacing:.2px; }
+    .brand-sub { display:none; }
+    .new-chat { border:1px solid #d7e8eb; border-radius:12px; background:#fff; color:var(--teal-dark); padding:9px 12px; font-size:12px; font-weight:650; white-space:nowrap; }
+    .open-conversations { border:1px solid #d7e8eb; border-radius:12px; background:#fff; color:var(--teal-dark); padding:9px 10px; font-size:12px; font-weight:650; white-space:nowrap; }
+    .delete-chat { border:1px solid #f0dede; border-radius:12px; background:#fff; color:#9b4c4c; padding:9px 10px; font-size:12px; font-weight:650; white-space:nowrap; }
+    .handoff-request { border:1px solid #c8e5df; border-radius:12px; background:#effaf6; color:#17664f; padding:9px 10px; font-size:12px; font-weight:700; white-space:nowrap; }
+    .delete-chat:disabled { cursor:default; opacity:.5; }
+    .handoff-modal[hidden] { display:none; }
+    .handoff-modal { position:fixed; inset:0; z-index:10; display:grid; place-items:center; padding:18px; background:rgba(12,35,41,.42); }
+    .handoff-card { width:min(100%,420px); padding:20px; border:1px solid var(--line); border-radius:20px; background:#fff; box-shadow:0 18px 55px rgba(14,46,53,.2); }
+    .handoff-card h2 { margin:0 0 7px; font-size:18px; }
+    .handoff-card p { margin:0 0 15px; color:var(--muted); font-size:12px; line-height:1.6; }
+    .handoff-field { display:grid; gap:6px; margin:12px 0; font-size:12px; font-weight:650; }
+    .handoff-field select { width:100%; min-height:42px; padding:8px 10px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); font:inherit; }
+    .handoff-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:17px; }
+    .handoff-actions button { border:1px solid var(--line); border-radius:10px; padding:9px 13px; background:#fff; color:var(--ink); }
+    .handoff-actions .handoff-submit { border-color:var(--teal); background:var(--teal); color:#fff; font-weight:700; }
+    .handoff-actions button:disabled { cursor:default; opacity:.55; }
+    .handoff-result { min-height:18px; color:var(--teal-dark); font-size:12px; line-height:1.5; }
+    .conversation-panel[hidden] { display:none; }
+    .conversation-panel { position:fixed; inset:0; z-index:8; display:flex; }
+    .conversation-backdrop { flex:1; border:0; background:rgba(12,35,41,.32); }
+    .conversation-drawer { width:min(390px,88vw); display:flex; flex-direction:column; padding:calc(14px + env(safe-area-inset-top)) 14px 14px; background:#f8fbfc; box-shadow:12px 0 40px rgba(14,46,53,.14); }
+    .conversation-drawer-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:4px 2px 14px; }
+    .conversation-drawer-title { font-size:16px; font-weight:750; }
+    .conversation-close { border:1px solid var(--line); border-radius:10px; padding:7px 10px; background:#fff; color:var(--ink); }
+    .conversation-items { flex:1; overflow:auto; display:flex; flex-direction:column; gap:8px; }
+    .conversation-item { width:100%; text-align:left; border:1px solid #e1ecee; border-radius:14px; padding:11px 12px; background:#fff; color:var(--ink); }
+    .conversation-item.active { border-color:#80c5cc; background:#effafa; }
+    .conversation-item-title { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:700; }
+    .conversation-item-preview { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:5px; color:var(--muted); font-size:11px; }
+    .conversation-item-time { display:block; margin-top:6px; color:#8b9ba0; font-size:10px; }
+    .conversation-empty { padding:20px 8px; text-align:center; color:var(--muted); font-size:12px; }
+    .conversation-more { margin-top:10px; border:1px solid #d7e8eb; border-radius:11px; padding:9px; background:#fff; color:var(--teal-dark); }
+    .policy-panel[hidden] { display:none; }
+    .policy-panel { position:fixed; inset:0; z-index:35; display:flex; justify-content:flex-end; }
+    .policy-backdrop { position:absolute; inset:0; border:0; background:rgba(13,35,40,.34); }
+    .policy-drawer { position:relative; width:min(440px,94vw); display:flex; flex-direction:column; padding:calc(14px + env(safe-area-inset-top)) 14px 14px; background:#f8fbfc; box-shadow:-12px 0 40px rgba(14,46,53,.14); }
+    .policy-drawer-head { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:4px 2px 14px; }
+    .policy-drawer-title { font-size:16px; font-weight:750; }
+    .policy-action-notice { margin:0 0 10px; padding:9px 11px; border:1px solid #f1dfb9; border-radius:10px; background:var(--warning); color:#74591f; font-size:12px; line-height:1.5; }
+    .policy-items { flex:1; overflow:auto; display:flex; flex-direction:column; gap:9px; }
+    .policy-actions { display:flex; flex-wrap:wrap; gap:7px; margin-top:9px; }
+    .policy-action { border:1px solid #d7e8eb; border-radius:10px; padding:8px 10px; background:#fff; color:var(--teal-dark); font-size:11px; }
+    .policy-action.primary { border-color:var(--teal); background:var(--teal); color:#fff; }
+    .policy-more { margin-top:10px; border:1px solid #d7e8eb; border-radius:11px; padding:9px; background:#fff; color:var(--teal-dark); }
+    .policy-detail { margin:0 0 10px; padding:12px; border:1px solid #dce8ea; border-radius:12px; background:#fff; color:#526e74; font-size:12px; line-height:1.7; }
+    .notice { margin:14px 16px 0; padding:10px 12px; border:1px solid #f1dfb9; border-radius:12px; background:var(--warning); color:#74591f; font-size:12px; line-height:1.5; display:none; }
+    .chat { flex:1; min-height:0; padding:20px 16px 18px; overflow:auto; scroll-behavior:smooth; }
+    .welcome { max-width:620px; margin:4px auto 24px; padding:20px; border:1px solid #e6eff0; border-radius:22px; background:rgba(255,255,255,.88); box-shadow:0 12px 38px rgba(20,68,78,.045); }
+    .welcome-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:15px; background:linear-gradient(135deg,#dff5f5,#ecf9f6); color:var(--teal); font-size:21px; }
+    .welcome h1 { margin:14px 0 7px; font-size:20px; }
+    .welcome p { margin:0; color:#61767c; font-size:13px; line-height:1.7; }
+    .prompts { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+    .prompt { border:1px solid #dcebed; border-radius:999px; padding:9px 12px; background:#f9fdfd; color:#25626b; font-size:12px; }
+    .messages { display:flex; flex-direction:column; gap:16px; max-width:680px; margin:0 auto; }
+    .history-control { display:block; margin:0 auto 14px; border:1px solid #d7e8eb; border-radius:999px; padding:8px 13px; background:#fff; color:var(--teal-dark); font-size:11px; }
+    .history-control[hidden] { display:none; }
+    .row { display:flex; align-items:flex-start; gap:9px; }
+    .row.user { justify-content:flex-end; }
+    .avatar { flex:0 0 30px; height:30px; display:grid; place-items:center; border-radius:11px; background:#dff2f3; color:#087d8c; font-size:13px; font-weight:800; }
+    .row.user .avatar { order:2; background:#d6e9ed; color:#416873; }
+    .bubble { max-width:min(82%,600px); padding:12px 14px; border:1px solid #e4edef; border-radius:5px 17px 17px 17px; background:#fff; box-shadow:0 5px 18px rgba(15,60,70,.035); font-size:14px; line-height:1.7; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .row.assistant .bubble { white-space:normal; }
+    .row.user .bubble { border:0; border-radius:17px 5px 17px 17px; background:linear-gradient(135deg,#0a8995,#08717e); color:#fff; box-shadow:0 8px 18px rgba(8,125,140,.16); }
+    .bubble h1,.bubble h2,.bubble h3,.bubble h4,.bubble h5,.bubble h6 { margin:12px 0 6px; color:var(--ink); line-height:1.4; }
+    .bubble h1 { font-size:19px; } .bubble h2 { font-size:17px; } .bubble h3 { font-size:15px; }
+    .bubble p { margin:0 0 9px; } .bubble p:last-child { margin-bottom:0; }
+    .bubble ul,.bubble ol { margin:5px 0 10px; padding-left:22px; }
+    .bubble li { margin:3px 0; }
+    .bubble blockquote { margin:9px 0; padding:7px 11px; border-left:3px solid #8fcbd0; border-radius:0 8px 8px 0; background:#f4f9fa; color:#557077; }
+    .bubble hr { height:1px; margin:11px 0; border:0; background:var(--line); }
+    .bubble code { padding:1px 4px; border-radius:4px; background:#eef4f5; color:#31545c; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.92em; }
+    .bubble pre { overflow:auto; margin:8px 0; padding:10px; border-radius:9px; background:#f2f6f7; white-space:pre; }
+    .bubble pre code { padding:0; background:transparent; }
+    .bubble a { color:#087d8c; text-decoration:underline; text-underline-offset:2px; }
+    .markdown-table-wrap { max-width:100%; margin:9px 0; overflow-x:auto; }
+    .markdown-table { width:100%; border-collapse:collapse; font-size:12px; text-align:left; }
+    .markdown-table th,.markdown-table td { min-width:78px; padding:6px 8px; border:1px solid #dce8ea; vertical-align:top; }
+    .markdown-table th { background:#f1f8f9; font-weight:700; }
+    .bubble.muted { color:var(--muted); }
+    .meta { margin-top:7px; color:#84969b; font-size:10px; }
+    .card-list { display:grid; gap:9px; margin-top:11px; }
+    .product-card,.policy-card { padding:13px; border:1px solid #e1edef; border-radius:14px; background:#fbfefe; }
+    .product-name { font-size:13px; font-weight:750; }
+    .product-category { margin-left:6px; color:var(--teal); font-size:10px; font-weight:600; }
+    .product-summary { margin-top:6px; color:#60757b; font-size:12px; line-height:1.55; }
+    .fact-list { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .fact { padding:4px 7px; border-radius:7px; background:#eef6f7; color:#476a71; font-size:10px; }
+    .reason-list { margin:8px 0 0; padding-left:17px; color:#526e74; font-size:11px; line-height:1.6; }
+    .policy-title { font-size:12px; font-weight:700; }
+    .policy-meta { margin-top:5px; color:#62777c; font-size:11px; line-height:1.6; }
+    .comparison-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:8px; margin-top:8px; }
+    .comparison-card { min-width:0; padding:12px; border:1px solid #e1edef; border-radius:13px; background:#fbfefe; }
+    .comparison-card h3 { margin:0 0 9px; font-size:12px; }
+    .comparison-fact { padding:6px 0; border-top:1px solid #edf2f3; color:#61767c; font-size:10px; line-height:1.5; }
+    .section-label { margin:12px 0 6px; color:#71848a; font-size:10px; font-weight:700; letter-spacing:.4px; }
+    .composer-wrap { flex:0 0 auto; padding:12px 14px 8px; background:linear-gradient(180deg,rgba(244,248,249,.7),#f4f8f9 22%); }
+    .composer-tools { max-width:680px; margin:0 auto 7px; }
+    .policy-select-button { border:1px solid #d7e8eb; border-radius:12px; padding:8px 12px; background:#fff; color:var(--teal-dark); font-size:12px; font-weight:650; }
+    .composer { display:flex; align-items:flex-end; gap:9px; max-width:680px; margin:0 auto; padding:8px; border:1px solid #dce8ea; border-radius:18px; background:#fff; box-shadow:0 8px 28px rgba(18,67,76,.08); }
+    .composer textarea { flex:1; min-height:40px; max-height:132px; resize:none; border:0; outline:0; padding:10px 8px; color:var(--ink); background:transparent; font-size:14px; line-height:1.45; }
+    .composer textarea::placeholder { color:#9aabad; }
+    .send { min-width:72px; height:40px; border:0; border-radius:13px; background:var(--teal); color:#fff; font-size:13px; font-weight:700; }
+    .send:disabled { cursor:default; opacity:.5; }
+    .footnote { max-width:680px; margin:8px auto 0; padding:0 3px; color:#91a0a4; font-size:10px; line-height:1.5; }
+    .app-tabbar { flex:0 0 auto; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); min-height:50px; padding-bottom:env(safe-area-inset-bottom); border-top:1px solid #e8e8e8; background:#fff; }
+    .app-tabbar a { display:flex; min-width:0; min-height:50px; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:#595959; text-decoration:none; -webkit-tap-highlight-color:transparent; }
+    .app-tabbar a[aria-current="page"] { color:#00a6c5; }
+    .app-tabbar img,.app-tabbar .tabbar-chat-icon { width:20px; height:20px; object-fit:contain; }
+    .app-tabbar .tabbar-chat-icon { display:grid; place-items:center; border-radius:50%; background:#e5f5f4; color:#0b8995; font-size:15px; line-height:1; }
+    .app-tabbar .tabbar-label { max-width:100%; overflow:hidden; font-size:10px; line-height:normal; text-overflow:ellipsis; white-space:nowrap; }
+    .login-card { display:none; margin:32px 16px; padding:24px; border:1px solid var(--line); border-radius:20px; background:#fff; text-align:center; }
+    .login-card h2 { margin:0 0 8px; font-size:19px; }
+    .login-card p { color:var(--muted); font-size:13px; line-height:1.6; }
+    .login-card a { display:inline-block; margin-top:8px; border-radius:12px; padding:11px 18px; background:var(--teal); color:#fff; text-decoration:none; font-size:13px; font-weight:700; }
+    @media (max-width:520px) { .topbar { gap:6px; padding-left:10px; padding-right:10px; } .back { width:34px; flex:0 0 34px; } .brand { flex:1; } .brand-title { font-size:14px; } .open-conversations,.new-chat,.delete-chat,.handoff-request { padding:8px 6px; font-size:10px; } }
+    @media (min-width:700px) { .chat { padding-top:28px; } .welcome { padding:24px; } .bubble { max-width:75%; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <button class="back" id="back" aria-label="返回">‹</button>
+      <img class="brand-mark" src="/static/brand-mark.svg" alt="保顾通">
+      <div class="brand"><div class="brand-title">客服</div></div>
+      <button class="open-conversations" id="open-conversations" type="button">历史</button>
+      <button class="new-chat" id="new-chat">新建</button>
+      <button class="handoff-request" id="handoff-request" type="button">人工</button>
+      <button class="delete-chat" id="delete-chat" type="button">删除</button>
+    </header>
+    <section class="conversation-panel" id="conversation-panel" hidden aria-label="会话列表">
+      <button class="conversation-backdrop" id="conversation-backdrop" type="button" aria-label="关闭会话列表"></button>
+      <aside class="conversation-drawer">
+        <div class="conversation-drawer-head"><div class="conversation-drawer-title">最近会话</div><button class="conversation-close" id="close-conversations" type="button">关闭</button></div>
+        <div class="conversation-items" id="conversation-items"><div class="conversation-empty">正在读取会话…</div></div>
+        <button class="conversation-more" id="conversation-more" type="button" hidden>加载更早会话</button>
+      </aside>
+    </section>
+    <section class="policy-panel" id="policy-panel" hidden aria-label="本人保单">
+      <button class="policy-backdrop" id="policy-backdrop" type="button" aria-label="关闭本人保单"></button>
+      <aside class="policy-drawer" role="dialog" aria-modal="true" aria-labelledby="policy-drawer-title">
+        <div class="policy-drawer-head"><div class="policy-drawer-title" id="policy-drawer-title">本人保单</div><button class="conversation-close" id="close-policies" type="button">关闭</button></div>
+        <div class="policy-action-notice" id="policy-action-notice" role="status" aria-live="polite" hidden></div>
+        <div class="policy-items" id="policy-items"><div class="conversation-empty">正在读取保单…</div></div>
+        <button class="policy-more" id="policy-more" type="button" hidden>加载更多保单</button>
+      </aside>
+    </section>
+    <section class="handoff-modal" id="handoff-modal" role="dialog" aria-modal="true" aria-labelledby="handoff-title" hidden>
+      <div class="handoff-card">
+        <h2 id="handoff-title">联系人工客服</h2>
+        <p>提交后会创建客服请求。AI 对话内容不会自动分享给客服。</p>
+        <label class="handoff-field">咨询类型
+          <select id="handoff-type"><option value="POLICY">本人保单</option><option value="CLAIM">理赔咨询</option><option value="PURCHASE">投保咨询</option><option value="PRODUCT_QUESTION">产品问题</option><option value="OTHER">其他</option></select>
+        </label>
+        <label class="handoff-field">希望的联系方法
+          <select id="handoff-contact"><option value="IN_APP">站内联系</option><option value="PHONE">电话联系</option></select>
+        </label>
+        <label class="handoff-field">客服渠道
+          <select id="handoff-channel"><option value="">由客服安排</option></select>
+        </label>
+        <div class="handoff-result" id="handoff-result" role="status" aria-live="polite"></div>
+        <div class="handoff-actions"><button id="handoff-cancel" type="button">取消</button><button class="handoff-submit" id="handoff-submit" type="button">提交请求</button></div>
+      </div>
+    </section>
+    <div class="notice" id="pending-notice"></div>
+    <section class="chat" id="chat">
+      <button class="history-control" id="load-older" type="button" hidden>加载更早消息</button>
+      <div class="welcome" id="welcome">
+        <div class="welcome-icon">✦</div>
+        <h1>你好，有什么可以帮你？</h1>
+        <p>描述你的保险需求或问题，我会为你解答。</p>
+        <div class="prompts">
+          <button class="prompt">我想给家人找医疗保障</button>
+          <button class="prompt">帮我推荐适合的保险</button>
+        </div>
+      </div>
+      <div class="messages" id="messages" aria-live="polite"></div>
+    </section>
+    <section class="login-card" id="login-card">
+      <h2>登录后开始咨询</h2>
+      <p>登录后才能安全地查询本人保单或保存你的客服会话。</p>
+      <a href="/#/pages/login/login">去登录</a>
+    </section>
+    <footer class="composer-wrap" id="composer-wrap">
+      <div class="composer-tools"><button class="policy-select-button" id="open-policies" type="button">选择保单</button></div>
+      <form class="composer" id="composer">
+        <textarea id="message" rows="1" maxlength="2000" placeholder="描述你的保险需求或问题…" aria-label="输入消息"></textarea>
+        <button class="send" id="send" type="submit">发送</button>
+      </form>
+      <div class="footnote">AI 建议仅供参考。保障责任、等待期、免责事项及最终承保结果，请以保险产品正式资料和保险公司核保为准。</div>
+    </footer>
+    <nav class="app-tabbar" aria-label="主导航">
+      <a href="/#/" aria-label="首页"><img src="/static/images/home.png" alt=""><span class="tabbar-label">首页</span></a>
+      <a href="/#/pages/product/index" aria-label="产品"><img src="/static/images/product.png" alt=""><span class="tabbar-label">产品</span></a>
+      <a href="/#/pages/myOptional/index" aria-label="自选"><img src="/static/images/myOptional.png" alt=""><span class="tabbar-label">自选</span></a>
+      <a href="/#/pages/user/index" aria-label="我的"><img src="/static/images/user.png" alt=""><span class="tabbar-label">我的</span></a>
+      <a href="/ai-chat.html" aria-label="客服" aria-current="page"><span class="tabbar-chat-icon" aria-hidden="true">✦</span><span class="tabbar-label">客服</span></a>
+    </nav>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const API_BASE = '/api/insurance-app/ai-assistant';
+      const HANDOFF_API_BASE = '/api/insurance-app/customer-service';
+      const SESSION_KEY = 'bolee.ai.sessionId';
+      const PENDING_KEY = 'bolee.ai.pending';
+      const chat = document.getElementById('chat');
+      const messages = document.getElementById('messages');
+      const input = document.getElementById('message');
+      const sendButton = document.getElementById('send');
+      const deleteButton = document.getElementById('delete-chat');
+      const notice = document.getElementById('pending-notice');
+      const historyButton = document.getElementById('load-older');
+      let activeRequest = null;
+      let historyCursor = null;
+      let loadingHistory = false;
+      let historyReloadRequested = false;
+      let conversationCursor = null;
+      let loadingConversations = false;
+      const hadSessionInThisTab = Boolean(sessionStorage.getItem(SESSION_KEY));
+      const conversationPanel = document.getElementById('conversation-panel');
+      const conversationItems = document.getElementById('conversation-items');
+      const conversationMore = document.getElementById('conversation-more');
+      const policyPanel = document.getElementById('policy-panel');
+      const policyItems = document.getElementById('policy-items');
+      const policyMore = document.getElementById('policy-more');
+      const policyActionNotice = document.getElementById('policy-action-notice');
+      let policyCursor = null;
+      let loadingPolicies = false;
+
+      function readStorage(key) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object' && 'type' in parsed && 'data' in parsed) return parsed.data;
+          return parsed;
+        } catch (_) { return null; }
+      }
+      const userInfo = readStorage('userInfo');
+      const userToken = userInfo && userInfo.userToken;
+      if (!userToken) {
+        document.getElementById('chat').style.display = 'none';
+        document.getElementById('composer-wrap').style.display = 'none';
+        document.getElementById('login-card').style.display = 'block';
+        document.getElementById('new-chat').style.display = 'none';
+        document.getElementById('open-conversations').style.display = 'none';
+        document.getElementById('open-policies').style.display = 'none';
+        document.getElementById('handoff-request').style.display = 'none';
+        deleteButton.style.display = 'none';
+        return;
+      }
+
+      function makeId() {
+        if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+        const bytes = new Uint8Array(16);
+        crypto.getRandomValues(bytes);
+        bytes[6] = (bytes[6] & 15) | 64;
+        bytes[8] = (bytes[8] & 63) | 128;
+        const hex = [...bytes].map(v => v.toString(16).padStart(2, '0')).join('');
+        return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
+      }
+      const handoffModal = document.getElementById('handoff-modal');
+      const handoffChannel = document.getElementById('handoff-channel');
+      const handoffSubmit = document.getElementById('handoff-submit');
+      const handoffResult = document.getElementById('handoff-result');
+      let handoffRequestId = null;
+      async function loadOwnPolicies(cursor, append) {
+        if (loadingPolicies) return;
+        loadingPolicies = true;
+        if (append) policyItems.querySelectorAll('.policy-load-error').forEach(item => item.remove());
+        if (!append) { policyItems.replaceChildren(); policyCursor = null; }
+        const loading = document.createElement('div'); loading.className = 'conversation-empty';
+        loading.textContent = append ? '正在读取更多保单…' : '正在读取保单…';
+        if (!append) policyItems.appendChild(loading);
+        policyMore.disabled = true;
+        try {
+          const query = new URLSearchParams({ limit: '10' });
+          if (cursor) query.set('cursor', cursor);
+          const response = await fetch(`${API_BASE}/policies?${query}`, {
+            credentials: 'same-origin', headers: { 'user-token': userToken }
+          });
+          const envelope = await response.json().catch(() => ({}));
+          if (!response.ok || (envelope.code !== undefined && ![0, 200].includes(envelope.code)))
+            throw new Error(envelope.msg || `读取保单失败（HTTP ${response.status}）`);
+          const page = envelope.data || {};
+          if (!append) policyItems.replaceChildren(); else loading.remove();
+          if (!append && page.status === 'PROFILE_NOT_LINKED') {
+            const empty = document.createElement('div'); empty.className = 'conversation-empty';
+            empty.textContent = '当前账号尚未关联可核验的本人资料，暂时无法展示保单。'; policyItems.appendChild(empty);
+          } else if (!append && (!Array.isArray(page.policies) || !page.policies.length)) {
+            const empty = document.createElement('div'); empty.className = 'conversation-empty';
+            empty.textContent = '当前没有可展示的本人保单。'; policyItems.appendChild(empty);
+          } else {
+            (Array.isArray(page.policies) ? page.policies : []).forEach(policy => {
+              const card = document.createElement('article'); card.className = 'policy-card';
+              const title = document.createElement('div'); title.className = 'policy-title';
+              title.textContent = policy.productName || '保险保单'; card.appendChild(title);
+              const meta = document.createElement('div'); meta.className = 'policy-meta';
+              meta.textContent = [policy.policyStatusLabel || policy.policyStatus,
+                policy.coverageStartTime && `保障开始：${policy.coverageStartTime}`,
+                policy.coverageEndTime && `保障结束：${policy.coverageEndTime}`,
+                policy.autoExtensionEnabled === true ? '自动续保：已开启' : policy.autoExtensionEnabled === false ? '自动续保：未开启' : ''].filter(Boolean).join(' · ');
+              card.appendChild(meta);
+              const detail = document.createElement('div'); detail.className = 'policy-detail'; detail.hidden = true; card.appendChild(detail);
+              const actions = document.createElement('div'); actions.className = 'policy-actions';
+              const detailButton = document.createElement('button'); detailButton.type = 'button'; detailButton.className = 'policy-action'; detailButton.textContent = '查看详情';
+              detailButton.addEventListener('click', async () => {
+                detailButton.disabled = true;
+                try {
+                  const response = await fetch(`${API_BASE}/policies/${encodeURIComponent(policy.policyId)}`, {
+                    credentials: 'same-origin', headers: { 'user-token': userToken }
+                  });
+                  const envelope = await response.json().catch(() => ({}));
+                  if (!response.ok || (envelope.code !== undefined && ![0, 200].includes(envelope.code)))
+                    throw new Error(envelope.msg || `读取详情失败（HTTP ${response.status}）`);
+                  const result = envelope.data || {};
+                  if (result.status !== 'FOUND' || !result.policy) throw new Error('未找到这张本人保单。');
+                  const item = result.policy;
+                  detail.textContent = [item.productName, item.policyStatusLabel || item.policyStatus,
+                    item.coverageStartTime && `保障开始：${item.coverageStartTime}`,
+                    item.coverageEndTime && `保障结束：${item.coverageEndTime}`,
+                    item.autoExtensionEnabled === true ? '自动续保：已开启' : item.autoExtensionEnabled === false ? '自动续保：未开启' : ''].filter(Boolean).join('\n');
+                  detail.hidden = false; detailButton.textContent = '刷新详情';
+                } catch (error) { detail.textContent = error.message || '读取保单详情失败。'; detail.hidden = false; }
+                finally { detailButton.disabled = false; }
+              });
+              const explainButton = document.createElement('button'); explainButton.type = 'button'; explainButton.className = 'policy-action primary'; explainButton.textContent = '让 AI 介绍';
+              explainButton.addEventListener('click', () => {
+                if (activeRequest) {
+                  policyActionNotice.textContent = '当前有一条消息正在处理中，请等待完成后再介绍保单。';
+                  policyActionNotice.hidden = false;
+                  return;
+                }
+                policyActionNotice.hidden = true;
+                policyPanel.hidden = true;
+                submitMessage(`请介绍我选中的这份保单“${policy.productName || '保险保单'}”。只说明系统能确认的产品名称、保单状态和保障期限；如果没有产品条款资料，请明确说明无法确认具体保障责任。`, undefined, String(policy.policyId));
+              });
+              actions.append(detailButton, explainButton); card.appendChild(actions); policyItems.appendChild(card);
+            });
+          }
+          policyCursor = page.nextCursor || null;
+          policyMore.hidden = !page.hasMore || !policyCursor;
+        } catch (error) {
+          if (!append) policyItems.replaceChildren(); else loading.remove();
+          const message = document.createElement('div'); message.className = 'conversation-empty policy-load-error';
+          message.textContent = error.message || '保单暂时无法读取，请稍后重试。'; policyItems.appendChild(message);
+        } finally { loadingPolicies = false; policyMore.disabled = false; }
+      }
+      function openPolicies() { policyActionNotice.hidden = true; policyPanel.hidden = false; loadOwnPolicies(null, false); }
+      async function openHandoff() {
+        handoffRequestId = makeId();
+        handoffResult.textContent = '';
+        handoffSubmit.disabled = false;
+        handoffSubmit.textContent = '提交请求';
+        handoffModal.hidden = false;
+        handoffChannel.replaceChildren(new Option('由客服安排', ''));
+        try {
+          const response = await fetch(`${HANDOFF_API_BASE}/channels`, {
+            credentials: 'same-origin', headers: { 'user-token': userToken }
+          });
+          if (!response.ok) throw new Error(`无法读取客服渠道（HTTP ${response.status}）`);
+          const envelope = await response.json();
+          (Array.isArray(envelope.data) ? envelope.data : []).forEach(channel => {
+            const option = new Option(channel.displayName, String(channel.id));
+            handoffChannel.add(option);
+          });
+        } catch (error) {
+          handoffResult.textContent = `${error.message}，仍可提交由客服安排的请求。`;
+        }
+      }
+      async function submitHandoff() {
+        if (!handoffRequestId) handoffRequestId = makeId();
+        handoffSubmit.disabled = true;
+        handoffSubmit.textContent = '正在提交…';
+        handoffResult.textContent = '';
+        const payload = {
+          clientRequestId: handoffRequestId,
+          requestType: document.getElementById('handoff-type').value,
+          preferredContactMethod: document.getElementById('handoff-contact').value
+        };
+        if (handoffChannel.value) payload.channelId = Number(handoffChannel.value);
+        try {
+          const response = await fetch(`${HANDOFF_API_BASE}/requests`, {
+            method: 'POST', credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json', 'user-token': userToken },
+            body: JSON.stringify(payload)
+          });
+          const envelope = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(envelope.msg || `提交失败（HTTP ${response.status}）`);
+          handoffResult.textContent = `请求已提交，编号：${envelope.data && envelope.data.requestNo || '已受理'}`;
+          handoffRequestId = null;
+          handoffSubmit.textContent = '已提交';
+        } catch (error) {
+          handoffResult.textContent = `${error.message}；可重试，重试会使用同一个请求编号。`;
+          handoffSubmit.disabled = false;
+          handoffSubmit.textContent = '重试提交';
+        }
+      }
+      function getSessionId() {
+        let id = sessionStorage.getItem(SESSION_KEY);
+        if (!id || !/^[A-Za-z0-9_-]{1,64}$/.test(id)) {
+          id = `ai_${makeId().replace(/-/g, '')}`;
+          sessionStorage.setItem(SESSION_KEY, id);
+        }
+        return id;
+      }
+      let sessionId = getSessionId();
+
+      async function digest(text) {
+        const bytes = new TextEncoder().encode(text);
+        if (window.crypto && crypto.subtle) {
+          const hash = await crypto.subtle.digest('SHA-256', bytes);
+          return [...new Uint8Array(hash)].map(v => v.toString(16).padStart(2, '0')).join('');
+        }
+        // The digest only matches a retyped pending request in sessionStorage. Java
+        // computes and verifies the authoritative SHA-256 fingerprint server-side.
+        let first = 0x811c9dc5;
+        let second = 0x9e3779b9;
+        for (const byte of bytes) {
+          first = Math.imul(first ^ byte, 0x01000193) >>> 0;
+          second = Math.imul(second ^ byte, 0x85ebca6b) >>> 0;
+        }
+        return `local-${bytes.length}-${first.toString(16).padStart(8, '0')}${second.toString(16).padStart(8, '0')}`;
+      }
+      function pendingKey(session = sessionId) { return `${PENDING_KEY}.${session}`; }
+      function savePending(id, hash, selectedPolicyId) {
+        if (!hash) return;
+        sessionStorage.setItem(pendingKey(), JSON.stringify({ id, hash, selectedPolicyId: selectedPolicyId || null }));
+      }
+      function clearPending(session = sessionId) { sessionStorage.removeItem(pendingKey(session)); }
+      function pendingRecord(session = sessionId) {
+        try {
+          const scoped = sessionStorage.getItem(pendingKey(session));
+          if (scoped) return JSON.parse(scoped);
+          // Migrate the old single-session key once, for the session that was open before upgrade.
+          const legacy = sessionStorage.getItem(PENDING_KEY);
+          if (legacy && session === sessionId) {
+            sessionStorage.setItem(pendingKey(session), legacy);
+            sessionStorage.removeItem(PENDING_KEY);
+            return JSON.parse(legacy);
+          }
+          return null;
+        }
+        catch (_) { return null; }
+      }
+      const oldPending = pendingRecord();
+      if (oldPending && oldPending.id && oldPending.hash) {
+        notice.textContent = '上一条消息可能仍在处理中。重新输入相同内容发送时，会沿用同一请求编号，避免重复执行。';
+        notice.style.display = 'block';
+      } else if (hadSessionInThisTab) {
+        notice.textContent = '正在恢复当前会话的历史消息…';
+        notice.style.display = 'block';
+      }
+
+      function scrollDown() { requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; }); }
+      function appendInlineMarkdown(parent, source) {
+        const text = String(source || '');
+        const pattern = /(\[[^\]]+\]\([^\s)]+\)|`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|~~[^~]+~~|\*[^*\n]+\*|_[^_\n]+_|  \n|\n)/g;
+        let offset = 0;
+        let match;
+        while ((match = pattern.exec(text))) {
+          if (match.index > offset) parent.appendChild(document.createTextNode(text.slice(offset, match.index)));
+          const token = match[0];
+          if (token.startsWith('[')) {
+            const link = token.match(/^\[([^\]]+)\]\(([^\s)]+)\)$/);
+            let url;
+            try { url = new URL(link[2], window.location.href); } catch (_) { url = null; }
+            if (url && (url.protocol === 'https:' || url.protocol === 'http:')) {
+              const anchor = document.createElement('a');
+              anchor.textContent = link[1]; anchor.href = url.href; anchor.target = '_blank'; anchor.rel = 'noopener noreferrer';
+              parent.appendChild(anchor);
+            } else parent.appendChild(document.createTextNode(link[1]));
+          } else if (token.startsWith('`')) {
+            const code = document.createElement('code'); code.textContent = token.slice(1, -1); parent.appendChild(code);
+          } else if (token.startsWith('**') || token.startsWith('__') || token.startsWith('~~')) {
+            const tag = token.startsWith('~~') ? 'del' : 'strong';
+            const node = document.createElement(tag); appendInlineMarkdown(node, token.slice(2, -2)); parent.appendChild(node);
+          } else if (token.startsWith('*') || token.startsWith('_')) {
+            const node = document.createElement('em'); appendInlineMarkdown(node, token.slice(1, -1)); parent.appendChild(node);
+          } else if (token === '  \n' || token === '\n') parent.appendChild(document.createElement('br'));
+          offset = pattern.lastIndex;
+        }
+        if (offset < text.length) parent.appendChild(document.createTextNode(text.slice(offset)));
+      }
+      function splitMarkdownTableRow(line) {
+        let value = line.trim();
+        if (value.startsWith('|')) value = value.slice(1);
+        if (value.endsWith('|')) value = value.slice(0, -1);
+        const cells = []; let cell = ''; let escaped = false;
+        for (const char of value) {
+          if (char === '|' && !escaped) { cells.push(cell.trim()); cell = ''; continue; }
+          if (char === '\\' && !escaped) { escaped = true; cell += char; continue; }
+          escaped = false; cell += char;
+        }
+        cells.push(cell.trim());
+        return cells;
+      }
+      function isMarkdownTableDivider(line) {
+        const cells = splitMarkdownTableRow(line);
+        return cells.length > 0 && cells.every(cell => /^:?-{3,}:?$/.test(cell));
+      }
+      function renderMarkdown(container, source, append = false) {
+        if (!append) container.replaceChildren();
+        const lines = String(source || '').replace(/\r\n?/g, '\n').split('\n');
+        let index = 0;
+        const isBlockStart = line => /^\s{0,3}(#{1,6}\s|>|```|[-+*]\s|\d+\.\s)/.test(line)
+          || /^\s{0,3}((\*\s*){3,}|(-\s*){3,}|(_\s*){3,})$/.test(line);
+        while (index < lines.length) {
+          const line = lines[index];
+          if (!line.trim()) { index += 1; continue; }
+          const fence = line.match(/^\s{0,3}```([^`]*)$/);
+          if (fence) {
+            index += 1; const codeLines = [];
+            while (index < lines.length && !/^\s{0,3}```\s*$/.test(lines[index])) codeLines.push(lines[index++]);
+            if (index < lines.length) index += 1;
+            const pre = document.createElement('pre'); const code = document.createElement('code');
+            if (fence[1].trim()) code.className = `language-${fence[1].trim().replace(/[^\w-]/g, '')}`;
+            code.textContent = codeLines.join('\n'); pre.appendChild(code); container.appendChild(pre); continue;
+          }
+          const heading = line.match(/^\s{0,3}(#{1,6})\s+(.+?)\s*#*\s*$/);
+          if (heading) {
+            const node = document.createElement(`h${heading[1].length}`); appendInlineMarkdown(node, heading[2]);
+            container.appendChild(node); index += 1; continue;
+          }
+          if (/^\s{0,3}((\*\s*){3,}|(-\s*){3,}|(_\s*){3,})$/.test(line)) {
+            container.appendChild(document.createElement('hr')); index += 1; continue;
+          }
+          if (line.includes('|') && index + 1 < lines.length && isMarkdownTableDivider(lines[index + 1])) {
+            const headers = splitMarkdownTableRow(line); index += 2;
+            const wrap = document.createElement('div'); wrap.className = 'markdown-table-wrap';
+            const table = document.createElement('table'); table.className = 'markdown-table';
+            const thead = document.createElement('thead'); const headRow = document.createElement('tr');
+            headers.forEach(value => { const cell = document.createElement('th'); appendInlineMarkdown(cell, value); headRow.appendChild(cell); });
+            thead.appendChild(headRow); table.appendChild(thead);
+            const tbody = document.createElement('tbody');
+            while (index < lines.length && lines[index].includes('|') && lines[index].trim()) {
+              const values = splitMarkdownTableRow(lines[index++]); const row = document.createElement('tr');
+              headers.forEach((_, cellIndex) => { const cell = document.createElement('td'); appendInlineMarkdown(cell, values[cellIndex] || ''); row.appendChild(cell); });
+              tbody.appendChild(row);
+            }
+            table.appendChild(tbody); wrap.appendChild(table); container.appendChild(wrap); continue;
+          }
+          if (/^\s{0,3}>/.test(line)) {
+            const quoteLines = [];
+            while (index < lines.length && /^\s{0,3}>/.test(lines[index])) quoteLines.push(lines[index++].replace(/^\s{0,3}>\s?/, ''));
+            const quote = document.createElement('blockquote'); renderMarkdown(quote, quoteLines.join('\n')); container.appendChild(quote); continue;
+          }
+          const listStart = line.match(/^\s{0,3}([-+*]|\d+\.)\s+(.+)$/);
+          if (listStart) {
+            const ordered = /^\d+\./.test(listStart[1]); const list = document.createElement(ordered ? 'ol' : 'ul');
+            while (index < lines.length) {
+              const itemMatch = lines[index].match(/^\s{0,3}([-+*]|\d+\.)\s+(.+)$/);
+              if (!itemMatch || /^\d+\./.test(itemMatch[1]) !== ordered) break;
+              const item = document.createElement('li'); appendInlineMarkdown(item, itemMatch[2]); list.appendChild(item); index += 1;
+            }
+            container.appendChild(list); continue;
+          }
+          const paragraph = [line.trim()]; index += 1;
+          while (index < lines.length && lines[index].trim() && !isBlockStart(lines[index])
+              && !(lines[index].includes('|') && index + 1 < lines.length && isMarkdownTableDivider(lines[index + 1]))) {
+            paragraph.push(lines[index++].trim());
+          }
+          const p = document.createElement('p'); appendInlineMarkdown(p, paragraph.join(' ')); container.appendChild(p);
+        }
+      }
+      function addMessage(role, text, options = {}) {
+        const row = document.createElement('div');
+        row.className = `row ${role}`;
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.textContent = role === 'user' ? '我' : 'AI';
+        const bubble = document.createElement('div');
+        bubble.className = `bubble${options.muted ? ' muted' : ''}`;
+        if (role === 'assistant') renderMarkdown(bubble, text || '');
+        else bubble.textContent = text || '';
+        if (role === 'user') row.append(bubble, avatar);
+        else row.append(avatar, bubble);
+        messages.appendChild(row);
+        scrollDown();
+        return { row, bubble };
+      }
+      function addHistoryMessage(item, prepend) {
+        if (!item || !['USER', 'ASSISTANT'].includes(item.role) || !item.content) return;
+        const row = document.createElement('div');
+        row.className = `row ${item.role === 'USER' ? 'user' : 'assistant'}`;
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.textContent = item.role === 'USER' ? '我' : 'AI';
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        if (item.role === 'ASSISTANT') renderMarkdown(bubble, item.content);
+        else bubble.textContent = item.content;
+        if (item.role === 'ASSISTANT' && item.structuredData) renderStructuredData(bubble, item.structuredData);
+        const time = item.createdAt ? new Date(item.createdAt) : null;
+        if (time && !Number.isNaN(time.getTime())) {
+          const meta = document.createElement('div');
+          meta.className = 'meta';
+          meta.textContent = time.toLocaleString('zh-CN', { hour12: false });
+          bubble.appendChild(meta);
+        }
+        if (item.role === 'USER') row.append(bubble, avatar);
+        else row.append(avatar, bubble);
+        if (prepend && messages.firstChild) messages.insertBefore(row, messages.firstChild);
+        else messages.appendChild(row);
+      }
+      async function loadHistory(cursor, prepend) {
+        if (loadingHistory) { if (!prepend) historyReloadRequested = true; return; }
+        const requestedSessionId = sessionId;
+        loadingHistory = true;
+        historyButton.disabled = true;
+        try {
+          const query = new URLSearchParams({ limit: '25' });
+          if (cursor) query.set('cursor', cursor);
+          const response = await fetch(`${API_BASE}/conversations/${encodeURIComponent(requestedSessionId)}/messages?${query}`, {
+            method: 'GET', credentials: 'same-origin', headers: { 'user-token': userToken }
+          });
+          let envelope;
+          try { envelope = await response.json(); } catch (_) { throw new Error(`历史消息暂时无法读取（HTTP ${response.status}）`); }
+          if (!response.ok || !envelope || (envelope.code !== 0 && envelope.code !== 200)) {
+            throw new Error((envelope && envelope.msg) || `历史消息暂时无法读取（HTTP ${response.status}）`);
+          }
+          const page = envelope.data || {};
+          if (sessionId !== requestedSessionId) return;
+          const items = Array.isArray(page.messages) ? page.messages : [];
+          if (prepend) [...items].reverse().forEach(item => addHistoryMessage(item, true));
+          else items.forEach(item => addHistoryMessage(item, false));
+          historyCursor = page.nextCursor || null;
+          historyButton.hidden = !page.hasMore || !historyCursor;
+          if (messages.children.length) document.getElementById('welcome').style.display = 'none';
+          if (!prepend) scrollDown();
+          const pending = pendingRecord();
+          if (!(pending && pending.id && pending.hash)) notice.style.display = 'none';
+        } catch (error) {
+          notice.textContent = error.message || '历史消息暂时无法读取。';
+          notice.style.display = 'block';
+          historyButton.hidden = true;
+        } finally {
+          loadingHistory = false;
+          historyButton.disabled = false;
+          if (historyReloadRequested) { historyReloadRequested = false; loadHistory(null, false); }
+        }
+      }
+      function closeConversationPanel() { conversationPanel.hidden = true; }
+      function renderConversationList(items, append) {
+        if (!append) conversationItems.replaceChildren();
+        if (!items.length && !append) {
+          const empty = document.createElement('div'); empty.className = 'conversation-empty';
+          empty.textContent = '还没有已保存的会话'; conversationItems.appendChild(empty); return;
+        }
+        items.forEach(item => {
+          if (!item || !item.sessionId) return;
+          const button = document.createElement('button'); button.type = 'button';
+          button.className = `conversation-item${item.sessionId === sessionId ? ' active' : ''}`;
+          const title = document.createElement('span'); title.className = 'conversation-item-title';
+          title.textContent = item.title || '保险咨询';
+          const preview = document.createElement('span'); preview.className = 'conversation-item-preview';
+          preview.textContent = item.preview || '点击继续此对话';
+          const time = document.createElement('span'); time.className = 'conversation-item-time';
+          const date = item.lastMessageAt || item.createdAt;
+          time.textContent = date && !Number.isNaN(new Date(date).getTime())
+            ? new Date(date).toLocaleString('zh-CN', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false }) : '';
+          button.append(title, preview, time);
+          button.addEventListener('click', () => switchConversation(item.sessionId));
+          conversationItems.appendChild(button);
+        });
+      }
+      async function loadConversations(cursor, append = false) {
+        if (loadingConversations) return;
+        loadingConversations = true; conversationMore.disabled = true;
+        try {
+          const query = new URLSearchParams({ limit:'20' }); if (cursor) query.set('cursor', cursor);
+          const response = await fetch(`${API_BASE}/conversations?${query}`, {
+            method:'GET', credentials:'same-origin', headers:{ 'user-token':userToken }
+          });
+          let envelope; try { envelope = await response.json(); } catch (_) { throw new Error(`会话列表暂时无法读取（HTTP ${response.status}）`); }
+          if (!response.ok || !envelope || (envelope.code !== 0 && envelope.code !== 200))
+            throw new Error((envelope && envelope.msg) || `会话列表暂时无法读取（HTTP ${response.status}）`);
+          const page = envelope.data || {};
+          renderConversationList(Array.isArray(page.conversations) ? page.conversations : [], append);
+          conversationCursor = page.nextCursor || null;
+          conversationMore.hidden = !page.hasMore || !conversationCursor;
+        } catch (error) {
+          if (!append) { conversationItems.replaceChildren(); const empty = document.createElement('div'); empty.className = 'conversation-empty'; empty.textContent = error.message || '会话列表暂时无法读取'; conversationItems.appendChild(empty); }
+        } finally { loadingConversations = false; conversationMore.disabled = false; }
+      }
+      function switchConversation(nextSessionId) {
+        if (activeRequest || !nextSessionId || nextSessionId === sessionId) { closeConversationPanel(); return; }
+        sessionId = nextSessionId; sessionStorage.setItem(SESSION_KEY, sessionId);
+        messages.replaceChildren(); historyCursor = null; historyButton.hidden = true;
+        document.getElementById('welcome').style.display = 'block';
+        const pending = pendingRecord();
+        notice.style.display = pending && pending.id && pending.hash ? 'block' : 'none';
+        if (notice.style.display === 'block') notice.textContent = '此会话有一条消息可能仍在处理中，重新输入相同内容可继续查询。';
+        closeConversationPanel(); loadHistory(null, false); loadConversations(null, false);
+      }
+      function appendList(parent, values, className) {
+        if (!Array.isArray(values) || !values.length) return;
+        const list = document.createElement('ul');
+        list.className = className || 'reason-list';
+        values.forEach(value => {
+          const item = document.createElement('li');
+          item.textContent = String(value);
+          list.appendChild(item);
+        });
+        parent.appendChild(list);
+      }
+      function displayFactValue(fact) {
+        if (!fact) return '';
+        if (fact.valueDisplay) return String(fact.valueDisplay);
+        if (fact.valueStatus === 'NOT_PROVIDED') return '未提供';
+        if (fact.valueStatus === 'NOT_APPLICABLE') return '不适用';
+        const unit = fact.unit ? ` ${fact.unit}` : '';
+        if (fact.valueNumber !== null && fact.valueNumber !== undefined) return `${fact.valueNumber}${unit}`;
+        if (fact.minValue !== null && fact.minValue !== undefined
+            && fact.maxValue !== null && fact.maxValue !== undefined) return `${fact.minValue} 至 ${fact.maxValue}${unit}`;
+        if (Array.isArray(fact.valueCodes) && fact.valueCodes.length) return fact.valueCodes.join('、');
+        return fact.valueCode ? String(fact.valueCode) : '';
+      }
+      function renderStructuredData(container, data) {
+        const recommendations = Array.isArray(data.recommendations) ? data.recommendations : [];
+        if (recommendations.length) {
+          const label = document.createElement('div'); label.className = 'section-label'; label.textContent = '可进一步了解的产品'; container.appendChild(label);
+          const list = document.createElement('div'); list.className = 'card-list';
+          recommendations.slice(0, 3).forEach(product => {
+            const card = document.createElement('article'); card.className = 'product-card';
+            const title = document.createElement('div'); title.className = 'product-name';
+            title.textContent = product.name || '保险产品';
+            if (product.categoryName) { const category = document.createElement('span'); category.className = 'product-category'; category.textContent = product.categoryName; title.appendChild(category); }
+            card.appendChild(title);
+            if (product.summary) { const summary = document.createElement('div'); summary.className = 'product-summary'; summary.textContent = product.summary; card.appendChild(summary); }
+            const facts = Array.isArray(product.facts) ? product.facts.filter(f => f && (f.name || displayFactValue(f))).slice(0, 4) : [];
+            if (facts.length) { const factList = document.createElement('div'); factList.className = 'fact-list'; facts.forEach(f => { const chip = document.createElement('span'); chip.className = 'fact'; chip.textContent = [f.name, displayFactValue(f)].filter(Boolean).join('：'); factList.appendChild(chip); }); card.appendChild(factList); }
+            appendList(card, product.matchReasons, 'reason-list');
+            list.appendChild(card);
+          });
+          container.appendChild(list);
+        }
+        const policy = data.ownPolicySummary;
+        if (policy && Array.isArray(policy.policies)) {
+          const label = document.createElement('div'); label.className = 'section-label'; label.textContent = policy.status === 'FOUND' ? '本人保单摘要' : '保单查询结果'; container.appendChild(label);
+          if (!policy.policies.length) {
+            const empty = document.createElement('div'); empty.className = 'product-summary';
+            empty.textContent = policy.status === 'PROFILE_NOT_LINKED'
+              ? '当前账户未关联可用于查询的投保人资料，暂时无法展示本人保单。'
+              : '当前没有可展示的有效保单。';
+            container.appendChild(empty);
+          }
+          const list = document.createElement('div'); list.className = 'card-list';
+          policy.policies.slice(0, 20).forEach(item => {
+            const card = document.createElement('article'); card.className = 'policy-card';
+            const title = document.createElement('div'); title.className = 'policy-title'; title.textContent = item.productName || '保险保单'; card.appendChild(title);
+            const detail = document.createElement('div'); detail.className = 'policy-meta';
+            detail.textContent = [item.policyStatusLabel || item.policyStatus, item.coverageStartTime && `保障开始：${item.coverageStartTime}`, item.coverageEndTime && `保障结束：${item.coverageEndTime}`, item.autoExtensionEnabled === true ? '自动续保：已开启' : item.autoExtensionEnabled === false ? '自动续保：未开启' : ''].filter(Boolean).join(' · ');
+            card.appendChild(detail); list.appendChild(card);
+          });
+          container.appendChild(list);
+          if (policy.truncated) { const more = document.createElement('div'); more.className = 'product-summary'; more.textContent = '保单数量较多，以上仅展示部分记录。'; container.appendChild(more); }
+        }
+        const comparison = data.productComparison;
+        if (comparison && Array.isArray(comparison.products)) {
+          const label = document.createElement('div'); label.className = 'section-label'; label.textContent = '产品对比'; container.appendChild(label);
+          if (comparison.products.length) {
+            const grid = document.createElement('div'); grid.className = 'comparison-grid';
+            comparison.products.slice(0, 10).forEach(product => {
+              const card = document.createElement('article'); card.className = 'comparison-card';
+              const title = document.createElement('h3'); title.textContent = product.name || '保险产品'; card.appendChild(title);
+              (Array.isArray(product.facts) ? product.facts : []).slice(0, 8).forEach(fact => {
+                if (!fact || (!fact.name && !displayFactValue(fact))) return;
+                const row = document.createElement('div'); row.className = 'comparison-fact';
+                row.textContent = [fact.name, displayFactValue(fact)].filter(Boolean).join('：'); card.appendChild(row);
+              });
+              grid.appendChild(card);
+            });
+            container.appendChild(grid);
+          } else if (comparison.status === 'CATALOG_NOT_READY') {
+            const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = '暂时无法获取足够的产品资料进行对比。'; container.appendChild(line);
+          }
+          const unresolved = Array.isArray(comparison.unresolvedCriteria) ? comparison.unresolvedCriteria : [];
+          unresolved.forEach(item => {
+            if (!item || !item.reason) return;
+            const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = item.reason; container.appendChild(line);
+          });
+        }
+        if (Array.isArray(data.missingCriteria) && data.missingCriteria.length) {
+          const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = `为了更准确地推荐，还需要了解：${data.missingCriteria.join('、')}`; container.appendChild(line);
+        }
+        if (Array.isArray(data.unsupportedCriteria) && data.unsupportedCriteria.length) {
+          const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = `当前目录无法核实这些要求：${data.unsupportedCriteria.join('、')}`; container.appendChild(line);
+        }
+        if (Array.isArray(data.unresolvedCriteria) && data.unresolvedCriteria.length) {
+          data.unresolvedCriteria.forEach(item => {
+            if (!item || !item.reason) return;
+            const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = item.reason; container.appendChild(line);
+          });
+        }
+        if (data.recommendationStatus === 'NEEDS_CLARIFICATION' && !data.missingCriteria?.length) {
+          const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = '我还需要了解更多需求，才能判断哪些产品适合你。'; container.appendChild(line);
+        }
+        if (data.recommendationStatus === 'NO_MATCH') {
+          const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = '暂时没有找到符合已知条件的可推荐产品，可以调整需求或补充条件后再试。'; container.appendChild(line);
+        }
+        if (data.recommendationStatus === 'CATALOG_NOT_READY') {
+          const line = document.createElement('div'); line.className = 'product-summary'; line.textContent = '相关产品资料暂不可用，请稍后再试或联系人工客服。'; container.appendChild(line);
+        }
+        scrollDown();
+      }
+      async function postMessage(message, clientMessageId, onDelta = () => {}, selectedPolicyId = null) {
+        const response = await fetch(`${API_BASE}/chat/stream`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json', 'Accept':'text/event-stream', 'user-token': userToken },
+          body: JSON.stringify({ sessionId, clientMessageId, message, ...(selectedPolicyId ? { selectedPolicyId } : {}) })
+        });
+        if (!response.ok) {
+          let envelope = {}; try { envelope = await response.json(); } catch (_) { /* use HTTP status */ }
+          throw new Error((envelope && envelope.msg) || `请求失败（HTTP ${response.status}）`);
+        }
+        if (!response.body) throw new Error('当前浏览器无法接收流式回复，请刷新后重试。');
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let result = null;
+        const dispatchFrame = frame => {
+          let event = 'message'; const data = [];
+          frame.split(/\r?\n/).forEach(line => {
+            if (line.startsWith('event:')) event = line.slice(6).trim();
+            else if (line.startsWith('data:')) data.push(line.slice(5).trimStart());
+          });
+          if (!data.length) return;
+          let payload; try { payload = JSON.parse(data.join('\n')); } catch (_) { throw new Error('收到无法识别的流式回复。'); }
+          if (event === 'delta') onDelta(payload.text || '');
+          else if (event === 'complete') result = payload;
+          else if (event === 'processing') result = payload;
+          else if (event === 'error') {
+            const error = new Error(payload.message || '回复生成失败，请稍后重试。');
+            if (payload.requestStatus === 'FAILED') error.terminal = true;
+            throw error;
+          }
+        };
+        while (true) {
+          const chunk = await reader.read();
+          buffer += decoder.decode(chunk.value || new Uint8Array(), { stream: !chunk.done });
+          let boundary;
+          while ((boundary = buffer.search(/\r?\n\r?\n/)) >= 0) {
+            const frame = buffer.slice(0, boundary);
+            const separator = buffer.slice(boundary).match(/^\r?\n\r?\n/)[0];
+            buffer = buffer.slice(boundary + separator.length);
+            dispatchFrame(frame);
+          }
+          if (chunk.done) break;
+        }
+        if (buffer.trim()) dispatchFrame(buffer);
+        if (!result) throw new Error('回复流意外结束。点击“继续查询”会沿用同一请求。');
+        return result;
+      }
+      async function deleteCurrentConversation() {
+        if (activeRequest || deleteButton.disabled) return;
+        if (!window.confirm('删除当前会话？服务端会清除这段会话及其 AI 记录，此操作无法撤销。')) return;
+        deleteButton.disabled = true;
+        const deletedSessionId = sessionId;
+        try {
+          const response = await fetch(`${API_BASE}/conversations/${encodeURIComponent(sessionId)}`, {
+            method: 'DELETE', credentials: 'same-origin', headers: { 'user-token': userToken }
+          });
+          let envelope = {};
+          try { envelope = await response.json(); } catch (_) { if (response.status !== 204) throw new Error(`服务暂时无法响应（HTTP ${response.status}）`); }
+          if (!response.ok || (envelope.code !== undefined && envelope.code !== 0 && envelope.code !== 200)) {
+            throw new Error((envelope && envelope.msg) || `删除失败（HTTP ${response.status}）`);
+          }
+          sessionId = `ai_${makeId().replace(/-/g, '')}`;
+          sessionStorage.setItem(SESSION_KEY, sessionId);
+          clearPending(deletedSessionId); messages.replaceChildren(); historyCursor = null; historyButton.hidden = true;
+          document.getElementById('welcome').style.display = 'block';
+          notice.style.display = 'none';
+          addMessage('assistant', envelope.data === true
+            ? '当前会话已提交删除。你可以开始新的咨询。'
+            : '当前没有已保存的会话记录，已为你开启新对话。');
+          loadConversations(null, false);
+        } catch (error) {
+          addMessage('assistant', error.message || '删除失败，请稍后重试。');
+        } finally {
+          deleteButton.disabled = false;
+        }
+      }
+      function addActionButton(parent, label, handler) {
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'prompt'; button.textContent = label;
+        button.addEventListener('click', handler, { once: true });
+        parent.appendChild(button);
+      }
+      async function runRequest(message, id, bubble, digestValue, selectedPolicyId = null) {
+        activeRequest = { message, id, digest: digestValue, selectedPolicyId };
+        sendButton.disabled = true;
+        input.disabled = true;
+        let attempts = 0;
+        let streamedAnswer = '';
+        try {
+          while (attempts < 12) {
+            attempts += 1;
+            bubble.textContent = attempts === 1 ? '正在思考…' : `正在整理答案（${attempts}）…`;
+            streamedAnswer = '';
+            const data = await postMessage(message, id, text => {
+              streamedAnswer += text;
+              renderMarkdown(bubble, streamedAnswer);
+              scrollDown();
+            }, selectedPolicyId);
+            if (data.requestStatus === 'PROCESSING') {
+              await new Promise(resolve => setTimeout(resolve, Math.min(1000 + attempts * 350, 3000)));
+              continue;
+            }
+            if (data.requestStatus === 'FAILED') {
+              throw Object.assign(new Error('这次回复没有完成，可以重新发起这一问题。'), { terminal: true });
+            }
+            renderMarkdown(bubble, data.answer || '我暂时没有生成文字回复，请换一种方式描述问题。');
+            renderStructuredData(bubble, data);
+            clearPending();
+            notice.style.display = 'none';
+            activeRequest = null;
+            loadConversations(null, false);
+            return;
+          }
+          throw new Error('回复仍在处理中。点击“继续查询”会沿用同一请求，不会重复运行。');
+        } catch (error) {
+          bubble.textContent = error.message || '发送失败，请稍后重试。';
+          const actions = document.createElement('div'); actions.className = 'prompts';
+          if (error.terminal) {
+            clearPending();
+            addActionButton(actions, '重新发起', () => {
+              const retry = addMessage('assistant', '正在重新发起…');
+              const newId = makeId(); savePending(newId, digestValue, selectedPolicyId);
+              runRequest(message, newId, retry.bubble, digestValue, selectedPolicyId);
+            });
+          } else {
+            addActionButton(actions, '继续查询', () => runRequest(message, id, bubble, digestValue, selectedPolicyId));
+            addActionButton(actions, '重新发起', () => {
+              const newId = makeId(); savePending(newId, digestValue, selectedPolicyId);
+              runRequest(message, newId, bubble, digestValue, selectedPolicyId);
+            });
+          }
+          bubble.appendChild(actions);
+          activeRequest = error.terminal ? null : { message, id, digest: digestValue, selectedPolicyId };
+          scrollDown();
+        } finally {
+          sendButton.disabled = false;
+          input.disabled = false;
+          if (!activeRequest) policyActionNotice.hidden = true;
+          input.focus();
+        }
+      }
+      async function submitMessage(text, existingBubble, selectedPolicyId = null) {
+        const message = String(text || '').trim();
+        if (!message || activeRequest) return;
+        if (message.length > 2000) { addMessage('assistant', '消息最多 2000 个字符，请精简后再发送。'); return; }
+        const messageHash = await digest(selectedPolicyId
+          ? `${message}\nselected_policy_id:${selectedPolicyId}` : message);
+        let clientMessageId = makeId();
+        const previous = pendingRecord();
+        if (previous && previous.id && previous.hash && messageHash && previous.hash === messageHash) clientMessageId = previous.id;
+        savePending(clientMessageId, messageHash, selectedPolicyId);
+        if (!existingBubble) addMessage('user', message);
+        const answer = existingBubble || addMessage('assistant', '正在思考…');
+        document.getElementById('welcome').style.display = 'none';
+        notice.style.display = 'none';
+        await runRequest(message, clientMessageId, answer.bubble, messageHash, selectedPolicyId);
+      }
+
+      document.getElementById('composer').addEventListener('submit', event => {
+        event.preventDefault();
+        const text = input.value;
+        if (!text.trim()) return;
+        input.value = ''; input.style.height = '40px';
+        submitMessage(text);
+      });
+      input.addEventListener('input', () => { input.style.height = '40px'; input.style.height = `${Math.min(input.scrollHeight, 132)}px`; });
+      input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); document.getElementById('composer').requestSubmit(); } });
+      document.querySelectorAll('.prompt').forEach(button => button.addEventListener('click', () => submitMessage(button.textContent)));
+      document.getElementById('open-policies').addEventListener('click', openPolicies);
+      document.getElementById('close-policies').addEventListener('click', () => { policyPanel.hidden = true; });
+      document.getElementById('policy-backdrop').addEventListener('click', () => { policyPanel.hidden = true; });
+      policyMore.addEventListener('click', () => loadOwnPolicies(policyCursor, true));
+      document.getElementById('back').addEventListener('click', () => { if (history.length > 1) history.back(); else location.href = '/'; });
+      document.getElementById('handoff-request').addEventListener('click', openHandoff);
+      document.getElementById('handoff-cancel').addEventListener('click', () => { handoffModal.hidden = true; });
+      handoffModal.addEventListener('click', event => { if (event.target === handoffModal) handoffModal.hidden = true; });
+      handoffSubmit.addEventListener('click', submitHandoff);
+      document.getElementById('new-chat').addEventListener('click', () => {
+        if (activeRequest) return;
+        if (messages.children.length && !window.confirm('开启新对话并清空当前页面的消息？')) return;
+        sessionId = `ai_${makeId().replace(/-/g, '')}`;
+        sessionStorage.setItem(SESSION_KEY, sessionId);
+        clearPending(); messages.replaceChildren(); historyCursor = null; historyButton.hidden = true;
+        document.getElementById('welcome').style.display = 'block';
+        notice.style.display = 'none'; input.value = ''; scrollDown();
+        loadConversations(null, false);
+      });
+      document.getElementById('open-conversations').addEventListener('click', () => {
+        conversationPanel.hidden = false; loadConversations(null, false);
+      });
+      document.getElementById('close-conversations').addEventListener('click', closeConversationPanel);
+      document.getElementById('conversation-backdrop').addEventListener('click', closeConversationPanel);
+      conversationMore.addEventListener('click', () => loadConversations(conversationCursor, true));
+      deleteButton.addEventListener('click', deleteCurrentConversation);
+      historyButton.addEventListener('click', () => loadHistory(historyCursor, true));
+      loadHistory(null, false);
+      loadConversations(null, false);
+    })();
+  </script>
+</body>
+</html>

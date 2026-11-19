@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>保顾通 · 保险 AI 客服</title>
+  <style>
+    :root { color-scheme: light; --ink:#182230; --muted:#667085; --line:#e6eaf0; --blue:#246bfd; --pale:#f4f7fb; }
+    * { box-sizing:border-box }
+    body { margin:0; background:linear-gradient(135deg,#f5f8ff,#f7fafc 50%,#eef5ff); color:var(--ink); font:15px/1.55 Inter,"Microsoft YaHei",sans-serif; min-height:100vh; }
+    .shell { width:min(1050px,100% - 32px); margin:32px auto; background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:0 18px 55px #19345b12; overflow:hidden; }
+    header { display:flex; align-items:center; justify-content:space-between; padding:20px 26px; border-bottom:1px solid var(--line); }
+    .brand { display:flex; gap:12px; align-items:center; font-weight:700; font-size:17px }
+    .logo { display:grid; place-items:center; width:38px; height:38px; border-radius:12px; background:#eaf1ff; color:var(--blue); font-size:20px }
+    .status { color:var(--muted); font-size:12px }
+    main { min-height:480px; padding:26px; background:var(--pale); }
+    .intro { max-width:680px; margin:8px auto 26px; text-align:center; }
+    .intro h1 { margin:0 0 7px; font-size:24px }
+    .intro p { margin:0; color:var(--muted) }
+    #messages { width:min(850px,100%); margin:auto; display:flex; flex-direction:column; gap:18px; }
+    .bubble { max-width:100%; background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 3px 12px #18223008; }
+    .bubble.user { align-self:flex-end; max-width:78%; background:#eaf1ff; border-color:#d9e5ff; white-space:pre-wrap; }
+    .bubble.assistant { align-self:flex-start; width:min(100%,820px); }
+    .bubble .label { color:var(--muted); font-size:12px; margin-bottom:6px }
+    .answer { white-space:pre-wrap; overflow-wrap:anywhere }
+    .comparison { margin-top:16px; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; }
+    .comparison-head { padding:12px 14px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; background:#f8faff; border-bottom:1px solid var(--line); font-size:13px; }
+    .tag { display:inline-flex; padding:2px 9px; border-radius:20px; background:#e7f7ee; color:#157347; font-size:12px; }
+    .table-wrap { overflow:auto; }
+    table { border-collapse:collapse; width:100%; min-width:560px; font-size:13px; }
+    th,td { padding:11px 13px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    thead th { background:#fbfcfe; color:#475467; font-weight:600; }
+    tbody tr:last-child th, tbody tr:last-child td { border-bottom:0 }
+    tbody th { width:170px; color:#475467; font-weight:600; background:#fcfdff; }
+    .meta,.notice { margin-top:10px; color:var(--muted); font-size:12px; }
+    .notice { padding:10px 12px; border-radius:9px; background:#fff8e8; color:#815b0b; }
+    .composer { display:flex; gap:10px; padding:16px 22px; border-top:1px solid var(--line); }
+    textarea { resize:vertical; min-height:48px; max-height:150px; flex:1; padding:13px 14px; border:1px solid #d0d5dd; border-radius:12px; font:inherit; outline:none; }
+    textarea:focus,input:focus { border-color:#7ba5ff; box-shadow:0 0 0 3px #246bfd16; }
+    button { border:0; border-radius:11px; padding:0 22px; background:var(--blue); color:#fff; font-weight:600; cursor:pointer; }
+    button:disabled { opacity:.55; cursor:wait }
+    details { padding:0 22px 18px; color:var(--muted); font-size:12px; }
+    details summary { cursor:pointer; }
+    .settings { display:flex; gap:10px; align-items:center; margin-top:12px; }
+    .settings input { flex:1; min-width:0; padding:9px 11px; border:1px solid #d0d5dd; border-radius:9px; }
+    .settings button { padding:9px 12px; background:#eef2f8; color:#344054; }
+    @media(max-width:600px) { .shell{width:100%;margin:0;border-radius:0;min-height:100vh} header{padding:16px} main{padding:18px 12px}.composer{padding:12px}.bubble.user{max-width:90%}.intro h1{font-size:21px} }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><span class="logo">✦</span><span>保顾通 · 保险 AI 客服</span></div>
+      <div class="status" id="auth-status">检查登录状态…</div>
+    </header>
+    <main>
+      <section class="intro">
+        <h1>保险产品对比</h1>
+        <p>告诉客服要比较哪些产品，结果将依据 Java 已发布的产品事实生成。</p>
+      </section>
+      <section id="messages" aria-live="polite">
+        <article class="bubble assistant"><div class="label">保险 AI 客服</div><div class="answer">你好！你可以告诉我想比较的产品名称或产品编号。我会列出已发布的保障事实；资料缺失时会明确标注。</div></article>
+      </section>
+    </main>
+    <form class="composer" id="chat-form">
+      <textarea id="message" required maxlength="4000" placeholder="例如：请帮我比较产品 123 和产品 456 的保障内容"></textarea>
+      <button id="send" type="submit">发送</button>
+    </form>
+    <details>
+      <summary>连接设置</summary>
+      <div class="settings">
+        <input id="token" type="password" autocomplete="off" placeholder="登录后自动读取；也可临时粘贴 user-token">
+        <button id="clear-token" type="button">清除</button>
+      </div>
+      <div class="meta">登录凭证仅用于本页请求，不会写入本页存储。请求发往同源 /ai-assistant/chat。</div>
+    </details>
+  </div>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const messages = $('messages');
+    const sessionKey = 'bolee-agent-chat-session';
+    const pendingRequestKey = 'bolee-agent-chat-pending';
+    async function fingerprint(message) {
+      const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(message));
+      return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+    let sessionId = sessionStorage.getItem(sessionKey);
+    if (!sessionId) {
+      sessionId = crypto.randomUUID().replaceAll('-', '');
+      sessionStorage.setItem(sessionKey, sessionId);
+    }
+    function findToken() {
+      for (const key of ['userInfo', 'token', 'user-token', 'userToken', 'czri']) {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        try {
+          const value = JSON.parse(raw);
+          if (value && typeof value === 'object') {
+            for (const name of ['userToken', 'token', 'access_token']) {
+              if (typeof value[name] === 'string') return value[name];
+            }
+          }
+        } catch { return raw; }
+      }
+      return '';
+    }
+    $('token').value = findToken();
+    function refreshAuth() { $('auth-status').textContent = $('token').value ? '已检测到登录凭证' : '未检测到登录凭证'; }
+    refreshAuth();
+    $('token').addEventListener('input', refreshAuth);
+    $('clear-token').addEventListener('click', () => { $('token').value = ''; refreshAuth(); });
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    function factValue(fact) {
+      if (fact.valueStatus === 'NOT_PROVIDED') return '未提供';
+      if (fact.valueStatus === 'NOT_APPLICABLE') return '不适用';
+      if (fact.valueStatus !== 'KNOWN') return `资料状态：${fact.valueStatus || '未知'}`;
+      if (fact.valueDisplay) return fact.valueDisplay;
+      if (fact.valueCodes?.length) return fact.valueCodes.join('、');
+      if (fact.valueCode) return fact.valueCode;
+      if (fact.minValue != null || fact.maxValue != null) return `${fact.minValue ?? '…'} 至 ${fact.maxValue ?? '…'}${fact.unit || ''}`;
+      if (fact.valueNumber != null) return `${fact.valueNumber}${fact.unit || ''}`;
+      return '未提供';
+    }
+    function renderComparison(result) {
+      const status = result.status === 'COMPLETE' ? '资料齐全' : result.status === 'PARTIAL' ? '部分资料缺失' : '目录尚未就绪';
+      if (result.status === 'CATALOG_NOT_READY') return `<div class="comparison"><div class="comparison-head"><strong>产品对比</strong><span class="tag">${status}</span></div><div class="notice">当前分类尚无可用于对比的已发布产品事实。</div></div>`;
+      const products = result.products || [];
+      const facts = products[0]?.facts || [];
+      const head = products.map(p => `<th>${esc(p.name)}（编号 ${esc(p.productId)}）</th>`).join('');
+      const rows = facts.map((fact, index) => `<tr><th>${esc(fact.name)}</th>${products.map(p => `<td>${esc(factValue(p.facts[index] || {}))}</td>`).join('')}</tr>`).join('');
+      const unresolved = (result.unresolvedCriteria || []).map(item => `${esc(item.code)}（${esc(item.reason)}）`).join('、');
+      return `<div class="comparison"><div class="comparison-head"><strong>产品逐项对比</strong><span class="tag">${status}</span></div><div class="table-wrap"><table><thead><tr><th>对比项目</th>${head}</tr></thead><tbody>${rows || '<tr><td colspan="99">暂无可展示的对比事实</td></tr>'}</tbody></table></div>${unresolved ? `<div class="notice">缺失事实：${unresolved}</div>` : ''}<div class="meta" style="padding:0 13px 12px">产品目录版本 ${esc(result.catalogVersion)} · 条件版本 ${esc(result.ruleVersion ?? '—')} · 对比时间 ${esc(result.comparedAt || '—')}</div></div>`;
+    }
+    function addMessage(kind, text, comparison) {
+      const article = document.createElement('article');
+      article.className = `bubble ${kind}`;
+      article.innerHTML = `<div class="label">${kind === 'user' ? '你' : '保险 AI 客服'}</div><div class="answer">${esc(text)}</div>${comparison ? renderComparison(comparison) : ''}`;
+      messages.appendChild(article);
+      article.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+    $('chat-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = $('message').value.trim();
+      const token = $('token').value.trim();
+      if (!message || !token) { if (!token) alert('请先登录，或在连接设置中粘贴 user-token。'); return; }
+      addMessage('user', message);
+      $('message').value = '';
+      $('send').disabled = true;
+      $('send').textContent = '处理中…';
+      let completed = false;
+      try {
+        let pendingRequest;
+        try { pendingRequest = JSON.parse(sessionStorage.getItem(pendingRequestKey) || 'null'); } catch { pendingRequest = null; }
+        const messageFingerprint = await fingerprint(message);
+        const clientMessageId = pendingRequest?.messageFingerprint === messageFingerprint ? pendingRequest.clientMessageId : crypto.randomUUID();
+        sessionStorage.setItem(pendingRequestKey, JSON.stringify({messageFingerprint, clientMessageId}));
+        let data;
+        let networkRetries = 0;
+        const requestBody = JSON.stringify({sessionId, message, clientMessageId});
+        for (let attempt = 0; attempt < 120; attempt++) {
+          let response;
+          try {
+            response = await fetch('/ai-assistant/chat', {
+              method:'POST', headers:{'Content-Type':'application/json','user-token':token}, body:requestBody
+            });
+          } catch (error) {
+            if (++networkRetries > 3) throw error;
+            await new Promise(resolve => setTimeout(resolve, networkRetries * 1000));
+            continue;
+          }
+          const payload = await response.json();
+          if (!response.ok || ![0,200].includes(payload.code)) throw new Error(payload.msg || payload.message || `请求失败（HTTP ${response.status}）`);
+          data = payload.data || {};
+          if (data.requestStatus === 'FAILED') {
+            sessionStorage.removeItem(pendingRequestKey);
+            throw new Error('上次请求已失败。如需重试，请再次发送这条消息（会创建新请求）。');
+          }
+          if (data.requestStatus !== 'PROCESSING') break;
+          $('send').textContent = '等待重试…';
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        if (!data || data.requestStatus === 'PROCESSING') throw new Error('请求仍在处理中，请稍后使用相同请求 ID 重试。');
+        addMessage('assistant', data.answer || '客服暂时没有返回文字。', data.productComparison);
+        completed = true;
+      } catch (error) {
+        $('message').value = message;
+        addMessage('assistant', `请求未完成：${error.message}。请确认 Java 客服、Agno 服务和登录状态正常。`);
+      } finally {
+        if (completed) sessionStorage.removeItem(pendingRequestKey);
+        $('send').disabled = false; $('send').textContent = '发送'; $('message').focus();
+      }
+    });
+  </script>
+</body>
+</html>
+

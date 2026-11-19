@@ -1,0 +1,12 @@
+server:
+  port: 17065
+bolee:
+  payment:
+    return-url: ${BOLEE_PAYMENT_RETURN_URL:http://127.0.0.1:18177/payment-result.html}
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDRESS:127.0.0.1:18848}
+      config:
+        server-addr: ${NACOS_ADDRESS:127.0.0.1:18848}

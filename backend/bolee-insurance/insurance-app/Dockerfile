@@ -1,0 +1,20 @@
+FROM openjdk:11-jdk
+ 
+# 时区修改为东八区
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ 
+WORKDIR /insurance-app
+ARG PACKAGE_PATH=./target/insurance-app.jar
+ADD ${PACKAGE_PATH:-./} insurance-app.jar
+
+EXPOSE 7065
+
+ENV JAVA_OPTS="\
+-server \
+-Xms256m \
+-Xmx512m \
+-XX:MetaspaceSize=256m \
+-XX:MaxMetaspaceSize=512m \
+-Dfile.encoding=UTF-8"
+ENTRYPOINT ["sh","-c","java -Djava.security.egd=file:/dev/./urandom $JAVA_OPTS -jar insurance-app.jar"]

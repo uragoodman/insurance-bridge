@@ -1,0 +1,1 @@
+import{o as e,c as o,e as r}from"./index-255ffb73.js";import{_ as s}from"./_plugin-vue_export-helper.1b428a4d.js";const a=s({},[["render",function(s,a){const n=r;return e(),o(n,{class:"container bg-main pos-r"})}],["__scopeId","data-v-a49b5484"]]);export{a as default};
