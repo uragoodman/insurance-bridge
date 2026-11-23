@@ -120,7 +120,7 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
         DaoAuthenticationProvider clientAuthenticationProvider = new DaoAuthenticationProvider();
         clientAuthenticationProvider.setUserDetailsService(clientUserDetailsService);
-        clientAuthenticationProvider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        clientAuthenticationProvider.setPasswordEncoder(new ClientSecretPasswordEncoder());
 
         ClientCredentialsTokenEndpointFilter filter =
                 new ClientCredentialsTokenEndpointFilter("/oauth/token");

@@ -6,6 +6,7 @@ import logging
 from collections.abc import Iterator
 from typing import Any
 
+from app.contexts.customer_task import CustomerTaskRuntime
 from app.domain.conversation_context import ContextPlan
 from app.services.context_management import ContextManagementService
 from app.services.ports import AgentRunnerPort, SessionTurnLockPort
@@ -37,6 +38,9 @@ class ContextAwareChatApplicationService:
     ) -> Any:
         with self._session_lock.acquire(user_id, session_id):
             plan = self._context_management.prepare(user_id, session_id, message)
+            task_runtime = dependencies.get("customer_task_runtime")
+            if isinstance(task_runtime, CustomerTaskRuntime):
+                task_runtime.begin_turn(plan.memory.active_task)
             result = self._agent_runner.run(
                 message,
                 user_id=user_id,
@@ -46,7 +50,7 @@ class ContextAwareChatApplicationService:
                 stream=False,
             )
             self._record_result(
-                plan, user_id, session_id, message, result, tool_result_collector
+                plan, user_id, session_id, message, result, tool_result_collector, task_runtime
             )
             return result
 
@@ -61,6 +65,9 @@ class ContextAwareChatApplicationService:
     ) -> Iterator[Any]:
         with self._session_lock.acquire(user_id, session_id):
             plan = self._context_management.prepare(user_id, session_id, message)
+            task_runtime = dependencies.get("customer_task_runtime")
+            if isinstance(task_runtime, CustomerTaskRuntime):
+                task_runtime.begin_turn(plan.memory.active_task)
             stream = self._agent_runner.run(
                 message,
                 user_id=user_id,
@@ -85,6 +92,7 @@ class ContextAwareChatApplicationService:
                 message,
                 final_output,
                 tool_result_collector,
+                task_runtime,
             )
             yield final_output
 
@@ -99,6 +107,7 @@ class ContextAwareChatApplicationService:
         message: str,
         result: Any,
         tool_result_collector: Any,
+        task_runtime: CustomerTaskRuntime | None,
     ) -> None:
         answer = getattr(result, "content", "")
         answer = answer if isinstance(answer, str) else str(answer or "")
@@ -124,6 +133,7 @@ class ContextAwareChatApplicationService:
                 business_references=tuple(
                     getattr(tool_result_collector, "context_references", ())
                 ),
+                active_task=(task_runtime.active_task if task_runtime is not None else None),
             )
         except Exception:
             # A failed optional memory write must not turn a completed answer into a retry.

@@ -3,6 +3,7 @@
 from pydantic import Field, model_validator
 
 from app.schemas.base import ContractModel
+from app.schemas.insurance_terms import TermCitation
 from app.schemas.own_policy import OwnPolicyDetailResponse, OwnPolicySummaryResponse
 from app.schemas.product_catalog import ProductCandidate
 from app.schemas.product_comparison import ProductComparisonResponse
@@ -24,7 +25,9 @@ class ChatRequest(ContractModel):
         repr=False,
     )
     message: str = Field(min_length=1, max_length=4000)
-    selected_policy_id: str | None = Field(default=None, min_length=1, max_length=19, pattern=r"^[0-9]+$")
+    selected_policy_id: str | None = Field(
+        default=None, min_length=1, max_length=19, pattern=r"^[0-9]+$"
+    )
 
 
 class ChatResponse(ContractModel):
@@ -47,9 +50,18 @@ class ChatResponse(ContractModel):
     excluded_product_count: int = Field(default=0, ge=0)
     catalog_version: str | None = Field(default=None, max_length=64)
     rule_version: int | None = Field(default=None, ge=1)
+    term_citations: list[TermCitation] = Field(default_factory=list, max_length=6)
 
     @model_validator(mode="after")
     def validate_recommendation_payload(self) -> "ChatResponse":
+        if self.term_citations and (
+            self.recommendations
+            or self.product_comparison is not None
+            or self.own_policy_summary is not None
+            or self.own_policy_detail is not None
+            or self.recommendation_status is not None
+        ):
+            raise ValueError("Terms citations cannot be mixed with another structured tool result")
         if self.own_policy_summary is not None and (
             self.recommendations
             or self.product_comparison is not None
@@ -58,8 +70,10 @@ class ChatResponse(ContractModel):
         ):
             raise ValueError("Own-policy and product tool results must be returned separately")
         if self.own_policy_detail is not None and (
-            self.recommendations or self.product_comparison is not None
-            or self.own_policy_summary is not None or self.recommendation_status is not None
+            self.recommendations
+            or self.product_comparison is not None
+            or self.own_policy_summary is not None
+            or self.recommendation_status is not None
         ):
             raise ValueError("Own-policy and product tool results must be returned separately")
         if self.product_comparison is not None and (
@@ -104,20 +118,30 @@ class ChatResponse(ContractModel):
             raise ValueError("This recommendation status cannot include candidates")
         elif self.evaluation_completeness != EvaluationCompleteness.COMPLETE:
             raise ValueError("Non-partial recommendation responses must be complete")
-        if (self.recommendation_status == ProductRecommendationStatus.NEEDS_CLARIFICATION
-                and not self.missing_criteria):
+        if (
+            self.recommendation_status == ProductRecommendationStatus.NEEDS_CLARIFICATION
+            and not self.missing_criteria
+        ):
             raise ValueError("NEEDS_CLARIFICATION requires missing criteria")
-        if (self.recommendation_status == ProductRecommendationStatus.UNSUPPORTED_CRITERIA
-                and not self.unsupported_criteria):
+        if (
+            self.recommendation_status == ProductRecommendationStatus.UNSUPPORTED_CRITERIA
+            and not self.unsupported_criteria
+        ):
             raise ValueError("UNSUPPORTED_CRITERIA requires unsupported criteria")
-        if self.recommendation_status != ProductRecommendationStatus.NEEDS_CLARIFICATION \
-                and self.missing_criteria:
+        if (
+            self.recommendation_status != ProductRecommendationStatus.NEEDS_CLARIFICATION
+            and self.missing_criteria
+        ):
             raise ValueError("Only NEEDS_CLARIFICATION may include missing criteria")
-        if self.recommendation_status != ProductRecommendationStatus.UNSUPPORTED_CRITERIA \
-                and self.unsupported_criteria:
+        if (
+            self.recommendation_status != ProductRecommendationStatus.UNSUPPORTED_CRITERIA
+            and self.unsupported_criteria
+        ):
             raise ValueError("Only UNSUPPORTED_CRITERIA may include unsupported criteria")
-        if (self.recommendation_status != ProductRecommendationStatus.CATALOG_INCOMPLETE
-                and self.unresolved_criteria):
+        if (
+            self.recommendation_status != ProductRecommendationStatus.CATALOG_INCOMPLETE
+            and self.unresolved_criteria
+        ):
             raise ValueError("Only CATALOG_INCOMPLETE may include unresolved criteria")
         if self.recommendation_status in {
             ProductRecommendationStatus.MATCHED,

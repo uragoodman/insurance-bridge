@@ -17,7 +17,7 @@ CREATE TABLE tab_insurance_ai_search_tag_set (
 CREATE TABLE tab_insurance_ai_search_tag (
   id BIGINT NOT NULL COMMENT 'Snowflake ID',
   tag_set_id BIGINT NOT NULL,
-  tag_type VARCHAR(24) NOT NULL COMMENT 'PRODUCT_TYPE, AUDIENCE, SCENARIO, KEYWORD',
+  tag_type VARCHAR(24) NOT NULL COMMENT 'PRODUCT_TYPE, AUDIENCE, SCENARIO, KEYWORD, or manually reviewed ALIAS',
   tag_value VARCHAR(128) NOT NULL,
   normalized_value VARCHAR(128) NOT NULL,
   evidence VARCHAR(512) DEFAULT NULL,

@@ -16,6 +16,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.minio</groupId>
+      <artifactId>minio</artifactId>
+      <version>8.5.17</version>
+    </dependency>
+    <dependency>
       <groupId>com.itheima.bolee</groupId>
       <artifactId>framework-mybatis-plus</artifactId>
     </dependency>

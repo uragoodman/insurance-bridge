@@ -1,4 +1,4 @@
-name: bolee-public-dev
+name: bolee-cloud-dev
 services:
   #mysql数据库脚本
   mysql:
@@ -13,7 +13,7 @@ services:
       - ./mysql/conf/my.cnf:/etc/my.cnf
       - ./mysql/source:/docker-entrypoint-initdb.d/
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: pass
     networks:
       extnetwork:
         ipv4_address: 172.25.0.2
@@ -31,7 +31,7 @@ services:
       MYSQL_SERVICE_DB_NAME: nacos
       MYSQL_SERVICE_PORT: 3306
       MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_SERVICE_PASSWORD: pass
       NACOS_APPLICATION_PORT: 8848
       JVM_XMS: 512m
       JVM_MMS: 256m
@@ -51,7 +51,7 @@ services:
     volumes:
       - ./seata-server/config:/root/seata-config
     environment:
-      SEATA_IP: ${SEATA_IP:-172.25.0.4}
+      SEATA_IP: 192.168.200.129
       SEATA_CONFIG_NAME: file:/root/seata-config/registry
       SEATA_PORT: 9200
     networks:
@@ -71,7 +71,7 @@ services:
       - ./rabbitmq/data:/var/lib/rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:?Set RABBITMQ_DEFAULT_PASS in .env}
+      RABBITMQ_DEFAULT_PASS: pass
     networks:
       extnetwork:
         ipv4_address: 172.25.0.5
@@ -84,7 +84,7 @@ services:
     volumes:
       - ./xxl-job/data:/data/applogs
     environment:
-      PARAMS: "--spring.datasource.url=jdbc:mysql://mysql:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai --spring.datasource.username=root --spring.datasource.password=${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}"
+      PARAMS: "--spring.datasource.url=jdbc:mysql://mysql:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai --spring.datasource.username=root --spring.datasource.password=pass"
     networks:
       extnetwork:
         ipv4_address: 172.25.0.9
@@ -94,7 +94,7 @@ services:
     image: redis:5.0.0
     container_name: redis
     restart: always
-    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}"]
+    command: redis-server --requirepass pass
     ports:
       - 6379:6379
     volumes:
@@ -170,7 +170,7 @@ services:
       - agno_pgdata:/var/lib/postgresql
     environment:
       POSTGRES_USER: ${AGNO_DB_USER:-ai}
-      POSTGRES_PASSWORD: ${AGNO_DB_PASSWORD:?Set AGNO_DB_PASSWORD in .env}
+      POSTGRES_PASSWORD: ${AGNO_DB_PASSWORD:-local-dev-only}
       POSTGRES_DB: ${AGNO_DB_NAME:-agentos}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${AGNO_DB_USER:-ai} -d ${AGNO_DB_NAME:-agentos}"]
@@ -187,6 +187,8 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:${AGNO_AGENT_HOST_PORT:-18000}:8000"
+    volumes:
+      - ./bolee-agent-service/app:/app/app:ro
     environment:
       AGNO_MODEL_API_KEY: ${AGNO_MODEL_API_KEY:-}
       AGNO_OAUTH_TOKEN_URL: ${AGNO_OAUTH_TOKEN_URL:-http://host.docker.internal:7078/oauth/service-token}
@@ -198,6 +200,9 @@ services:
       AGNO_CHAT_OAUTH_SCOPE: ${AGNO_CHAT_OAUTH_SCOPE:-agent.chat}
       AGNO_OPERATOR_OAUTH_CLIENT_ID: ${AGNO_OPERATOR_OAUTH_CLIENT_ID:-}
       AGNO_OPERATOR_OAUTH_SCOPE: ${AGNO_OPERATOR_OAUTH_SCOPE:-agent.operator}
+      AGNO_AGENTOS_ADMIN_ISSUER: ${AGNO_AGENTOS_ADMIN_ISSUER:-bolee-security-oauth}
+      AGNO_AGENTOS_ADMIN_AUDIENCE: ${AGNO_AGENTOS_ADMIN_AUDIENCE:-bolee-insurance-agent-os}
+      AGNO_AGENTOS_ADMIN_CORS_ORIGINS: ${AGNO_AGENTOS_ADMIN_CORS_ORIGINS:-http://127.0.0.1:18166,http://localhost:18166}
       AGNO_TAG_GENERATION_CLIENT_ID: ${AGNO_TAG_GENERATION_CLIENT_ID:-}
       AGNO_TAG_GENERATION_SCOPE: ${AGNO_TAG_GENERATION_SCOPE:-product.tags.generate}
       AGNO_MODEL_ID: ${AGNO_MODEL_ID:-deepseek-chat}
@@ -217,10 +222,18 @@ services:
       AGNO_DB_HOST: agentos-db
       AGNO_DB_PORT: 5432
       AGNO_DB_USER: ${AGNO_DB_USER:-ai}
-      AGNO_DB_PASSWORD: ${AGNO_DB_PASSWORD:?Set AGNO_DB_PASSWORD in .env}
+      AGNO_DB_PASSWORD: ${AGNO_DB_PASSWORD:-local-dev-only}
       AGNO_DB_NAME: ${AGNO_DB_NAME:-agentos}
       AGNO_JAVA_SERVICE_URL: ${AGNO_JAVA_SERVICE_URL:-http://host.docker.internal:17065}
       AGNO_JAVA_HTTP_TIMEOUT_SECONDS: ${AGNO_JAVA_HTTP_TIMEOUT_SECONDS:-10}
+      AGNO_TERMS_DATABASE_URL: ${AGNO_TERMS_DATABASE_URL:-postgresql://ai:local-dev-only@agentos-db:5432/agentos}
+      AGNO_TERMS_SYNTHETIC_SOURCES_ENABLED: ${AGNO_TERMS_SYNTHETIC_SOURCES_ENABLED:-true}
+      AGNO_TERMS_EMBEDDING_BASE_URL: ${AGNO_TERMS_EMBEDDING_BASE_URL:-}
+      AGNO_TERMS_EMBEDDING_API_KEY: ${AGNO_TERMS_EMBEDDING_API_KEY:-}
+      AGNO_TERMS_EMBEDDING_MODEL: ${AGNO_TERMS_EMBEDDING_MODEL:-}
+      AGNO_TERMS_EMBEDDING_DIMENSIONS: ${AGNO_TERMS_EMBEDDING_DIMENSIONS:-0}
+      AGNO_TERMS_EMBEDDING_TIMEOUT_SECONDS: ${AGNO_TERMS_EMBEDDING_TIMEOUT_SECONDS:-120}
+      AGNO_TERMS_LLM_READ_TIMEOUT_SECONDS: ${AGNO_TERMS_LLM_READ_TIMEOUT_SECONDS:-120}
       AGNO_TELEMETRY: "false"
     networks:
       extnetwork:
@@ -228,6 +241,51 @@ services:
     depends_on:
       agentos-db:
         condition: service_healthy
+  agno-term-indexer:
+    build:
+      context: ./bolee-agent-service
+    container_name: bolee-agno-term-indexer
+    restart: unless-stopped
+    command: ["python", "-m", "app.workers.term_index_worker"]
+    volumes:
+      - ./bolee-agent-service/app:/app/app:ro
+    healthcheck:
+      disable: true
+    environment:
+      AGNO_OAUTH_TOKEN_URL: ${AGNO_OAUTH_TOKEN_URL:-http://host.docker.internal:7078/oauth/service-token}
+      AGNO_OAUTH_TIMEOUT_SECONDS: ${AGNO_OAUTH_TIMEOUT_SECONDS:-5}
+      AGNO_TERMS_INDEXER_CLIENT_ID: ${AGNO_TERMS_INDEXER_CLIENT_ID:-}
+      AGNO_TERMS_INDEXER_CLIENT_SECRET: ${AGNO_TERMS_INDEXER_CLIENT_SECRET:-}
+      AGNO_TERMS_INDEXER_SCOPE: ${AGNO_TERMS_INDEXER_SCOPE:-product.terms.index}
+      AGNO_TERMS_INDEXER_JAVA_URL: ${AGNO_TERMS_INDEXER_JAVA_URL:-http://host.docker.internal:17065}
+      AGNO_TERMS_DATABASE_URL: ${AGNO_TERMS_DATABASE_URL:-postgresql://ai:local-dev-only@agentos-db:5432/agentos}
+      AGNO_TERMS_INDEX_DATABASE_URL: ${AGNO_TERMS_INDEX_DATABASE_URL:-postgresql://ai:local-dev-only@agentos-db:5432/agentos}
+      AGNO_TERMS_SYNTHETIC_SOURCES_ENABLED: ${AGNO_TERMS_SYNTHETIC_SOURCES_ENABLED:-true}
+      AGNO_TERMS_EMBEDDING_BASE_URL: ${AGNO_TERMS_EMBEDDING_BASE_URL:-}
+      AGNO_TERMS_EMBEDDING_API_KEY: ${AGNO_TERMS_EMBEDDING_API_KEY:-}
+      AGNO_TERMS_EMBEDDING_MODEL: ${AGNO_TERMS_EMBEDDING_MODEL:-}
+      AGNO_TERMS_EMBEDDING_DIMENSIONS: ${AGNO_TERMS_EMBEDDING_DIMENSIONS:-0}
+      AGNO_TERMS_EMBEDDING_TIMEOUT_SECONDS: ${AGNO_TERMS_EMBEDDING_TIMEOUT_SECONDS:-120}
+      AGNO_TERMS_WORKER_POLL_SECONDS: ${AGNO_TERMS_WORKER_POLL_SECONDS:-2}
+      AGNO_TERMS_MAX_FILE_BYTES: ${AGNO_TERMS_MAX_FILE_BYTES:-52428800}
+      AGNO_TELEMETRY: "false"
+    networks:
+      extnetwork:
+        ipv4_address: 172.25.0.18
+    depends_on:
+      agentos-db:
+        condition: service_healthy
+  terms-embedding:
+    image: ollama/ollama:0.40.16
+    container_name: bolee-terms-embedding
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:11434:11434"
+    volumes:
+      - terms_ollama:/root/.ollama
+    networks:
+      extnetwork:
+        ipv4_address: 172.25.0.19
 # docker容器内网地址
 networks:
   extnetwork:
@@ -235,7 +293,9 @@ networks:
     external: true
 volumes:
   agno_pgdata:
-    name: ${AGNO_POSTGRES_VOLUME:-bolee-public-agno-pgdata}
-
+    name: ${AGNO_POSTGRES_VOLUME:-bolee-cloud_agno_pgdata}
+    external: true
+  terms_ollama:
+    name: bolee-cloud_terms_ollama
 
 

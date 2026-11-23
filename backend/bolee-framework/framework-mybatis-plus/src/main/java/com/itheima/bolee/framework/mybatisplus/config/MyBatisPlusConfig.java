@@ -55,9 +55,36 @@ public class MyBatisPlusConfig {
             "tab_customer_service_channel", "tab_customer_service_request",
             "tab_customer_service_request_event");
 
+    /** Global reference data has no company or legacy row-level scope columns. */
+    private static final Set<String> GLOBAL_REFERENCE_TABLES = Set.of("tab_category");
+
+    /** Company-level shared records remain tenant-scoped, without owner or department filtering. */
+    private static final Set<String> COMPANY_SCOPED_SHARED_TABLES = Set.of(
+            "tab_ai_product_profile_version", "tab_insurance_term_source",
+            "tab_insurance_term_source_audit", "tab_insurance_term_index_task", "tab_insurance",
+            "tab_insurance_ai_search_tag_set", "tab_insurance_ai_search_tag");
+
     private static boolean isExplicitlyScopedTable(String tableName) {
         return tableName != null && EXPLICITLY_SCOPED_TABLES.contains(
                 tableName.toLowerCase(Locale.ROOT));
+    }
+
+    private static boolean isGlobalReferenceTable(String tableName) {
+        return tableName != null && GLOBAL_REFERENCE_TABLES.contains(
+                tableName.toLowerCase(Locale.ROOT));
+    }
+
+    private static boolean isCompanyScopedSharedTable(String tableName) {
+        if (tableName == null) {
+            return false;
+        }
+        String normalizedTableName = tableName.trim().toLowerCase(Locale.ROOT)
+                .replace("`", "").replace("\"", "");
+        int schemaSeparator = normalizedTableName.lastIndexOf('.');
+        if (schemaSeparator >= 0) {
+            normalizedTableName = normalizedTableName.substring(schemaSeparator + 1);
+        }
+        return COMPANY_SCOPED_SHARED_TABLES.contains(normalizedTableName);
     }
 
     @Autowired
@@ -130,7 +157,7 @@ public class MyBatisPlusConfig {
 
             @Override
             public boolean ignoreTable(String tableName) {
-                if (isExplicitlyScopedTable(tableName)) {
+                if (isExplicitlyScopedTable(tableName) || isGlobalReferenceTable(tableName)) {
                     return true;
                 }
                 //如果当前为默认管理平台则忽略表
@@ -177,7 +204,8 @@ public class MyBatisPlusConfig {
             }
             @Override
             public boolean ignoreTable(String tableName) {
-                if (isExplicitlyScopedTable(tableName)) {
+                if (isExplicitlyScopedTable(tableName) || isGlobalReferenceTable(tableName)
+                        || isCompanyScopedSharedTable(tableName)) {
                     return true;
                 }
                 //如果未指定创建人
@@ -219,7 +247,8 @@ public class MyBatisPlusConfig {
             }
             @Override
             public boolean ignoreTable(String tableName) {
-                if (isExplicitlyScopedTable(tableName)) {
+                if (isExplicitlyScopedTable(tableName) || isGlobalReferenceTable(tableName)
+                        || isCompanyScopedSharedTable(tableName)) {
                     return true;
                 }
                 //如果未指定部门列表

@@ -25,6 +25,20 @@ class Settings:
     oauth_operator_client_id: str = os.getenv("AGNO_OPERATOR_OAUTH_CLIENT_ID", "")
     oauth_chat_scope: str = os.getenv("AGNO_CHAT_OAUTH_SCOPE", "agent.chat")
     oauth_operator_scope: str = os.getenv("AGNO_OPERATOR_OAUTH_SCOPE", "agent.operator")
+    oauth_agentos_admin_issuer: str = os.getenv(
+        "AGNO_AGENTOS_ADMIN_ISSUER", "bolee-security-oauth"
+    )
+    oauth_agentos_admin_audience: str = os.getenv(
+        "AGNO_AGENTOS_ADMIN_AUDIENCE", "bolee-insurance-agent-os"
+    )
+    agentos_admin_cors_origins: tuple[str, ...] = tuple(
+        origin.strip()
+        for origin in os.getenv(
+            "AGNO_AGENTOS_ADMIN_CORS_ORIGINS",
+            "http://127.0.0.1:18166,http://localhost:18166",
+        ).split(",")
+        if origin.strip()
+    )
     oauth_tag_generation_client_id: str = os.getenv("AGNO_TAG_GENERATION_CLIENT_ID", "")
     oauth_tag_generation_scope: str = os.getenv(
         "AGNO_TAG_GENERATION_SCOPE", "product.tags.generate"
@@ -36,6 +50,29 @@ class Settings:
     db_name: str = os.getenv("AGNO_DB_NAME", "agentos")
     java_service_url: str = os.getenv("AGNO_JAVA_SERVICE_URL", "http://host.docker.internal:17065")
     java_http_timeout_seconds: float = float(os.getenv("AGNO_JAVA_HTTP_TIMEOUT_SECONDS", "10"))
+    terms_indexer_client_id: str = os.getenv("AGNO_TERMS_INDEXER_CLIENT_ID", "")
+    terms_indexer_client_secret: str = os.getenv("AGNO_TERMS_INDEXER_CLIENT_SECRET", "")
+    terms_indexer_scope: str = os.getenv("AGNO_TERMS_INDEXER_SCOPE", "product.terms.index")
+    terms_indexer_base_url: str = os.getenv(
+        "AGNO_TERMS_INDEXER_JAVA_URL", "http://host.docker.internal:17065"
+    )
+    terms_database_url: str = os.getenv("AGNO_TERMS_DATABASE_URL", "")
+    terms_index_database_url: str = os.getenv("AGNO_TERMS_INDEX_DATABASE_URL", "")
+    terms_synthetic_sources_enabled: bool = os.getenv(
+        "AGNO_TERMS_SYNTHETIC_SOURCES_ENABLED", "true"
+    ).strip().lower() in {"1", "true", "yes", "on"}
+    terms_embedding_base_url: str = os.getenv("AGNO_TERMS_EMBEDDING_BASE_URL", "")
+    terms_embedding_api_key: str = os.getenv("AGNO_TERMS_EMBEDDING_API_KEY", "")
+    terms_embedding_model: str = os.getenv("AGNO_TERMS_EMBEDDING_MODEL", "")
+    terms_embedding_dimensions: int = int(os.getenv("AGNO_TERMS_EMBEDDING_DIMENSIONS", "0"))
+    terms_embedding_timeout_seconds: float = float(
+        os.getenv("AGNO_TERMS_EMBEDDING_TIMEOUT_SECONDS", "120")
+    )
+    terms_llm_read_timeout_seconds: float = float(
+        os.getenv("AGNO_TERMS_LLM_READ_TIMEOUT_SECONDS", "120")
+    )
+    terms_worker_poll_seconds: float = float(os.getenv("AGNO_TERMS_WORKER_POLL_SECONDS", "2"))
+    terms_worker_max_file_bytes: int = int(os.getenv("AGNO_TERMS_MAX_FILE_BYTES", "52428800"))
     context_window_tokens: int = int(os.getenv("AGNO_CONTEXT_WINDOW_TOKENS", "32768"))
     context_fixed_tokens: int = int(os.getenv("AGNO_CONTEXT_FIXED_TOKENS", "6000"))
     context_output_reserve_tokens: int = int(
@@ -64,6 +101,10 @@ class Settings:
     )
 
     def __post_init__(self) -> None:
+        if self.terms_llm_read_timeout_seconds <= 0:
+            raise ValueError("AGNO_TERMS_LLM_READ_TIMEOUT_SECONDS must be positive")
+        if self.terms_embedding_timeout_seconds <= 0:
+            raise ValueError("AGNO_TERMS_EMBEDDING_TIMEOUT_SECONDS must be positive")
         if self.tool_result_max_tokens <= 0:
             raise ValueError("AGNO_TOOL_RESULT_MAX_TOKENS must be positive")
         if self.context_tool_result_reserve_tokens < self.tool_result_max_tokens:
@@ -73,3 +114,13 @@ class Settings:
 
 
 settings = Settings()
+
+# Agno maps system instructions to the OpenAI-only "developer" role by default.
+# Qwen's OpenAI-compatible endpoint expects standard chat roles instead.
+OPENAI_COMPATIBLE_ROLE_MAP = {
+    "system": "system",
+    "user": "user",
+    "assistant": "assistant",
+    "tool": "tool",
+    "model": "assistant",
+}

@@ -7,6 +7,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
+from app.domain.customer_task import ActiveTaskState
+
 CONVERSATION_CONTEXT_STATE_KEY = "bolee_conversation_context"
 _CJK = re.compile(r"[\u3400-\u9fff]")
 _CHUNK = re.compile(r"[\u3400-\u9fff]|[^\s\u3400-\u9fff]+")
@@ -50,8 +52,9 @@ class ConversationMemorySnapshot:
     pending_questions: tuple[str, ...] = field(default_factory=tuple)
     business_references: tuple[str, ...] = field(default_factory=tuple)
     business_reference_age: int = 0
+    active_task: ActiveTaskState = field(default_factory=ActiveTaskState)
     revision: int = 0
-    schema_version: int = 2
+    schema_version: int = 3
 
     def to_state(self) -> dict[str, Any]:
         return {
@@ -65,6 +68,7 @@ class ConversationMemorySnapshot:
             "pending_questions": list(self.pending_questions),
             "business_references": list(self.business_references),
             "business_reference_age": self.business_reference_age,
+            "active_task": self.active_task.to_dict(),
         }
 
     def to_session_state(self) -> dict[str, Any]:
@@ -72,7 +76,7 @@ class ConversationMemorySnapshot:
 
     @classmethod
     def from_state(cls, value: Any, summary_max_chars: int) -> ConversationMemorySnapshot:
-        if not isinstance(value, dict) or value.get("schema_version") not in {1, 2}:
+        if not isinstance(value, dict) or value.get("schema_version") not in {1, 2, 3}:
             return cls()
         schema_version = value.get("schema_version")
         summary = value.get("summary", "")
@@ -126,8 +130,13 @@ class ConversationMemorySnapshot:
             ),
             business_references=bounded_strings("business_references", limit=10, max_chars=160),
             business_reference_age=business_reference_age,
+            active_task=(
+                ActiveTaskState.from_dict(value.get("active_task"))
+                if schema_version >= 3
+                else ActiveTaskState()
+            ),
             revision=revision,
-            schema_version=2,
+            schema_version=3,
         )
 
     @classmethod
@@ -160,6 +169,9 @@ class ConversationMemorySnapshot:
                 "业务对象引用（仅用于重新查询，不代表当前业务事实）：\n"
                 + "\n".join(self.business_references)
             )
+        active_task_text = self.active_task.as_context_text()
+        if active_task_text:
+            sections.append(active_task_text)
         return "\n\n".join(sections)
 
 

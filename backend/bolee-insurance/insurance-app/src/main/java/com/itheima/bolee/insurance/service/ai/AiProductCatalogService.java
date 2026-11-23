@@ -8,6 +8,7 @@ import com.itheima.bolee.insurance.pojo.Category;
 import com.itheima.bolee.insurance.pojo.Insurance;
 import com.itheima.bolee.insurance.repository.ai.AiProductCatalogRepository;
 import com.itheima.bolee.insurance.repository.ai.AiProductSearchTagRepository;
+import com.itheima.bolee.insurance.service.ai.ProductNameSimilarity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -148,6 +149,8 @@ public class AiProductCatalogService {
                     item.category.getCategoryNo(),
                     item.category.getCategoryName(),
                     item.match.reasons,
+                    matchType(item.product, tagsByProduct.getOrDefault(
+                            item.product.getId(), Collections.<AiSearchTagRow>emptyList()), keywords),
                     null,
                     "CATALOG_MATCH",
                     Collections.emptyList(),
@@ -185,18 +188,28 @@ public class AiProductCatalogService {
             String bestReason = null;
             for (AiSearchTagRow tag : tags) {
                 if (matchesTag(tag.getTagValue(), query)) {
-                    int weight = "PRODUCT_TYPE".equals(tag.getTagType()) ? 100
+                    int weight = "ALIAS".equals(tag.getTagType()) ? 120
+                            : "PRODUCT_TYPE".equals(tag.getTagType()) ? 100
                             : "AUDIENCE".equals(tag.getTagType()) ? 90
                             : "SCENARIO".equals(tag.getTagType()) ? 80 : 70;
                     if (weight > best) {
                         best = weight;
-                        bestReason = "产品标签匹配：" + tag.getTagValue();
+                        bestReason = "ALIAS".equals(tag.getTagType())
+                                ? "已审核产品别名匹配：" + tag.getTagValue()
+                                : "产品标签匹配：" + tag.getTagValue();
                     }
                 }
             }
             if (contains(product.getInsuranceName(), query) && best < 60) {
                 best = 60;
                 bestReason = "产品名称匹配：" + keyword;
+            }
+            int sharedNameNgrams = ProductNameSimilarity.sharedCount(
+                    query, normalize(product.getInsuranceName()));
+            if (best < 40 && ProductNameSimilarity.isSimilar(
+                    query, normalize(product.getInsuranceName()))) {
+                best = 30 + Math.min(sharedNameNgrams, 4) * 10;
+                bestReason = "产品名称相近：" + product.getInsuranceName();
             }
             if (contains(category.getCategoryName(), query) && best < 55) {
                 best = 55;
@@ -217,6 +230,21 @@ public class AiProductCatalogService {
         }
         if (keywords.isEmpty()) reasons.add("管理员已加入 AI 推荐候选池");
         return new Match(score, matchedTermCount, reasons);
+    }
+
+    private static String matchType(Insurance product, List<AiSearchTagRow> tags, List<String> keywords) {
+        if (keywords == null || keywords.isEmpty()) return "RELATED";
+        for (String keyword : keywords) {
+            if (normalize(keyword).equals(normalize(product.getInsuranceName()))) return "EXACT_NAME";
+        }
+        for (String keyword : keywords) {
+            String query = normalize(keyword);
+            for (AiSearchTagRow tag : tags) {
+                if ("ALIAS".equals(tag.getTagType())
+                        && query.equals(normalize(tag.getTagValue()))) return "APPROVED_ALIAS";
+            }
+        }
+        return "RELATED";
     }
 
     private static boolean contains(String source, String query) {

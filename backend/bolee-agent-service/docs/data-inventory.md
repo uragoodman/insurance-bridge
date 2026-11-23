@@ -9,7 +9,7 @@
 ### 产品目录与推荐
 
 - `ProductController` 已提供产品分类、分类筛选条件、产品列表和详情查询；产品列表按 `insuranceState=0` 查询。分类和条件来自数据库字典，不能把本地库当前代码写死为长期产品枚举。
-- 现有产品数据包含投保期限、等待期、犹豫期、续保/复效、标签、计划、系数和筛选条件等字段。`InsurancePlanVO.price` 注释为“默认定价”，`priceUnit` 注释为 `y/d,y/m,y/y`；最终保费由起步价、产品系数（累加/乘积）和部分产品的投保人数等计算得出。实际代码也由 `doPremium` 路由到不同险种 handler 计算。
+- 现有产品数据包含投保期限、等待期、犹豫期、续保/复效、标签、计划、系数和筛选条件等字段。`InsurancePlanVO.price` 注释为“默认定价”，`priceUnit` 注释为 `y/d,y/m,y/y`；笔记 `SFBX day5.md` 将其描述为试算起步价，最终保费由起步价、产品系数（累加/乘积）和部分产品的投保人数等计算得出。实际代码也由 `doPremium` 路由到不同险种 handler 计算。
 - 因此价格字段语义已能确认到“方案基础价/单位 + 依产品规则试算最终保费”，但代码中未发现币种字段，也没有适用于所有产品的标准“年预算”换算/比较契约。年预算不能直接拿 `price` 比；需由 Java 新增类型化、按产品规则校验的报价适配，并明确币种与报价时点。现有 `doPremium` 是投保流程入口，涉及被保险人关系及部分产品所需的健康/年龄/系数信息，不能直接开放给模型调用。
 - 产品条件中含健康状况（例如健康、慢性病等）。第一阶段 Agent 不应询问或传递健康信息；需要此类筛选的产品应转到官方详情/人工渠道。
 - 通用 `InsuranceServiceImpl.findList` 会把筛选值构造成 `JSON_CONTAINS` 条件。不要将模型原文直接交给此查询；应另建枚举化、校验过的 AI 推荐请求和安全查询层。
@@ -17,7 +17,7 @@
 
 ### 产品资料
 
-产品管理端可以维护产品信息，`insuranceState` 表示上架 0 / 下架 1；这是销售状态，不是条款审签状态。产品可关联 `bolee-file` 附件。通用 `FileVO` 有文件名、路径、存储标识、MD5、上传状态等字段，但未发现产品条款审批状态、条款版本、生效/失效日期、审批人/时间及发布撤回流程。因此目前能确认的是“产品可上/下架并挂附件”；正式条款审核与版本流程在本项目没有实现依据，不能把附件直接作为客服权威资料。
+产品管理端可以维护产品信息，`insuranceState` 表示上架 0 / 下架 1；这是销售状态，不是条款审签状态。产品可关联 `bolee-file` 附件。通用 `FileVO` 有文件名、路径、存储标识、MD5、上传状态等字段，但未发现产品条款审批状态、条款版本、生效/失效日期、审批人/时间及发布撤回流程。个人 SFBX 笔记 `SFBX day1-4.md`、`SFBX day5.md` 只说明产品发布/配置和投保试算背景，没有补足条款审签版本工作流。因此目前能确认的是“产品可上/下架并挂附件”；正式条款审核与版本流程在本项目没有实现依据，不能把附件直接作为客服权威资料。
 
 ### 本人保单
 
@@ -44,15 +44,15 @@
 3. 产品上/下架已确认；条款审核、版本、有效日期与撤回工作流未在本项目实现。需要产品/文件管理方建设并定义后，才能同步给知识库。
 4. Agent 保单初始范围定为当前登录客户作为投保人且状态为待付款/待生效/保障中；被保险人身份和历史/终止保单先排除。现有关系人查询要先补 owner 校验。
 5. 仓库未发现理赔案件查询、客服工单或转人工集成；目前没有可指定的权威系统/接口。接入前须由项目方提供系统所有者、API 和状态字典。
-6. 仓库代码未定义聊天正文、Agno session、trace、Java 业务审计的留存期限、删除 SLA、备份清理要求或访问审计规则；目前数据库持久化配置没有自动保留/清理期限。期限仍需由数据/隐私责任方确定。
+6. 仓库和 SFBX 笔记未定义聊天正文、Agno session、trace、Java 业务审计的留存期限、删除 SLA、备份清理要求或访问审计规则；目前数据库持久化配置没有自动保留/清理期限。期限仍需由数据/隐私责任方确定。
 
 ## 查证位置
 
 - 产品目录/状态/报价字段：`bolee-insurance/insurance-app/.../ProductController.java`、`bolee-insurance/insurance-mgt/.../InsuranceController.java`、`bolee-insurance/insurance-service/.../InsuranceServiceImpl.java`、`.../InsurancePlanVO.java`、`.../InsuranceConstant.java`。
-- 产品附件字段：`bolee-framework/framework-commons/.../FileVO.java`。
-- 试算公式：`bolee-insurance/insurance-service/.../InsuranceServiceImpl.java` 及 `handler/impl/*InsureHandler.java`。
+- 产品附件字段：`bolee-framework/framework-commons/.../FileVO.java`；SFBX 笔记 `C:\ck\NoteNO2\developer\BackEnd\SFBX_Serial\SFBX day1-4.md`、`SFBX day5.md`。
+- 试算公式：`bolee-insurance/insurance-service/.../InsuranceServiceImpl.java` 及 `handler/impl/*InsureHandler.java`；个人笔记 `SFBX day5.md`。
 - 保单范围与关系人：`bolee-insurance/insurance-service/.../WarrantyServiceImpl.java`、`CustomerRelationServiceImpl.java`、`WarrantyInsuredServiceImpl.java`、`bolee-framework/framework-commons/.../WarrantyConstant.java`。
-- 理赔/客服和 Agent 留存：`bolee-insurance/insurance-service/.../enums/*ClaimEnum.java`、`bolee-agent-service/app/agent.py`、`bolee-agent-service/db/__init__.py`、根目录 `docker-compose.yml`。
+- 理赔/客服和 Agent 留存：`bolee-insurance/insurance-service/.../enums/*ClaimEnum.java`、`bolee-agent-service/app/agent.py`、`bolee-agent-service/db/__init__.py`、根目录 `docker-compose.yml`；SFBX 笔记中未找到 AI 会话/trace 留存规定。
 
 ## 实施顺序建议
 

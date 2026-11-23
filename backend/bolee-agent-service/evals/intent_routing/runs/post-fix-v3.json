@@ -1,0 +1,1435 @@
+{
+  "rubric_version": "intent-routing-rubric-v3",
+  "rubric_sha256": "69412a03a10270f407ea0a72783134e27be1617f7e11d0888acb932ffdb2bd2f",
+  "case_suite_sha256": "0e2047caafbd08f0beba09cbc235f33ffce805da6a3d1bbf7846eca7f661e940",
+  "source_run": "evals\\intent_routing\\runs\\post-fix-v1.json",
+  "source_run_started_at_utc": "2026-11-23T03:22:01.459420+00:00",
+  "source_run_completed_at_utc": "2026-11-23T03:31:05.323453+00:00",
+  "model_id": "qwen3.8-flash",
+  "endpoint_alias": "dashscope.aliyuncs.com",
+  "new_llm_calls": 0,
+  "observations": [
+    {
+      "case_id": "catalog-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "境内旅游",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-02",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "短期出行 意外险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "旅行险 医疗保障",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "意外险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-06",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "自驾出行",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "旅游险 行李损失",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "少儿意外险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "健康险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "catalog-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "intent": "PRODUCT_CATALOG",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "住院医疗",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_catalog_categories",
+        "intent": "PRODUCT_CATALOG",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "境内旅游险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "少儿意外险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "意外险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "出境旅游保险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "自驾游",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "住院医疗险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "行李",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "个人意外险",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "terms-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_product_terms",
+        "intent": "TERMS_QA",
+        "action": "SEARCH_PRODUCT_TERMS",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "平安境内旅游险",
+          "question": "航班延误责任的起赔时长是多少？"
+        }
+      }
+    },
+    {
+      "case_id": "terms-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_product_terms",
+        "intent": "TERMS_QA",
+        "action": "SEARCH_PRODUCT_TERMS",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行A",
+          "question": "免责条款有哪些？"
+        }
+      }
+    },
+    {
+      "case_id": "terms-03",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Clarification is accepted by the audited case; review whether it asks for the needed detail."
+    },
+    {
+      "case_id": "terms-04",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Clarification is accepted by the audited case; review whether it asks for the needed detail."
+    },
+    {
+      "case_id": "terms-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_product_terms",
+        "intent": "TERMS_QA",
+        "action": "SEARCH_PRODUCT_TERMS",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行B",
+          "question": "是否设有等待期？等待期具体规定是什么？"
+        }
+      }
+    },
+    {
+      "case_id": "terms-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_product_terms",
+        "intent": "TERMS_QA",
+        "action": "SEARCH_PRODUCT_TERMS",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行A",
+          "question": "意外身故责任的条款内容是什么？"
+        }
+      }
+    },
+    {
+      "case_id": "terms-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Clarification without a business call."
+    },
+    {
+      "case_id": "terms-08",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "search_product_terms",
+        "intent": "TERMS_QA",
+        "action": "SEARCH_PRODUCT_TERMS",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "境内旅游险",
+          "question": "紧急救援责任的适用条件"
+        }
+      }
+    },
+    {
+      "case_id": "terms-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_product_terms",
+        "intent": "TERMS_QA",
+        "action": "SEARCH_PRODUCT_TERMS",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行A",
+          "question": "航班延误保障的赔付金额上限是多少？"
+        }
+      }
+    },
+    {
+      "case_id": "terms-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_product_terms",
+        "intent": "TERMS_QA",
+        "action": "SEARCH_PRODUCT_TERMS",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行B",
+          "question": "高风险运动的除外约定有哪些？"
+        }
+      }
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 2,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_catalog_categories",
+        "intent": "PRODUCT_CATALOG",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 3,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 4,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "intent": "PRODUCT_COMPARISON",
+        "action": "SEARCH_PRODUCTS",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "limit": 3
+        }
+      }
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen case route.",
+      "normalized_call": {
+        "name": "get_my_policies",
+        "intent": "OWN_POLICY",
+        "action": "GET_MY_POLICIES",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      }
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 2,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 3,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Clarification is accepted by the audited case; review whether it asks for the needed detail."
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 4,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Clarification is accepted by the audited case; review whether it asks for the needed detail."
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 2,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 3,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 4,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Accepted first-step route; review subsequent answer separately.",
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "intent": "PRODUCT_RECOMMENDATION",
+        "action": "LIST_CATEGORIES",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      }
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "No business tool and non-empty answer."
+    }
+  ],
+  "summary": {
+    "all_observations": {
+      "PASS": 114,
+      "PASS_MANUAL_REVIEW": 17
+    },
+    "base_observations": {
+      "PASS": 60,
+      "PASS_MANUAL_REVIEW": 8
+    },
+    "repeat_observations": {
+      "PASS_MANUAL_REVIEW": 9,
+      "PASS": 54
+    },
+    "remaining_failures": [],
+    "follow_up_required": []
+  },
+  "scoring_note": "Optional empty category_id/keyword values are treated as omitted in line with the adapter fix, verified by test_customer_task_dispatcher.",
+  "rescored_at_utc": "2026-11-23T03:34:01.603165+00:00"
+}

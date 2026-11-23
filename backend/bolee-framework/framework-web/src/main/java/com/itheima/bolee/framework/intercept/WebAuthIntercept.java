@@ -30,8 +30,14 @@ public class WebAuthIntercept implements HandlerInterceptor {
         //从头部中拿到当前userToken
         String userToken = request.getHeader(SecurityConstant.USER_TOKEN);
         if (!EmptyUtil.isNullOrEmpty(userToken)){
+            // Use the Redisson client's configured default codec, matching the OAuth
+            // service that writes this shared session entry.
             RBucket<UserVO> userVORBucket = redissonClient.getBucket(OauthCacheConstant.USER_TOKEN + userToken);
             UserVO userVO = userVORBucket.get();
+            if (userVO == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired user token");
+                return false;
+            }
             //放入当前线程中：用户当前的web直接获得userVO使用
             SubjectContent.setUserVO(userVO);
             //下游传递userToken

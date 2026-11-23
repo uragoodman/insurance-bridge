@@ -3,6 +3,8 @@
 import re
 from dataclasses import dataclass
 
+from app.contexts.customer_task import CustomerTaskRuntime
+from app.schemas.insurance_terms import TermSearchOutcome
 from app.schemas.own_policy import OwnPolicyDetailResponse, OwnPolicySummaryResponse
 from app.schemas.product_catalog import ProductCatalogSearchResponse
 from app.schemas.product_comparison import ProductComparisonResponse
@@ -16,6 +18,7 @@ class AgentToolContext:
     authorization_context: str
     result_collector: "AgentToolResultCollector"
     selected_policy_id: str | None = None
+    customer_task_runtime: CustomerTaskRuntime | None = None
 
 
 @dataclass(slots=True)
@@ -29,11 +32,17 @@ class AgentToolResultCollector:
     product_comparison: ProductComparisonResponse | None = None
     own_policy_summary: OwnPolicySummaryResponse | None = None
     own_policy_detail: OwnPolicyDetailResponse | None = None
+    terms_search: TermSearchOutcome | None = None
+    sensitive_data_accessed: bool = False
 
     @property
     def sensitive_tool_used(self) -> bool:
         """Whether this run accessed owner-specific policy information."""
-        return self.own_policy_summary is not None or self.own_policy_detail is not None
+        return (
+            self.sensitive_data_accessed
+            or self.own_policy_summary is not None
+            or self.own_policy_detail is not None
+        )
 
     @property
     def context_references(self) -> tuple[str, ...]:
@@ -59,9 +68,8 @@ class AgentToolResultCollector:
                 reference = f"product_id={product_id}"
                 if isinstance(product_version, int) and product_version > 0:
                     reference += f";product_version={product_version}"
-                if (
-                    isinstance(catalog_version, str)
-                    and re.fullmatch(r"[A-Za-z0-9._-]{1,64}", catalog_version)
+                if isinstance(catalog_version, str) and re.fullmatch(
+                    r"[A-Za-z0-9._-]{1,64}", catalog_version
                 ):
                     reference += f";catalog_version={catalog_version}"
                 if reference not in references:
@@ -106,6 +114,7 @@ class AgentToolResultCollector:
         self.own_policy_detail = None
 
     def record_own_policy_summary(self, result: OwnPolicySummaryResponse) -> None:
+        self.sensitive_data_accessed = True
         self.product_catalog_search = None
         self.product_recommendation = None
         self.product_comparison = None
@@ -113,8 +122,13 @@ class AgentToolResultCollector:
         self.own_policy_detail = None
 
     def record_own_policy_detail(self, result: OwnPolicyDetailResponse) -> None:
+        self.sensitive_data_accessed = True
         self.product_catalog_search = None
         self.product_recommendation = None
         self.product_comparison = None
         self.own_policy_summary = None
         self.own_policy_detail = result
+
+    def record_terms_search(self, result: TermSearchOutcome) -> None:
+        self.clear()
+        self.terms_search = result

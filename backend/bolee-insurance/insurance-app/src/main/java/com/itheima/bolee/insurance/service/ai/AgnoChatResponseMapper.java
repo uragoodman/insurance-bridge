@@ -3,6 +3,7 @@ package com.itheima.bolee.insurance.service.ai;
 import com.itheima.bolee.framework.commons.enums.basic.BaseEnum;
 import com.itheima.bolee.framework.commons.exception.ProjectException;
 import com.itheima.bolee.insurance.dto.ai.AgnoChatResponse;
+import com.itheima.bolee.insurance.dto.ai.AgnoTermCitationDTO;
 import com.itheima.bolee.insurance.dto.ai.AgnoOwnPolicySummaryDTO;
 import com.itheima.bolee.insurance.dto.ai.AgnoOwnPolicyDetailDTO;
 import com.itheima.bolee.insurance.dto.ai.AgnoOwnPolicySummaryItemDTO;
@@ -12,6 +13,7 @@ import com.itheima.bolee.insurance.dto.ai.AgnoProductComparisonProductDTO;
 import com.itheima.bolee.insurance.dto.ai.AgnoRecommendationFactDTO;
 import com.itheima.bolee.insurance.dto.ai.AgnoRecommendationUnresolvedCriterionDTO;
 import com.itheima.bolee.insurance.dto.ai.AiAssistantChatResponseVO;
+import com.itheima.bolee.insurance.dto.ai.AiTermCitationVO;
 import com.itheima.bolee.insurance.dto.ai.AiProductCandidateVO;
 import com.itheima.bolee.insurance.dto.ai.AiOwnPolicyChatItemVO;
 import com.itheima.bolee.insurance.dto.ai.AiOwnPolicyChatSummaryResponseVO;
@@ -45,6 +47,7 @@ public final class AgnoChatResponseMapper {
             throw new ProjectException(BaseEnum.REMOTE_FAIL);
         }
         validateEnvelope(response);
+        List<AiTermCitationVO> termCitations = mapTermCitations(response.getTermCitations());
         AiProductComparisonResponseVO comparison = mapComparison(response.getProductComparison());
         AiOwnPolicyChatSummaryResponseVO ownPolicySummary = mapOwnPolicy(response.getOwnPolicySummary());
         AiOwnPolicyChatDetailResponseVO ownPolicyDetail = mapOwnPolicyDetail(response.getOwnPolicyDetail());
@@ -69,6 +72,7 @@ public final class AgnoChatResponseMapper {
                     comparison);
             mapped.setOwnPolicySummary(ownPolicySummary);
             mapped.setOwnPolicyDetail(ownPolicyDetail);
+            mapped.setTermCitations(termCitations);
             return mapped;
         }
         if (upstream.size() > MAX_RECOMMENDATIONS) {
@@ -99,6 +103,7 @@ public final class AgnoChatResponseMapper {
                     candidate.getMatchReasons() == null
                             ? Collections.<String>emptyList()
                             : candidate.getMatchReasons(),
+                    candidate.getMatchType(),
                     candidate.getProductVersion(),
                     candidate.getVerificationStatus(),
                     mapFacts(candidate.getFacts()),
@@ -119,7 +124,41 @@ public final class AgnoChatResponseMapper {
                 comparison);
         mapped.setOwnPolicySummary(ownPolicySummary);
         mapped.setOwnPolicyDetail(ownPolicyDetail);
+        mapped.setTermCitations(termCitations);
         return mapped;
+    }
+
+    private static List<AiTermCitationVO> mapTermCitations(List<AgnoTermCitationDTO> citations) {
+        if (citations == null || citations.isEmpty()) return Collections.emptyList();
+        if (citations.size() > 6) throw new ProjectException(BaseEnum.REMOTE_FAIL);
+        List<AiTermCitationVO> mapped = new ArrayList<AiTermCitationVO>(citations.size());
+        Set<String> citationIds = new HashSet<String>();
+        for (AgnoTermCitationDTO citation : citations) {
+            if (citation == null || !isUuid(citation.getCitationId())
+                    || !citationIds.add(citation.getCitationId())
+                    || !isNumericId(citation.getSourceId()) || !isNumericId(citation.getProductId())
+                    || !isNumericId(citation.getProfileVersionId())
+                    || !StringUtils.hasText(citation.getSourceTitle()) || citation.getSourceTitle().length() > 255
+                    || citation.getProductVersion() == null || citation.getProductVersion() < 1
+                    || (citation.getClauseId() != null && citation.getClauseId().length() > 128)
+                    || (citation.getClauseTitle() != null && citation.getClauseTitle().length() > 255)
+                    || (citation.getPageStart() != null && citation.getPageStart() < 1)
+                    || (citation.getPageEnd() != null && citation.getPageEnd() < 1)
+                    || (citation.getPageStart() != null && citation.getPageEnd() != null
+                    && citation.getPageEnd() < citation.getPageStart())
+                    || !StringUtils.hasText(citation.getExcerpt()) || citation.getExcerpt().length() > 1200) {
+                throw new ProjectException(BaseEnum.REMOTE_FAIL);
+            }
+            mapped.add(new AiTermCitationVO(citation.getCitationId(), citation.getSourceId(),
+                    citation.getSourceTitle(), citation.getProductId(), citation.getProductVersion(),
+                    citation.getProfileVersionId(), citation.getClauseId(), citation.getClauseTitle(),
+                    citation.getPageStart(), citation.getPageEnd(), citation.getExcerpt()));
+        }
+        return mapped;
+    }
+
+    private static boolean isNumericId(String value) {
+        return value != null && value.matches("[0-9]{1,19}");
     }
 
     private static AiOwnPolicyChatSummaryResponseVO mapOwnPolicy(AgnoOwnPolicySummaryDTO source) {
@@ -249,6 +288,12 @@ public final class AgnoChatResponseMapper {
     }
 
     private static void validateEnvelope(AgnoChatResponse response) {
+        boolean hasTerms = !isEmpty(response.getTermCitations());
+        if (hasTerms && (response.getRecommendationStatus() != null
+                || !isEmpty(response.getRecommendations()) || response.getProductComparison() != null
+                || response.getOwnPolicySummary() != null || response.getOwnPolicyDetail() != null)) {
+            throw new ProjectException(BaseEnum.REMOTE_FAIL);
+        }
         if (response.getOwnPolicySummary() != null || response.getOwnPolicyDetail() != null) {
             if (response.getRecommendationStatus() != null
                     || !isEmpty(response.getRecommendations())

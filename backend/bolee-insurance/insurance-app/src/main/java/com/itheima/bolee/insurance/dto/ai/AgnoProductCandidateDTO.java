@@ -29,6 +29,9 @@ public class AgnoProductCandidateDTO {
     @JsonProperty("match_reasons")
     private List<String> matchReasons = new ArrayList<String>();
 
+    @JsonProperty("match_type")
+    private String matchType;
+
     @JsonProperty("product_version")
     private Integer productVersion;
 

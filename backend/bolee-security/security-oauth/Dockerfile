@@ -1,4 +1,5 @@
 FROM openjdk:11-jdk
+LABEL maintainer="研究院研发组 <research@itcast.cn>"
 
 # 时区修改为东八区
 ENV TZ=Asia/Shanghai

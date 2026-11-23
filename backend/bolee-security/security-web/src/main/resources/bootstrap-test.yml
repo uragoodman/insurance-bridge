@@ -23,13 +23,13 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_ADDRESS:${NACOS_ADDRESS:127.0.0.1:18848}} # nacos注册中心
+        server-addr: ${NACOS_ADDRESS:nacos-service.yjy-public-sfbx-java.svc.cluster.local:20015} # nacos注册中心
         group: SEATA_GROUP
         service: ${spring.application.name}
         username: ${NACOS_USERNAME:nacos}
-        password: ${NACOS_PASSWORD:}
+        password: ${NACOS_PASSWORD:PKsf*bxQ4;yP3a+}
       config:
-        server-addr: ${NACOS_ADDRESS:${NACOS_ADDRESS:127.0.0.1:18848}} # nacos注册中心
+        server-addr: ${NACOS_ADDRESS:nacos-service.yjy-public-sfbx-java.svc.cluster.local:20015} # nacos注册中心
         group: SEATA_GROUP
         file-extension: yml
         shared-configs: # 共享配置
@@ -46,7 +46,7 @@ spring:
             group: SEATA_GROUP
             refresh: false
         username: ${NACOS_USERNAME:nacos}
-        password: ${NACOS_PASSWORD:}
+        password: ${NACOS_PASSWORD:PKsf*bxQ4;yP3a+}
 logging:
   config: classpath:logback.xml
 

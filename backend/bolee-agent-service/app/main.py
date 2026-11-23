@@ -5,14 +5,15 @@ import re
 
 from agno.models.openai.like import OpenAILike
 from agno.os import AgentOS
-from fastapi import FastAPI, Header, HTTPException, Query, Request, Response
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi import FastAPI, Header, HTTPException, Query, Response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
 from app.agent import insurance_agent
 from app.clients.java_internal_api import JavaInternalApiClient
 from app.clients.oauth2 import OAuth2ClientCredentials
-from app.clients.oauth2_jwt import OAuth2JWTRejected, OAuth2JWTUnavailable, OAuth2JWTValidator
-from app.config import settings
+from app.clients.oauth2_jwt import OAuth2JWTValidator
+from app.config import OPENAI_COMPATIBLE_ROLE_MAP, settings
 from app.contexts.agent import AgentDependencies
 from app.contexts.tool import AgentToolResultCollector
 from app.domain.conversation_context import (
@@ -32,6 +33,10 @@ from app.schemas.history import (
 from app.schemas.product_search_tags import (
     ProductSearchTagGenerationOutput,
     ProductSearchTagInput,
+)
+from app.security.oauth_scope_middleware import (
+    AgentOSOAuthScopeMiddleware,
+    AgentOSRouteScopePolicy,
 )
 from app.services.chat_application import ContextAwareChatApplicationService
 from app.services.context_management import (
@@ -94,6 +99,7 @@ context_management = ContextManagementService(
             id=settings.context_summary_model_id or settings.model_id,
             api_key=settings.model_api_key or "not-configured",
             base_url=settings.model_base_url or None,
+            role_map=OPENAI_COMPATIBLE_ROLE_MAP,
             max_tokens=768,
             temperature=0,
         )
@@ -110,35 +116,28 @@ chat_application = ContextAwareChatApplicationService(
 )
 
 base_app = FastAPI(title="Bolee Insurance Agent Service", version="0.1.0")
-
-
-@base_app.middleware("http")
-async def require_oauth_access_token(request: Request, call_next):
-    if request.url.path == "/health":
-        return await call_next(request)
-
-    authorization = request.headers.get("authorization", "")
-    if not authorization.lower().startswith("bearer "):
-        return JSONResponse(status_code=401, content={"detail": "bearer access token required"})
-    chat_paths = {"/internal/chat", "/internal/chat/stream", "/internal/sessions/previews"}
-    if request.url.path in chat_paths or re.fullmatch(
-        r"/internal/sessions/[A-Za-z0-9_-]{1,64}/messages", request.url.path
-    ):
-        required_scope = settings.oauth_chat_scope
-    elif request.url.path == "/internal/product-tags/generate":
-        required_scope = settings.oauth_tag_generation_scope
-    else:
-        required_scope = settings.oauth_operator_scope
-    try:
-        oauth_jwt_validator.require(authorization[7:].strip(), required_scope)
-    except OAuth2JWTUnavailable:
-        return JSONResponse(
-            status_code=503,
-            content={"detail": "OAuth verification is unavailable"},
-        )
-    except OAuth2JWTRejected as exc:
-        return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
-    return await call_next(request)
+agentos_route_policy = AgentOSRouteScopePolicy(
+    chat_scope=settings.oauth_chat_scope,
+    operator_scope=settings.oauth_operator_scope,
+    tag_generation_scope=settings.oauth_tag_generation_scope,
+)
+base_app.add_middleware(
+    AgentOSOAuthScopeMiddleware,
+    token_validator=oauth_jwt_validator,
+    route_policy=agentos_route_policy,
+    admin_issuer=settings.oauth_agentos_admin_issuer,
+    admin_audience=settings.oauth_agentos_admin_audience,
+)
+# Added after auth so Starlette places CORS outside the authorization middleware;
+# allowed browser preflights terminate here without bypassing authorization on requests.
+base_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=list(settings.agentos_admin_cors_origins),
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
+    max_age=600,
+)
 
 
 @base_app.post("/internal/chat", response_model=ChatResponse)
@@ -246,7 +245,8 @@ def build_chat_response(
     result,
     tool_result_collector: AgentToolResultCollector,
 ) -> ChatResponse:
-    answer = result.content
+    terms_search = tool_result_collector.terms_search
+    answer = terms_search.answer if terms_search is not None else result.content
     if not isinstance(answer, str):
         answer = str(answer or "")
     answer = answer.strip()
@@ -255,10 +255,18 @@ def build_chat_response(
     if len(answer) > 12000:
         raise HTTPException(status_code=502, detail="Agent answer exceeded the response limit")
 
-    recommendation_result = tool_result_collector.product_recommendation
-    comparison_result = tool_result_collector.product_comparison
-    own_policy_summary = tool_result_collector.own_policy_summary
-    own_policy_detail = tool_result_collector.own_policy_detail
+    recommendation_result = (
+        None if terms_search is not None else tool_result_collector.product_recommendation
+    )
+    comparison_result = (
+        None if terms_search is not None else tool_result_collector.product_comparison
+    )
+    own_policy_summary = (
+        None if terms_search is not None else tool_result_collector.own_policy_summary
+    )
+    own_policy_detail = (
+        None if terms_search is not None else tool_result_collector.own_policy_detail
+    )
     if recommendation_result is not None:
         recommendations = recommendation_result.candidates
         recommendation_status = recommendation_result.status
@@ -270,7 +278,9 @@ def build_chat_response(
         catalog_version = recommendation_result.catalog_version
         rule_version = recommendation_result.rule_version
     else:
-        search_result = tool_result_collector.product_catalog_search
+        search_result = (
+            None if terms_search is not None else tool_result_collector.product_catalog_search
+        )
         recommendations = (
             search_result.candidates
             if search_result is not None and search_result.status == RecommendationStatus.MATCHED
@@ -288,6 +298,7 @@ def build_chat_response(
         session_id=request.session_id,
         run_id=str(result.run_id),
         answer=answer,
+        term_citations=terms_search.term_citations if terms_search is not None else [],
         recommendations=recommendations,
         product_comparison=comparison_result,
         own_policy_summary=own_policy_summary,
@@ -406,8 +417,12 @@ agent_os = AgentOS(
     id="bolee-insurance-agent-os",
     db=get_postgres_db(),
     tracing=True,
+    # The outer ASGI policy authenticates Java service tokens and enforces
+    # management roles from short-lived, audience-bound Java admin tokens.
+    # Customer data authorization remains enforced by Java tool endpoints.
     authorization=False,
     agents=[insurance_agent],
     base_app=base_app,
 )
 app = agent_os.get_app()
+agentos_route_policy.validate_openapi(app.openapi())

@@ -56,4 +56,7 @@ public class AgnoChatResponse {
 
     @JsonProperty("own_policy_detail")
     private AgnoOwnPolicyDetailDTO ownPolicyDetail;
+
+    @JsonProperty("term_citations")
+    private List<AgnoTermCitationDTO> termCitations = new ArrayList<AgnoTermCitationDTO>();
 }

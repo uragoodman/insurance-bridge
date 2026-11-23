@@ -1,17 +1,11 @@
-"""Allowlist of Agno tools backed by implemented Java APIs."""
+"""Allowlist of model-facing Agno tools."""
 
 from agno.tools import Toolkit
 
-from app.tools.own_policy import OwnPolicyTools
-from app.tools.product_catalog import ProductCatalogTools
-from app.tools.product_comparison import ProductComparisonTools
-from app.tools.product_recommendation import ProductRecommendationTools
+from app.tools.customer_task import CustomerTaskTools
 
 
 def build_agent_tools() -> list[Toolkit]:
-    return [
-        ProductCatalogTools(),
-        ProductRecommendationTools(),
-        ProductComparisonTools(),
-        OwnPolicyTools(),
-    ]
+    # Expose only one typed task entry point to the model. Existing business
+    # toolkits are instantiated internally by CustomerTaskDispatcher.
+    return [CustomerTaskTools()]

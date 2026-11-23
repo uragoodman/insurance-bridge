@@ -150,7 +150,8 @@ public class CacheServerHttpResponseDecorator extends ServerHttpResponseDecorato
             .requestUri(requestUri)
             .requestBody(requestBody)
             .requestMethod(method)
-            .responseBody(JSONObject.toJSONString(responseResult.getData()))
+            .responseBody(isSensitiveTokenExchange(requestUri)
+                    ? "[REDACTED]" : JSONObject.toJSONString(responseResult.getData()))
             .responseCode(responseResult.getCode())
             .responseMsg(responseResult.getMsg())
             .businessType(businessType)
@@ -165,5 +166,9 @@ public class CacheServerHttpResponseDecorator extends ServerHttpResponseDecorato
         String logBusinessVOJsonString = JSONObject.toJSONString(logBusinessVO);
         log.info("================logBusinessVOJsonString:{}",logBusinessVOJsonString);
         return logBusinessVOJsonString;
+    }
+
+    private boolean isSensitiveTokenExchange(String requestUri) {
+        return "/security-oauth/agentos/admin-token".equals(requestUri);
     }
 }

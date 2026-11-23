@@ -36,10 +36,14 @@ public class AgnoOAuthTokenValidator {
     }
 
     public void require(String token, String requiredScope) {
+        require(token, requiredScope, expectedClientId);
+    }
+
+    public void require(String token, String requiredScope, String clientIdExpectedForScope) {
         if (!StringUtils.hasText(token) || !StringUtils.hasText(requiredScope)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid agent access token");
         }
-        if (!StringUtils.hasText(tokenKeyUrl) || !StringUtils.hasText(expectedClientId)) {
+        if (!StringUtils.hasText(tokenKeyUrl) || !StringUtils.hasText(clientIdExpectedForScope)) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Agent OAuth is not configured");
         }
 
@@ -60,7 +64,7 @@ public class AgnoOAuthTokenValidator {
         }
 
         String clientId = jwt.getClaimAsString("client_id");
-        if (!expectedClientId.equals(clientId)) {
+        if (!clientIdExpectedForScope.equals(clientId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Agent OAuth client is not permitted");
         }
         Object scopeClaim = jwt.getClaims().get("scope");

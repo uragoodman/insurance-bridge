@@ -5,6 +5,7 @@ from typing import Any, cast
 
 from agno.run import RunContext
 
+from app.contexts.customer_task import CustomerTaskRuntime
 from app.contexts.tool import AgentToolContext, AgentToolResultCollector
 from app.services.ports import JavaInternalApiPort
 
@@ -22,6 +23,7 @@ def resolve_tool_context(run_context: RunContext) -> AgentToolContext:
     authorization_context = dependencies.get("authorization_context")
     collector = dependencies.get("tool_result_collector")
     selected_policy_id = dependencies.get("selected_policy_id")
+    customer_task_runtime = dependencies.get("customer_task_runtime")
     if not callable(getattr(client, "get_json", None)):
         raise AgentToolContextError("Java insurance client is unavailable.")
     if not isinstance(authorization_context, str) or not re.fullmatch(
@@ -30,6 +32,8 @@ def resolve_tool_context(run_context: RunContext) -> AgentToolContext:
         raise AgentToolContextError("Java authorization grant is invalid or missing.")
     if not isinstance(collector, AgentToolResultCollector):
         raise AgentToolContextError("Per-run result collector is unavailable.")
+    if not isinstance(customer_task_runtime, CustomerTaskRuntime):
+        raise AgentToolContextError("Per-run customer task context is unavailable.")
     if selected_policy_id is not None and (
         not isinstance(selected_policy_id, str)
         or re.fullmatch(r"[0-9]{1,19}", selected_policy_id) is None
@@ -41,4 +45,5 @@ def resolve_tool_context(run_context: RunContext) -> AgentToolContext:
         authorization_context=authorization_context,
         result_collector=collector,
         selected_policy_id=selected_policy_id,
+        customer_task_runtime=customer_task_runtime,
     )

@@ -21,11 +21,11 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: ${NACOS_ADDRESS:127.0.0.1:18848} # nacos注册中心
+        server-addr: 192.168.200.129:8848 # nacos注册中心
         group: SEATA_GROUP
         service: ${spring.application.name}
       config:
-        server-addr: ${NACOS_ADDRESS:127.0.0.1:18848} # nacos配置中心地址
+        server-addr: 192.168.200.129:8848 # nacos配置中心地址
         group: SEATA_GROUP
         file-extension: yml
         shared-configs: # 共享配置
@@ -43,3 +43,11 @@ bolee:
     key-store-password: ${BOLEE_OAUTH_KEY_STORE_PASSWORD:}
     key-alias: ${BOLEE_OAUTH_KEY_ALIAS:}
     key-password: ${BOLEE_OAUTH_KEY_PASSWORD:}
+agentos:
+  authorization:
+    admin-token:
+      source-client-id: ${AGNO_AGENTOS_ADMIN_SOURCE_CLIENT_ID:insurance-mgt}
+      issuer: ${AGNO_AGENTOS_ADMIN_ISSUER:bolee-security-oauth}
+      audience: ${AGNO_AGENTOS_ADMIN_AUDIENCE:bolee-insurance-agent-os}
+      admin-role-labels: ${AGNO_AGENTOS_ADMIN_ROLE_LABELS:admin,superman}
+      auditor-role-label: ${AGNO_AGENTOS_AUDITOR_ROLE_LABEL:agent_conversation_auditor}

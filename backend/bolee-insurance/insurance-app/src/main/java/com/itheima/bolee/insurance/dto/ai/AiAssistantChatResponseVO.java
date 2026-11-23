@@ -62,6 +62,8 @@ public class AiAssistantChatResponseVO {
 
     private AiOwnPolicyChatDetailResponseVO ownPolicyDetail;
 
+    private List<AiTermCitationVO> termCitations;
+
     /** COMPLETED or PROCESSING; clients retry the same request ID while processing. */
     private String requestStatus;
 

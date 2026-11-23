@@ -26,7 +26,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //多租户拦截
-        registry.addInterceptor(webAuthIntercept).addPathPatterns("/**");
+        registry.addInterceptor(webAuthIntercept)
+                .addPathPatterns("/**")
+                // Public OAuth endpoints authenticate their own client credentials or
+                // validate tokens. A stale user-token header from browser storage must
+                // not trigger the user-session Redis lookup before those handlers run.
+                .excludePathPatterns(
+                        "/oauth/token",
+                        "/oauth/service-token",
+                        "/oauth/token_key",
+                        "/oauth/check_token",
+                        "/customer/loginCode/**");
         //数字签名拦截
         registry.addInterceptor(companyCheckIntercept).addPathPatterns("/coefficent/**");
     }

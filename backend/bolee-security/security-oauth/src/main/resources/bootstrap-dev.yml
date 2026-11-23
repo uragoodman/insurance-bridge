@@ -1,4 +1,14 @@
 spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: ${BOLEE_OAUTH_DB_URL:}
+    username: ${BOLEE_OAUTH_DB_USERNAME:}
+    password: ${BOLEE_OAUTH_DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 16379
+    password: ${BOLEE_OAUTH_REDIS_PASSWORD:pass}
   cloud:
     nacos:
       discovery:

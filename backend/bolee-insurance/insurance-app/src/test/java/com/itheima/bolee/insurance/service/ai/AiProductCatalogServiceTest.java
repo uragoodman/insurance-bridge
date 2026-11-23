@@ -70,6 +70,39 @@ public class AiProductCatalogServiceTest {
         assertEquals(0, result.getCandidates().size());
     }
 
+    @Test
+    public void exactProductNameIsMarkedAsExactName() {
+        product.setInsuranceName("平安境内旅游险");
+        when(tagRepository.findActiveTagsByProductIds(anyList())).thenReturn(Collections.emptyList());
+
+        AiProductSearchResponseVO result = service.search("42", "平安境内旅游险", 3);
+
+        assertEquals("EXACT_NAME", result.getCandidates().get(0).getMatchType());
+    }
+
+    @Test
+    public void approvedAliasIsMarkedSeparatelyFromSimilarName() {
+        product.setInsuranceName("平安境内旅游险");
+        when(tagRepository.findActiveTagsByProductIds(anyList()))
+                .thenReturn(Collections.singletonList(tag("ALIAS", "境内旅游保险")));
+
+        AiProductSearchResponseVO result = service.search("42", "境内旅游保险", 3);
+
+        assertEquals("APPROVED_ALIAS", result.getCandidates().get(0).getMatchType());
+    }
+
+    @Test
+    public void nearNameIsReturnedAsRelatedCandidateForConfirmation() {
+        product.setInsuranceName("平安境内旅游险");
+        when(tagRepository.findActiveTagsByProductIds(anyList())).thenReturn(Collections.emptyList());
+
+        AiProductSearchResponseVO result = service.search("42", "境内旅游保险", 3);
+
+        assertEquals("RELATED", result.getCandidates().get(0).getMatchType());
+        org.junit.Assert.assertTrue(result.getCandidates().get(0).getMatchReasons().stream()
+                .anyMatch(reason -> reason.startsWith("产品名称相近：")));
+    }
+
     private static AiSearchTagRow tag(String type, String value) {
         AiSearchTagRow tag = new AiSearchTagRow();
         tag.setProductId(7001L);

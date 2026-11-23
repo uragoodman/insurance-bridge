@@ -1,5 +1,6 @@
 """Local verification of OAuth2 JWTs issued by the Java authorization server."""
 
+import asyncio
 import threading
 
 import httpx
@@ -36,17 +37,7 @@ class OAuth2JWTValidator:
         expected_client_id = self._expected_client_ids.get(required_scope)
         if not expected_client_id:
             raise OAuth2JWTUnavailable("OAuth client identity or required scope is not configured")
-        try:
-            claims = jwt.decode(
-                token,
-                self._key(),
-                algorithms=["RS256"],
-                options={"require": ["exp"]},
-            )
-        except OAuth2JWTUnavailable:
-            raise
-        except jwt.PyJWTError as exc:
-            raise OAuth2JWTRejected("invalid or expired bearer access token") from exc
+        claims = self.decode_claims(token)
 
         if claims.get("client_id") != expected_client_id:
             raise OAuth2JWTRejected("OAuth client is not permitted", status_code=403)
@@ -61,6 +52,50 @@ class OAuth2JWTValidator:
             scopes = set()
         if required_scope not in scopes:
             raise OAuth2JWTRejected("OAuth scope denied", status_code=403)
+
+    async def require_async(self, token: str, required_scope: str) -> None:
+        """Run synchronous key retrieval and JWT checks outside the ASGI event loop."""
+        await asyncio.to_thread(self.require, token, required_scope)
+
+    def decode_claims(
+        self,
+        token: str,
+        *,
+        issuer: str | None = None,
+        audience: str | None = None,
+    ) -> dict:
+        if not token:
+            raise OAuth2JWTRejected("bearer access token required")
+        decode_options = {"require": ["exp"]}
+        if issuer is None:
+            decode_options["verify_iss"] = False
+        if audience is None:
+            decode_options["verify_aud"] = False
+        try:
+            return jwt.decode(
+                token,
+                self._key(),
+                algorithms=["RS256"],
+                issuer=issuer,
+                audience=audience,
+                options=decode_options,
+            )
+        except OAuth2JWTUnavailable:
+            raise
+        except jwt.PyJWTError as exc:
+            raise OAuth2JWTRejected("invalid or expired bearer access token") from exc
+
+    async def decode_claims_async(
+        self,
+        token: str,
+        *,
+        issuer: str | None = None,
+        audience: str | None = None,
+    ) -> dict:
+        """Run synchronous key retrieval and JWT checks outside the ASGI event loop."""
+        return await asyncio.to_thread(
+            self.decode_claims, token, issuer=issuer, audience=audience
+        )
 
     def _key(self) -> str:
         if self._public_key:

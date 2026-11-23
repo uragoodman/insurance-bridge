@@ -3,6 +3,7 @@ package com.itheima.bolee.security.web;
 import com.itheima.bolee.framework.commons.basic.ResponseResult;
 import com.itheima.bolee.framework.commons.constant.basic.SuperConstant;
 import com.itheima.bolee.framework.commons.constant.security.OauthConstant;
+import com.itheima.bolee.framework.commons.constant.security.SecurityConstant;
 import com.itheima.bolee.framework.commons.dto.security.UserVO;
 import com.itheima.bolee.framework.commons.enums.basic.BaseEnum;
 import com.itheima.bolee.framework.commons.utils.ResponseResultBuild;
@@ -64,7 +65,7 @@ public class AuthController {
         @ApiImplicitParam(name = "client_id",  value = "Oauth2客户端ID",example = "operators-pc", required = true),
         @ApiImplicitParam(name = "client_secret",value = "Oauth2客户端秘钥",  example = "pass", required = true),
         @ApiImplicitParam(name = "username",  value = "登录用户名",example = "admin@qq.com"),
-        @ApiImplicitParam(name = "mobile", value = "登录用户名", example = ""),
+        @ApiImplicitParam(name = "mobile", value = "登录用户名", example = "15156403088"),
         @ApiImplicitParam(name = "usetToken",value = "会话usetToken",required = true),
         @ApiImplicitParam(name = "password", value = "登录密码", example = "pass"),
         @ApiImplicitParam(name = "login_type", value = "登录类型", example = "详解OauthConstant登录类型"),

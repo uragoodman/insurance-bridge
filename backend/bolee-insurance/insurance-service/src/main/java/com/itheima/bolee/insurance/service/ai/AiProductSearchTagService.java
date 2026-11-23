@@ -22,7 +22,7 @@ import java.util.Set;
 @Service
 public class AiProductSearchTagService {
     private static final Set<String> ALLOWED_TYPES = new HashSet<String>(Arrays.asList(
-            "PRODUCT_TYPE", "AUDIENCE", "SCENARIO", "KEYWORD"));
+            "PRODUCT_TYPE", "AUDIENCE", "SCENARIO", "KEYWORD", "ALIAS"));
 
     private final AiProductSearchTagRepository repository;
     private final IdentifierGenerator identifierGenerator;
@@ -69,6 +69,12 @@ public class AiProductSearchTagService {
         if (tags == null || tags.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "The generator found no sufficiently supported product tags; existing tags were kept");
+        }
+        for (AiSearchTagDTO tag : tags) {
+            if (tag != null && "ALIAS".equalsIgnoreCase(tag.getTagType())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Product aliases must be reviewed and entered manually");
+            }
         }
         if (!StringUtils.hasText(modelId) || modelId.length() > 128
                 || !StringUtils.hasText(promptVersion) || promptVersion.length() > 32) {

@@ -79,6 +79,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests().requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()//站点请求处理
             .and()
             .authorizeRequests()
+            // This endpoint verifies the supplied user JWT itself and only exchanges
+            // approved admin-console roles for a short-lived AgentOS-audience token.
+            .antMatchers("/agentos/admin-token").permitAll()
             .antMatchers(securityConfigProperties.getIgnoreUrl()
             .toArray(new String[securityConfigProperties.getIgnoreUrl().size()]))//忽略配置
             .permitAll()

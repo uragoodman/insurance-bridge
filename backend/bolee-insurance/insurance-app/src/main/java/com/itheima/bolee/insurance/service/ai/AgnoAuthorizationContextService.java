@@ -55,7 +55,8 @@ public class AgnoAuthorizationContextService {
                 sessionId,
                 new HashSet<String>(Arrays.asList(
                         AgnoScope.PRODUCT_CATALOG_READ,
-                        AgnoScope.POLICY_OWN_READ)),
+                        AgnoScope.POLICY_OWN_READ,
+                        AgnoScope.PRODUCT_TERMS_READ)),
                 Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(GRANT_TTL_MINUTES)).getEpochSecond());
 
         try {

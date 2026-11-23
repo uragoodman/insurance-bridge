@@ -9,9 +9,11 @@ import com.itheima.bolee.insurance.mapper.InsuranceMapper;
 import com.itheima.bolee.insurance.mapper.ai.AiProductSearchTagMapper;
 import com.itheima.bolee.insurance.pojo.Category;
 import com.itheima.bolee.insurance.pojo.Insurance;
+import com.itheima.bolee.insurance.service.ai.ProductNameSimilarity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /** Read-only, narrow database access for the first AI product-catalog slice. */
 @Repository
@@ -72,6 +74,11 @@ public class AiProductCatalogRepository {
         }
         if (keywords != null && !keywords.isEmpty()) {
             List<Long> taggedProductIds = searchTagMapper.findActiveProductIdsMatchingKeywords(keywords);
+            List<String> nameNgrams = nameNgrams(keywords);
+            List<Long> similarNameProductIds = nameNgrams.size() >= 2
+                    ? searchTagMapper.findActiveProductIdsMatchingNameNgrams(
+                            nameNgrams, ProductNameSimilarity.minimumMatches(nameNgrams))
+                    : java.util.Collections.<Long>emptyList();
             query.and(wrapper -> {
                 boolean first = true;
                 for (String keyword : keywords) {
@@ -90,10 +97,23 @@ public class AiProductCatalogRepository {
                 if (taggedProductIds != null && !taggedProductIds.isEmpty()) {
                     wrapper.or().in(Insurance::getId, taggedProductIds);
                 }
+                if (similarNameProductIds != null && !similarNameProductIds.isEmpty()) {
+                    wrapper.or().in(Insurance::getId, similarNameProductIds);
+                }
             });
         }
         query.orderByAsc(Insurance::getSortNo).orderByAsc(Insurance::getId);
         if (keywords == null || keywords.isEmpty()) query.last("LIMIT " + categoryOnlyLimit);
         return insuranceMapper.selectList(query);
+    }
+
+    private static List<String> nameNgrams(List<String> keywords) {
+        java.util.Set<String> grams = new java.util.LinkedHashSet<String>();
+        if (keywords == null) return new ArrayList<String>();
+        for (String keyword : keywords) {
+            grams.addAll(ProductNameSimilarity.bigrams(keyword));
+            if (grams.size() >= 32) break;
+        }
+        return new ArrayList<String>(grams).subList(0, Math.min(32, grams.size()));
     }
 }

@@ -175,7 +175,7 @@ public class RepositoryBuilder implements InitializingBean,ApplicationContextAwa
 		try{
 			inputStream=this.applicationContext.getResource(xml).getInputStream();
 			String tempRepoHomeDir=System.getProperty("java.io.tmpdir");
-            // String tempRepoHomeDir = "./data/urule-home";
+//			String tempRepoHomeDir = "D:/repo2/";
 			if(StringUtils.isNotBlank(tempRepoHomeDir) && tempRepoHomeDir.length()>1){
 				if(tempRepoHomeDir.endsWith("/") || tempRepoHomeDir.endsWith("\\")){
 					tempRepoHomeDir+="urule-temp-repo-home/";

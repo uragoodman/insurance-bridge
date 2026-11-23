@@ -67,5 +67,12 @@ class OAuth2ClientCredentials:
             self._expires_at = time.monotonic() + expires_in
             return token
 
+    def invalidate(self, token: str | None = None) -> None:
+        """Expire the cached token after an upstream 401 without discarding a newer token."""
+        with self._lock:
+            if token is None or token == self._access_token:
+                self._access_token = None
+                self._expires_at = 0.0
+
 
 __all__ = ["OAuth2ClientCredentials", "OAuth2TokenError"]

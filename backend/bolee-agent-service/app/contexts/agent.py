@@ -3,6 +3,7 @@
 from dataclasses import dataclass, field
 from typing import Any
 
+from app.contexts.customer_task import CustomerTaskRuntime
 from app.contexts.tool import AgentToolResultCollector
 
 
@@ -12,6 +13,7 @@ class AgentDependencies:
     authorization_context: str = field(repr=False)
     tool_result_collector: AgentToolResultCollector
     selected_policy_id: str | None = None
+    customer_task_runtime: CustomerTaskRuntime = field(default_factory=CustomerTaskRuntime)
 
     def as_agno_dependencies(self) -> dict[str, Any]:
         return {
@@ -19,4 +21,5 @@ class AgentDependencies:
             "authorization_context": self.authorization_context,
             "tool_result_collector": self.tool_result_collector,
             "selected_policy_id": self.selected_policy_id,
+            "customer_task_runtime": self.customer_task_runtime,
         }

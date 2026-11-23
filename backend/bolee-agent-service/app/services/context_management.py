@@ -12,6 +12,7 @@ from app.domain.conversation_context import (
     ConversationMemorySnapshot,
     ConversationTurn,
 )
+from app.domain.customer_task import ActiveTaskState
 from app.services.ports import (
     SessionContextStorePort,
     SummaryGeneratorPort,
@@ -100,6 +101,7 @@ class ContextManagementService:
         *,
         sensitive_tool_used: bool,
         business_references: tuple[str, ...] = (),
+        active_task: ActiveTaskState | None = None,
     ) -> ConversationMemorySnapshot:
         """Persist only safe conversational content; business tools stay authoritative."""
         if (
@@ -149,6 +151,11 @@ class ContextManagementService:
             pending_questions=pending_questions,
             business_references=references,
             business_reference_age=reference_age,
+            active_task=(
+                active_task
+                if active_task is not None and active_task != previous.active_task
+                else previous.active_task.next_turn()
+            ),
             revision=previous.revision + 1,
         )
         self._store.save(user_id, session_id, updated)

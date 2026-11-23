@@ -1,0 +1,3809 @@
+{
+  "suite_version": "intent-routing-cases-v1",
+  "rubric_version": "intent-routing-rubric-v4",
+  "runner_version": "2.1.0",
+  "code_revision": "3bd9acb9c921a344d9cd56ff990ab77196c76d2a",
+  "model_id": "qwen3.8-flash",
+  "endpoint_alias": "dashscope.aliyuncs.com",
+  "generation_parameters": {
+    "temperature": 0,
+    "max_tokens": 500,
+    "tool_choice": "auto",
+    "timeout_seconds": 90
+  },
+  "prompt_sha256": "c9e7ae65a148a8a7f849456c2766e2d23a8154f02bdc72b08116e5571a6af433",
+  "tool_schema_sha256": "2975afa597c74e2dbdc1d93eed5aa9a5604aafe4c71056ab92530a8dc9e602ed",
+  "case_suite_sha256": "0e2047caafbd08f0beba09cbc235f33ffce805da6a3d1bbf7846eca7f661e940",
+  "expectation_overlay_sha256": "405f59ba0ae41aabf754573a7f992948b2e7ba530623374058c3c1f7b043f5d6",
+  "rubric_sha256": "59a6ddf18ffc2e319196205e541a7eb2967fc48bb6193bebab6949445d4435df",
+  "runner_sha256": "c28d24e38a3a905439ec92dbd7741308f7a00a747bbae540209ae3261882f4b3",
+  "started_at_utc": "2026-11-23T08:49:05.663876+00:00",
+  "completed_at_utc": "2026-11-23T08:57:43.225987+00:00",
+  "case_count": 68,
+  "evaluation_case_ids": [
+    "catalog-01",
+    "catalog-02",
+    "catalog-03",
+    "catalog-04",
+    "catalog-05",
+    "catalog-06",
+    "catalog-07",
+    "catalog-08",
+    "catalog-09",
+    "catalog-10",
+    "recommend-01",
+    "recommend-02",
+    "recommend-03",
+    "recommend-04",
+    "recommend-05",
+    "recommend-06",
+    "recommend-07",
+    "recommend-08",
+    "recommend-09",
+    "recommend-10",
+    "compare-01",
+    "compare-02",
+    "compare-03",
+    "compare-04",
+    "compare-05",
+    "compare-06",
+    "compare-07",
+    "compare-08",
+    "compare-09",
+    "compare-10",
+    "terms-01",
+    "terms-02",
+    "terms-03",
+    "terms-04",
+    "terms-05",
+    "terms-06",
+    "terms-07",
+    "terms-08",
+    "terms-09",
+    "terms-10",
+    "policy-01",
+    "policy-02",
+    "policy-03",
+    "policy-04",
+    "policy-05",
+    "policy-06",
+    "policy-07",
+    "policy-08",
+    "policy-09",
+    "policy-10",
+    "unsupported-01",
+    "unsupported-02",
+    "unsupported-03",
+    "unsupported-04",
+    "unsupported-05",
+    "unsupported-06",
+    "unsupported-07",
+    "unsupported-08",
+    "ambiguous-01",
+    "ambiguous-02",
+    "ambiguous-03",
+    "ambiguous-04",
+    "ambiguous-05",
+    "ambiguous-06",
+    "ambiguous-07",
+    "ambiguous-08",
+    "ambiguous-09",
+    "ambiguous-10"
+  ],
+  "observation_count": 131,
+  "repeat_policy": "baseline once; critical_no_tool and high_confusion cases repeated three additional times",
+  "metrics": {
+    "supported_routes": {
+      "passed": 47,
+      "total": 47
+    },
+    "supported_by_intent": {
+      "PRODUCT_CATALOG": {
+        "total": 10,
+        "passed": 10,
+        "first_action_passed": 10,
+        "schema_valid": 10
+      },
+      "PRODUCT_RECOMMENDATION": {
+        "total": 10,
+        "passed": 10,
+        "first_action_passed": 10,
+        "schema_valid": 10
+      },
+      "PRODUCT_COMPARISON": {
+        "total": 10,
+        "passed": 10,
+        "first_action_passed": 10,
+        "schema_valid": 10
+      },
+      "TERMS_QA": {
+        "total": 7,
+        "passed": 7,
+        "first_action_passed": 7,
+        "schema_valid": 7
+      },
+      "OWN_POLICY": {
+        "total": 10,
+        "passed": 10,
+        "first_action_passed": 10,
+        "schema_valid": 10
+      }
+    },
+    "expected_no_tool": {
+      "passed": 18,
+      "total": 18
+    },
+    "expected_clarification": {
+      "passed": 3,
+      "total": 3
+    },
+    "critical_no_tool_business_calls": 0,
+    "argument_schema_validity": {
+      "valid": 58,
+      "attempted": 58
+    },
+    "schema_invalid_calls": 0,
+    "argument_violation_observations": 0,
+    "manual_review_cases": 19,
+    "repeat_observations": 63,
+    "repeat_passed": 63,
+    "repeat_critical_no_tool_business_calls": 0,
+    "provider_errors": 0,
+    "mean_latency_ms": 3805.7,
+    "p95_latency_ms": 7481.6
+  },
+  "observations": [
+    {
+      "case_id": "catalog-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_156e074a615d4a4783c538e4",
+          "function": {
+            "arguments": "{\"keyword\": \"境内旅游保险\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "境内旅游保险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1507.7,
+      "observed_at_utc": "2026-11-23T08:49:05.663876+00:00"
+    },
+    {
+      "case_id": "catalog-02",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_97f453f60799466da96b27d2",
+          "function": {
+            "arguments": "{\"keyword\": \"短期出行 意外险\", \"category_id\": null}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "短期出行 意外险",
+          "category_id": null,
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2670.3,
+      "observed_at_utc": "2026-11-23T08:49:08.334385+00:00"
+    },
+    {
+      "case_id": "catalog-03",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_89c82392f9dc439695589353",
+          "function": {
+            "arguments": "{\"keyword\": \"含医疗保障的旅行险\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "含医疗保障的旅行险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1929.0,
+      "observed_at_utc": "2026-11-23T08:49:10.263613+00:00"
+    },
+    {
+      "case_id": "catalog-04",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_478c4df5a5ac4683944fdc4a",
+          "function": {
+            "arguments": "{\"keyword\": \"安心旅行\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1723.6,
+      "observed_at_utc": "2026-11-23T08:49:11.987432+00:00"
+    },
+    {
+      "case_id": "catalog-05",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_21907960b6bb46be84d382d3",
+          "function": {
+            "arguments": "{\"keyword\": \"一年期 个人意外险\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "一年期 个人意外险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1823.6,
+      "observed_at_utc": "2026-11-23T08:49:13.811212+00:00"
+    },
+    {
+      "case_id": "catalog-06",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_71eb76cabd5e425490c6646a",
+          "function": {
+            "arguments": "{\"keyword\": \"自驾出行\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "自驾出行",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1628.9,
+      "observed_at_utc": "2026-11-23T08:49:15.440303+00:00"
+    },
+    {
+      "case_id": "catalog-07",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_a56ec220ade549fe979aba9b",
+          "function": {
+            "arguments": "{\"keyword\": \"行李损失 旅游险\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "行李损失 旅游险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2494.2,
+      "observed_at_utc": "2026-11-23T08:49:17.934622+00:00"
+    },
+    {
+      "case_id": "catalog-08",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_6c0c20d6789048bd81fa6a43",
+          "function": {
+            "arguments": "{\"keyword\": \"少儿意外险\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "少儿意外险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1314.8,
+      "observed_at_utc": "2026-11-23T08:49:19.249540+00:00"
+    },
+    {
+      "case_id": "catalog-09",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_2a25211b07324f11b1cc674c",
+          "function": {
+            "arguments": "{\"keyword\": \"保障期限一年 健康险\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "保障期限一年 健康险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1824.0,
+      "observed_at_utc": "2026-11-23T08:49:21.073732+00:00"
+    },
+    {
+      "case_id": "catalog-10",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_CATALOG",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_0fe2f39bcba84ca2b9084b45",
+          "function": {
+            "arguments": "{\"keyword\": \"住院医疗\"}",
+            "name": "search_catalog_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_catalog_products",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "住院医疗",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1424.8,
+      "observed_at_utc": "2026-11-23T08:49:22.498681+00:00"
+    },
+    {
+      "case_id": "recommend-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_10db7906eae84073a812573b",
+          "function": {
+            "arguments": "{}",
+            "name": "list_catalog_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_catalog_categories",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1705.5,
+      "observed_at_utc": "2026-11-23T08:49:24.204429+00:00"
+    },
+    {
+      "case_id": "recommend-02",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_2bf3e630ed834b1ea852fe2d",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2349.8,
+      "observed_at_utc": "2026-11-23T08:49:26.554418+00:00"
+    },
+    {
+      "case_id": "recommend-03",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_7edb9d70c21f483294e8aed6",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2976.8,
+      "observed_at_utc": "2026-11-23T08:49:30.108216+00:00"
+    },
+    {
+      "case_id": "recommend-04",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_8052c53d62cc4cd499070cd7",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1860.6,
+      "observed_at_utc": "2026-11-23T08:49:31.968977+00:00"
+    },
+    {
+      "case_id": "recommend-05",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_b65d08fb33104adfbcf4f98f",
+          "function": {
+            "arguments": "{}",
+            "name": "list_catalog_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_catalog_categories",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2325.4,
+      "observed_at_utc": "2026-11-23T08:49:34.294449+00:00"
+    },
+    {
+      "case_id": "recommend-06",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c2604b79cee24148911c1b2a",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "我先帮您查看可用于个性化推荐的意外险类别，随后再结合老人的年龄、活动场景等条件进行推荐。\n\n",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2562.4,
+      "observed_at_utc": "2026-11-23T08:49:36.857026+00:00"
+    },
+    {
+      "case_id": "recommend-07",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c66a0d4b6ca14f359dae729d",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1715.1,
+      "observed_at_utc": "2026-11-23T08:49:38.572208+00:00"
+    },
+    {
+      "case_id": "recommend-08",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_63d8c4056d7e4e028da16015",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "我先为您列出可推荐的保险类别，再结合家庭成员和短期旅行的需求进行匹配。\n\n",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1567.4,
+      "observed_at_utc": "2026-11-23T08:49:40.139689+00:00"
+    },
+    {
+      "case_id": "recommend-09",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_f9ea934162ec4ee88c64cbd1",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2090.8,
+      "observed_at_utc": "2026-11-23T08:49:42.230592+00:00"
+    },
+    {
+      "case_id": "recommend-10",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_a7477239613942d7b9b1b2cd",
+          "function": {
+            "arguments": "{}",
+            "name": "list_recommendation_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "我先为您查找适合“周末自驾游”场景的推荐类别，然后再结合您的具体需求做推荐。\n\n",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_recommendation_categories",
+        "arguments": {
+          "intent": "PRODUCT_RECOMMENDATION",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1897.2,
+      "observed_at_utc": "2026-11-23T08:49:44.127881+00:00"
+    },
+    {
+      "case_id": "compare-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_e10cf9665f49426982b50514",
+          "function": {
+            "arguments": "{\"keyword\": \"安心旅行A 安心旅行B\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行A 安心旅行B",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1407.4,
+      "observed_at_utc": "2026-11-23T08:49:45.535386+00:00"
+    },
+    {
+      "case_id": "compare-02",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c113faaf970f40e6819741dd",
+          "function": {
+            "arguments": "{\"keyword\": \"境内旅游险 价格 医疗保障\", \"category_id\": null}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "境内旅游险 价格 医疗保障",
+          "category_id": null,
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3211.0,
+      "observed_at_utc": "2026-11-23T08:49:48.746491+00:00"
+    },
+    {
+      "case_id": "compare-03",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_3035df0d58b344038a23df01",
+          "function": {
+            "arguments": "{\"keyword\": \"少儿意外险\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "我先为您查询可比较的少儿意外险产品。\n\n",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "少儿意外险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2072.1,
+      "observed_at_utc": "2026-11-23T08:49:50.818690+00:00"
+    },
+    {
+      "case_id": "compare-04",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_56857366b0cd4600b17fee77",
+          "function": {
+            "arguments": "{\"keyword\": \"安心旅行\", \"category_id\": null}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行",
+          "category_id": null,
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2147.3,
+      "observed_at_utc": "2026-11-23T08:49:52.966098+00:00"
+    },
+    {
+      "case_id": "compare-05",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c71604a6e7424e85bb31ae96",
+          "function": {
+            "arguments": "{\"keyword\": \"短期 一年期 意外险\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "短期 一年期 意外险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1504.8,
+      "observed_at_utc": "2026-11-23T08:49:54.471048+00:00"
+    },
+    {
+      "case_id": "compare-06",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_23a66d6add5a450e91836edf",
+          "function": {
+            "arguments": "{\"keyword\": \"出境旅游保险\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "出境旅游保险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2206.1,
+      "observed_at_utc": "2026-11-23T08:49:56.677417+00:00"
+    },
+    {
+      "case_id": "compare-07",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c33ad0d7e13a488cb2d13e6f",
+          "function": {
+            "arguments": "{\"keyword\": \"自驾游\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "自驾游",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2178.4,
+      "observed_at_utc": "2026-11-23T08:49:58.418364+00:00"
+    },
+    {
+      "case_id": "compare-08",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_d6b4e30d6f7849d5aaeb0e5f",
+          "function": {
+            "arguments": "{\"keyword\": \"住院医疗险\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "我来帮您查找住院医疗险产品进行对比。\n\n",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "住院医疗险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1736.6,
+      "observed_at_utc": "2026-11-23T08:50:00.155152+00:00"
+    },
+    {
+      "case_id": "compare-09",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_759d9b033ca24f1a9aea2fb0",
+          "function": {
+            "arguments": "{\"keyword\": \"旅游 行李保障\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "旅游 行李保障",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1736.5,
+      "observed_at_utc": "2026-11-23T08:50:01.891830+00:00"
+    },
+    {
+      "case_id": "compare-10",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_0bc91d5127d442b5b71ebe52",
+          "function": {
+            "arguments": "{\"keyword\": \"个人意外险\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "个人意外险",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3264.7,
+      "observed_at_utc": "2026-11-23T08:50:05.156639+00:00"
+    },
+    {
+      "case_id": "terms-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_164f3ec4023d4181a4ccdd0a",
+          "function": {
+            "arguments": "{\"product_name\": \"平安境内旅游险\", \"question\": \"航班延误责任的起赔时长是多少？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "平安境内旅游险",
+          "question": "航班延误责任的起赔时长是多少？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1958.8,
+      "observed_at_utc": "2026-11-23T08:50:07.115587+00:00"
+    },
+    {
+      "case_id": "terms-02",
+      "expected_outcome": "CALL",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_be3e66a85596445c8b7e8039",
+          "function": {
+            "arguments": "{\"product_name\": \"安心旅行A\", \"question\": \"免责条款有哪些\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行A",
+          "question": "免责条款有哪些"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1367.1,
+      "observed_at_utc": "2026-11-23T08:50:08.482833+00:00"
+    },
+    {
+      "case_id": "terms-03",
+      "expected_outcome": "CALL_OR_CLARIFY",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_b76e26c35017499ab553c10a",
+          "function": {
+            "arguments": "{\"product_name\": \"旅游险\", \"question\": \"旅游险对行李延误有什么正式保障规定？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "旅游险",
+          "question": "旅游险对行李延误有什么正式保障规定？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 4025.0,
+      "observed_at_utc": "2026-11-23T08:50:12.507927+00:00"
+    },
+    {
+      "case_id": "terms-04",
+      "expected_outcome": "CALL",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_9dd13f1e973543f6b546b53f",
+          "function": {
+            "arguments": "{\"product_name\": \"境内旅行保险\", \"question\": \"医疗费用责任如何约定？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "境内旅行保险",
+          "question": "医疗费用责任如何约定？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3234.9,
+      "observed_at_utc": "2026-11-23T08:50:19.663619+00:00"
+    },
+    {
+      "case_id": "terms-05",
+      "expected_outcome": "CALL",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_f38ca35c3a744d8f95d97cf9",
+          "function": {
+            "arguments": "{\"product_name\": \"安心旅行B\", \"question\": \"是否设有等待期？等待期时长及起算规则是什么？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行B",
+          "question": "是否设有等待期？等待期时长及起算规则是什么？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1320.6,
+      "observed_at_utc": "2026-11-23T08:50:20.984319+00:00"
+    },
+    {
+      "case_id": "terms-06",
+      "expected_outcome": "CALL",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c7ca528893c74a6d9807a532",
+          "function": {
+            "arguments": "{\"product_name\": \"安心旅行A\", \"question\": \"意外身故责任的条款怎么写？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行A",
+          "question": "意外身故责任的条款怎么写？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2032.7,
+      "observed_at_utc": "2026-11-23T08:50:23.017286+00:00"
+    },
+    {
+      "case_id": "terms-07",
+      "expected_outcome": "CALL_OR_CLARIFY",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "“投保前已发生的疾病”在不同产品条款中的处理可能不同，常见包括：\n\n- **作为既往症除外**：投保前已存在、已确诊或有症状的疾病，可能不在保障范围内；\n- **设置等待期**：等待期内发生的疾病可能不赔，等待期后是否赔付要看条款；\n- **需健康告知/核保**：是否影响投保、是否加费或除外，取决于产品规则和核保结论。\n\n如果您想查询**具体条款如何处理**，请告诉我产品名称或险种说法，例如“XX百万医疗险”“XX重疾险”。我会再帮您检索该产品的正式条款。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3338.4,
+      "observed_at_utc": "2026-11-23T08:50:26.355834+00:00"
+    },
+    {
+      "case_id": "terms-08",
+      "expected_outcome": "CALL_OR_CLARIFY",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_5300e3a156a24e21817fa15d",
+          "function": {
+            "arguments": "{\"product_name\": \"境内旅游险\", \"question\": \"紧急救援责任的适用条件是什么？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "境内旅游险",
+          "question": "紧急救援责任的适用条件是什么？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1772.2,
+      "observed_at_utc": "2026-11-23T08:50:28.128170+00:00"
+    },
+    {
+      "case_id": "terms-09",
+      "expected_outcome": "CALL",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c8a30ee56cd645a7b8c62216",
+          "function": {
+            "arguments": "{\"product_name\": \"安心旅行A\", \"question\": \"航班延误保障是否有金额上限？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行A",
+          "question": "航班延误保障是否有金额上限？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2081.7,
+      "observed_at_utc": "2026-11-23T08:50:30.210073+00:00"
+    },
+    {
+      "case_id": "terms-10",
+      "expected_outcome": "CALL",
+      "expected_intent": "TERMS_QA",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c929fa43da5a4ddfb2712fca",
+          "function": {
+            "arguments": "{\"product_name\": \"安心旅行B\", \"question\": \"高风险运动相关的除外责任约定有哪些？\"}",
+            "name": "search_product_terms"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_product_terms",
+        "arguments": {
+          "intent": "TERMS_QA",
+          "action": "SEARCH_PRODUCT_TERMS",
+          "product_name": "安心旅行B",
+          "question": "高风险运动相关的除外责任约定有哪些？"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1793.6,
+      "observed_at_utc": "2026-11-23T08:50:32.003814+00:00"
+    },
+    {
+      "case_id": "policy-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_1315facf6dbf495f861ef14e",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 913.6,
+      "observed_at_utc": "2026-11-23T08:50:30.023229+00:00"
+    },
+    {
+      "case_id": "policy-02",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_919ae3c616034abbb8f39f43",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1436.3,
+      "observed_at_utc": "2026-11-23T08:50:31.459644+00:00"
+    },
+    {
+      "case_id": "policy-03",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_0fd60d9bc80f499aa90a4f0b",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1947.6,
+      "observed_at_utc": "2026-11-23T08:50:33.407362+00:00"
+    },
+    {
+      "case_id": "policy-04",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_9737149658af436081d1a687",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2112.0,
+      "observed_at_utc": "2026-11-23T08:50:35.519436+00:00"
+    },
+    {
+      "case_id": "policy-05",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_ce97f14552e848f2a52063a8",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2268.2,
+      "observed_at_utc": "2026-11-23T08:50:37.787715+00:00"
+    },
+    {
+      "case_id": "policy-06",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_3be7f10d2aee4973877c3707",
+          "function": {
+            "arguments": "{\"raw_arguments\": null}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1995.0,
+      "observed_at_utc": "2026-11-23T08:50:39.782905+00:00"
+    },
+    {
+      "case_id": "policy-07",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_377aa2ea75344c88ae086a89",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1210.1,
+      "observed_at_utc": "2026-11-23T08:50:40.993063+00:00"
+    },
+    {
+      "case_id": "policy-08",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_15a2530c3481486b82df25cb",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 1809.4,
+      "observed_at_utc": "2026-11-23T08:50:42.802610+00:00"
+    },
+    {
+      "case_id": "policy-09",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_44b013b784344cbfafb294fe",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2166.5,
+      "observed_at_utc": "2026-11-23T08:50:44.969176+00:00"
+    },
+    {
+      "case_id": "policy-10",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_6822d706a2cb492d87f5addf",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 2155.0,
+      "observed_at_utc": "2026-11-23T08:50:47.124270+00:00"
+    },
+    {
+      "case_id": "unsupported-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "目前平台暂不支持直接提交保险理赔申请，也无法代办或查询理赔进度。\n\n您可以按以下方式处理：\n1. 通过承保保险公司的官方 App、官网或客服电话提交理赔申请；\n2. 按保险公司要求准备理赔材料，并以其理赔渠道的正式指引为准；\n3. 如果您想了解某项保障责任、免责条款或理赔条件，我可以帮您查询相关产品的正式条款。\n\n需要我帮您查询某个产品的条款吗？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 4356.5,
+      "observed_at_utc": "2026-11-23T08:50:51.480933+00:00"
+    },
+    {
+      "case_id": "unsupported-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 理赔进度查询\n\n很抱歉，**理赔进度查询功能目前暂未接入本平台**，我无法为您查询或跟踪理赔案件的办理状态。\n\n### 建议您通过以下渠道核实：\n\n1. **保险公司官方客服热线** —— 拨打您投保的保险公司客服电话，提供保单相关信息即可查询理赔进度\n2. **保险公司官方 App / 官网** —— 登录您的账户，在「理赔服务」或「我的理赔」栏目中查看案件状态\n3. **线下服务网点** —— 携带有效身份证件前往保险公司营业网点咨询\n\n> ⚠️ 温馨提示：为了您的信息安全，请不要在对话中提供身份证号、银行卡号或完整保单号等敏感信息。\n\n如果您有其他关于产品、保障条款或本人保单状态的问题，我可以继续为您解答。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3860.7,
+      "observed_at_utc": "2026-11-23T08:50:55.341685+00:00"
+    },
+    {
+      "case_id": "unsupported-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "目前平台暂不支持根据健康情况作出**核保结论**，也无法预测是否能通过核保。\n\n建议你通过保险公司的官方核保渠道提交健康告知和相关资料，由核保人员审核并给出正式结论。请不要在这里发送病历、身份证号或其他敏感健康信息。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3559.3,
+      "observed_at_utc": "2026-11-23T08:50:58.901024+00:00"
+    },
+    {
+      "case_id": "unsupported-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "当前平台暂不支持由我直接购买保险或提交投保申请，也无法完成核保、缴费和出单操作。\n\n另外，你提到的“这份保险”目前无法确定具体产品。若你需要，我可以先帮你：\n\n- 查询某款保险的产品信息或正式保障条款；\n- 根据你的需求推荐可参考的保险产品；\n- 对比不同产品。\n\n请告诉我产品名称或险种，以及你希望先了解哪一项。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 4495.0,
+      "observed_at_utc": "2026-11-23T08:51:03.997568+00:00"
+    },
+    {
+      "case_id": "unsupported-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "目前平台尚未接入**退保**和**停止自动续费**的操作能力，我无法代为办理，也不能确认退保或扣费状态。\n\n建议你通过以下正式渠道办理：\n\n- 在平台的“我的保单 / 保单服务”入口提交退保或关闭自动续费的申请；\n- 或直接联系承保保险公司的官方客服，按流程申请终止保障与停止续期扣费；\n- 办理时请保留申请编号、受理回执或沟通记录，以便后续核对。\n\n如果你的首要目标只是**查看本人保单的产品名称、状态和保障日期**，我可以帮你做只读查询；但这不能替代退保或停止续费的办理。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 11159.7,
+      "observed_at_utc": "2026-11-23T08:51:18.301483+00:00"
+    },
+    {
+      "case_id": "unsupported-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，**准确报价与最终保费测算目前暂不支持在线查询**，我无法为你给出具体金额或承保结论。\n\n原因说明：\n- 保费并非固定值，通常由**投保年龄、性别、职业、保额、保障期限、缴费期限、健康状况及核保结论**等因素共同决定；\n- 最终保费需由保险公司完成核保后正式确认，平台当前未接入报价与核保能力。\n\n建议通过以下渠道获取准确报价：\n1. 在保险公司官方投保页面填写真实投保信息后试算；\n2. 联系保险顾问或保险公司官方客服进行人工核保与报价；\n3. 若已有投保意向，按官方流程提交投保申请，以核保结果为准。\n\n如果你愿意告诉我**产品名称**，我可以帮你查询该产品的**保障责任、免责条款、等待期**等正式条款信息（但不包含报价）。需要吗？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 7116.9,
+      "observed_at_utc": "2026-11-23T08:51:25.418543+00:00"
+    },
+    {
+      "case_id": "unsupported-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 暂时无法为您办理\n\n**修改保单受益人属于保单保全（变更）操作，平台 AI 助手目前尚未接入该能力**，因此我无法替您提交、确认或反馈任何变更结果。\n\n### 建议办理渠道\n\n- **保险公司官方客服热线**：保单载明的客服电话，可申请受益人变更\n- **官方 App / 微信公众号**：通常在「我的保单 → 保全服务 / 保单变更」中有「受益人变更」入口\n- **线下柜面或您的保单服务人员**：需本人办理\n\n### 办理时一般需要准备\n\n- 投保人本人有效身份证件\n- 保单信息（保单号可在您的保单详情页查看，**无需发给我**）\n- 新受益人的姓名、身份信息及与被保险人的关系\n- 若变更身故受益人，通常需要**被保险人本人同意并签字**\n\n### 我可以帮您做的\n\n- 说明受益人的一般概念（如「指定受益人」与「法定受益人」的区别）\n- 查询某款产品的**条款中关于受益人约定的原文**（请告知产品名称）\n- 查询您名下保单的**产品名称、状态、保障日期**等基本信息\n\n需要哪一项？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 5715.5,
+      "observed_at_utc": "2026-11-23T08:51:31.134127+00:00"
+    },
+    {
+      "case_id": "unsupported-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我目前**暂不支持代为提交或办理保单贷款申请**，无法替你完成这项操作，也不能替你确认贷款额度、利率或到账状态。\n\n建议你通过以下渠道办理：\n\n1. **保险公司官方 App / 微信公众号**：进入“保单服务”或“保单贷款”入口，按页面提示自助申请。\n2. **保险公司客服热线 / 官方客服**：说明需要办理保单贷款，由客服引导。\n3. **原投保渠道或线下服务网点**：由服务人员协助办理。\n\n办理时通常需要关注：保单是否具备贷款功能、可贷额度、贷款利率与期限、还款方式，以及贷款期间保障责任可能受影响。具体规则以你的保险合同和保险公司规定为准。\n\n如果你想先了解某款产品的**保单贷款条款规定**，可以告诉我产品名称，我帮你查询正式条款内容。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 5411.8,
+      "observed_at_utc": "2026-11-23T08:51:33.806723+00:00"
+    },
+    {
+      "case_id": "ambiguous-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您好，我可以协助您处理保险相关事务。为了准确帮您办理，请先告诉我具体需求，例如：\n\n- **查找/浏览产品**：如“有哪些重疾险”“帮我搜一下百万医疗”\n- **个性化推荐**：结合您的年龄、预算、家庭情况等推荐合适产品\n- **产品对比**：如“对比 A 产品和 B 产品”\n- **条款咨询**：如某产品的保障责任、免责、等待期、理赔条件\n- **我的保单**：查询本人保单的状态、产品名称、保障日期等\n\n⚠️ 温馨提示：报价、投保办理、理赔申请与进度查询、核保、退保等功能目前尚未接入，暂时无法处理。\n\n请问您希望先处理哪一项？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3539.9,
+      "observed_at_utc": "2026-11-23T08:51:37.346717+00:00"
+    },
+    {
+      "case_id": "ambiguous-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "请问您想查询的是哪一款产品？请提供产品名称或险种类别，例如：\n\n- **重疾险**\n- **医疗险**\n- **意外险**\n- **年金险**\n\n另外，您希望我做哪种查询：\n\n1. 查询产品目录/有哪些可选产品  \n2. 查询某个产品的保障责任或条款  \n3. 比较几个产品  \n4. 查询您本人的保单信息  \n\n请补充一下，我再为您处理。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3348.5,
+      "observed_at_utc": "2026-11-23T08:51:40.695320+00:00"
+    },
+    {
+      "case_id": "ambiguous-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您这句话里包含两个可以分别处理的目标：\n\n1. **推荐保险产品**\n2. **退掉旧保单**\n\n按当前服务流程，一次只能先处理一个主要目标；另外，**退保办理暂未接入**，我可以先说明可核实的信息或后续渠道。\n\n请问您希望我先处理哪一项：**推荐产品**，还是**旧保单相关咨询**？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 5880.8,
+      "observed_at_utc": "2026-11-23T08:51:46.576288+00:00"
+    },
+    {
+      "case_id": "ambiguous-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "请告诉我你想比较的**两个产品名称**，或描述使用场景/需求关键词。我才能先查询本轮 Java 产品目录，再只对查询到的产品做比较。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 3174.6,
+      "observed_at_utc": "2026-11-23T08:51:49.750968+00:00"
+    },
+    {
+      "case_id": "ambiguous-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "“免赔额”一般是指：发生保险事故后，**保险公司不承担赔偿责任、需要由被保险人自己先承担的那部分损失金额**。只有超过免赔额的损失，才可能按合同约定继续赔付。\n\n常见理解方式：\n\n- **绝对免赔额**：损失金额先扣除免赔额，剩余部分再赔。  \n  例如：免赔额 1 万元，医疗花费 3 万元，最多按 2 万元进入赔付计算。\n- **相对免赔额**：损失未达到免赔额不赔；达到或超过免赔额后，可能按约定对全部符合条件损失赔付。具体要看条款。\n- **0 免赔额**：合同没有设置需自担的免赔金额，但仍可能受赔付比例、保额上限、责任范围等限制。\n\n需要注意的是，**免赔额不等于等待期**。免赔额影响“赔多少钱”，等待期影响“这段时间内发生的事故是否赔”。\n\n实际理赔时，还要看条款中的保障责任、免责条款、医院范围、社保结算情况、赔付比例和保额上限等。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 6299.0,
+      "observed_at_utc": "2026-11-23T08:51:56.050048+00:00"
+    },
+    {
+      "case_id": "ambiguous-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "你好，我可以帮你处理以下保险相关问题：\n\n- **查询或浏览产品**：根据你提供的产品关键词或场景，查询当前产品目录。\n- **个性化推荐**：先选择推荐类别，再结合你的需求条件进行产品推荐。\n- **产品比较**：根据你指定的产品或场景，查询可比较的产品并生成比较结果。\n- **正式条款查询**：查询某款产品的保障责任、免责、等待期或条款相关说明。\n- **本人保单摘要**：在你已登录的账户范围内，查询本人保单的状态、产品名称和保障日期等基本信息。\n\n暂时不支持的业务包括：**报价、投保办理、核保、理赔办理/进度查询、退保办理**，以及替你作出是否赔付或是否符合承保条件的结论。\n\n你可以直接告诉我需求，例如：\n\n> “帮我推荐适合经常出差人群的产品。”  \n> “比较产品 A 和产品 B。”  \n> “查询某产品的等待期。”  \n> “查看我的保单状态。”",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 7253.6,
+      "observed_at_utc": "2026-11-23T08:52:03.811988+00:00"
+    },
+    {
+      "case_id": "ambiguous-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "可以，但正式条款查询需要先确定具体产品。你可以先告诉我任意一项：\n\n- 产品名称或大致名称  \n- 险种，例如医疗、意外、重疾、旅行、家财  \n- 保障对象，例如本人、儿童、老人、宠物、房屋  \n- 你记得的产品特点或使用场景  \n\n不需要提供身份证号、保单号或其他敏感信息。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 7591.7,
+      "observed_at_utc": "2026-11-23T08:52:11.403753+00:00"
+    },
+    {
+      "case_id": "ambiguous-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我无法使用他人的身份信息来查询保单。\n\n**原因说明**\n- 保单信息属于个人敏感信息，平台只能查询**当前登录账号本人名下**的保单。\n- 我不能接收、使用或代为输入他人的身份证号、保单号、账号等身份信息，也无法验证我与该保单的关系。\n\n**建议的合规查询方式**\n1. 请家人本人登录其平台账号，在“我的保单”中查看保单状态、保障期限等信息。\n2. 若需要查询他人保单的缴费、批改、理赔等事项，建议由保单持有人本人联系保险公司客服或通过官方渠道办理。\n3. 如果这份保单是以您为投保人的，那么它会出现在您本人的保单列表中，我可以帮您查询。\n\n需要我现在为您查询**本人名下**的保单吗？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 6151.1,
+      "observed_at_utc": "2026-11-23T08:52:20.399814+00:00"
+    },
+    {
+      "case_id": "ambiguous-09",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您这条消息里包含两个可以分别完成的目标，我先跟您确认优先级，再开始处理（本轮暂不调用任何业务工具）：\n\n1. **个性化推荐**：结合您的出行/工作、预算等条件，分别推荐旅游险和意外险产品。\n2. **条款查询**：查询指定产品的保障责任、免责、等待期等正式条款内容。\n\n请问您希望**先处理哪一个**？\n\n- 如果选 **1**，请补充：投保目的（如出境游/国内游、日常意外）、大致预算或保额需求、被保人年龄段等，我会先列出推荐类别再走推荐流程。\n- 如果选 **2**，请告诉我具体产品名称（或您手上的产品说法）以及想了解的问题，例如“旅游险的等待期是多久”“意外险的免责条款有哪些”。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 6383.5,
+      "observed_at_utc": "2026-11-23T08:52:26.783375+00:00"
+    },
+    {
+      "case_id": "ambiguous-10",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我无法判断某次事故或治疗“能不能赔”，也不能作出核赔结论——是否赔付需要由保险公司依据正式条款、事故材料和核赔结果来认定。\n\n建议这样处理：\n\n1. **通过保险公司理赔渠道核实**：在平台内找到对应保单，进入“理赔申请/报案”入口提交材料；或直接拨打保险公司客服电话报案，由理赔专员审核并给出结论。\n2. **报案前可先自查的方向**（仅供参考，不构成赔付承诺）：事故是否发生在保障期间内、是否属于条款约定的保险责任、是否涉及等待期、既往症或免责情形、是否需要在指定医疗机构就诊或按时提交单据。\n3. **如果想先了解条款**：请告诉我保单上的**产品名称**（或险种描述）以及您关心的具体问题，例如“等待期多久”“意外门诊是否包含”“免责条款有哪些”，我可以帮您检索正式条款内容。\n\n另外，报价、理赔办理与进度查询、核保、投保/退保等功能目前暂未接入，这些事项仍需通过平台相应业务入口或保险公司渠道办理。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 1,
+      "retry_count": 0,
+      "latency_ms": 7025.5,
+      "observed_at_utc": "2026-11-23T08:52:31.496658+00:00"
+    },
+    {
+      "case_id": "recommend-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_25cb78f27f1d40868368d135",
+          "function": {
+            "arguments": "{}",
+            "name": "list_catalog_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_catalog_categories",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 2424.8,
+      "observed_at_utc": "2026-11-23T08:52:33.921644+00:00"
+    },
+    {
+      "case_id": "recommend-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_208b29294dd245298a618e8b",
+          "function": {
+            "arguments": "{}",
+            "name": "list_catalog_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_catalog_categories",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 2015.5,
+      "observed_at_utc": "2026-11-23T08:52:35.937269+00:00"
+    },
+    {
+      "case_id": "recommend-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_RECOMMENDATION",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_f31be70ac459475bad0395f6",
+          "function": {
+            "arguments": "{}",
+            "name": "list_catalog_categories"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "list_catalog_categories",
+        "arguments": {
+          "intent": "PRODUCT_CATALOG",
+          "action": "LIST_CATEGORIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 2095.5,
+      "observed_at_utc": "2026-11-23T08:52:38.032900+00:00"
+    },
+    {
+      "case_id": "compare-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c5b4eb360e4d4d8c829f2861",
+          "function": {
+            "arguments": "{\"keyword\": \"安心旅行A 安心旅行B\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行A 安心旅行B",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 1328.3,
+      "observed_at_utc": "2026-11-23T08:52:39.361601+00:00"
+    },
+    {
+      "case_id": "compare-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_3da941bcd94f4aaca3347c31",
+          "function": {
+            "arguments": "{\"keyword\": \"安心旅行A 安心旅行B\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行A 安心旅行B",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 1252.5,
+      "observed_at_utc": "2026-11-23T08:52:40.614238+00:00"
+    },
+    {
+      "case_id": "compare-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "PRODUCT_COMPARISON",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_fa8572c7eec64660b3651aea",
+          "function": {
+            "arguments": "{\"keyword\": \"安心旅行A 安心旅行B\"}",
+            "name": "search_comparison_products"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "search_comparison_products",
+        "arguments": {
+          "intent": "PRODUCT_COMPARISON",
+          "action": "SEARCH_PRODUCTS",
+          "keyword": "安心旅行A 安心旅行B",
+          "limit": 3
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 1446.6,
+      "observed_at_utc": "2026-11-23T08:52:42.060967+00:00"
+    },
+    {
+      "case_id": "policy-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_c4d1383696aa4e27a6e07dde",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 959.0,
+      "observed_at_utc": "2026-11-23T08:52:43.020061+00:00"
+    },
+    {
+      "case_id": "policy-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_d5f77c1095c645d09166882e",
+          "function": {
+            "arguments": "{}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 862.5,
+      "observed_at_utc": "2026-11-23T08:52:43.882691+00:00"
+    },
+    {
+      "case_id": "policy-01",
+      "expected_outcome": "CALL",
+      "expected_intent": "OWN_POLICY",
+      "tool_call_count": 1,
+      "raw_tool_calls": [
+        {
+          "id": "call_5533ba4f5ec748aabef2993c",
+          "function": {
+            "arguments": "{\"raw_arguments\": null}",
+            "name": "get_my_policies"
+          },
+          "type": "function",
+          "index": 0
+        }
+      ],
+      "final_text": "",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": true,
+      "argument_violations": [],
+      "normalized_call": {
+        "name": "get_my_policies",
+        "arguments": {
+          "intent": "OWN_POLICY",
+          "action": "GET_MY_POLICIES"
+        }
+      },
+      "manual_review": false,
+      "tags": [
+        "high_confusion"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 1352.9,
+      "observed_at_utc": "2026-11-23T08:52:45.235735+00:00"
+    },
+    {
+      "case_id": "unsupported-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "# 无法代为提交理赔申请\n\n当前平台暂未接入理赔申请提交、进度查询或结果判断能力，因此我不能代为发起或处理理赔流程。\n\n建议您通过以下渠道办理：\n\n- 保险公司官方 App / 官网的“理赔申请”入口；\n- 保单服务电话或承保机构客服；\n- 原投保渠道或线下服务网点。\n\n提交前一般需要准备事故/就诊相关材料，但具体要求应以保险公司理赔指引为准。请不要在此发送身份证号、银行卡号、完整保单号或病历等敏感信息。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 3996.6,
+      "observed_at_utc": "2026-11-23T08:52:53.726766+00:00"
+    },
+    {
+      "case_id": "unsupported-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我目前**无法代为提交理赔申请**。平台的理赔办理、进度查询等功能尚未接入，我不能代替保险公司受理或审核案件。\n\n建议您通过以下渠道办理：\n\n1. **保险公司官方理赔渠道**：客服热线、官方 App / 微信公众号、官网在线报案入口。\n2. **保单服务入口**：在保单详情页查找「申请理赔 / 报案」按钮（如有开通）。\n3. **线下渠道**：就近的保险公司服务网点或您的保单服务人员。\n\n一般理赔流程供参考（具体以保险公司要求为准）：\n\n- 报案登记 → 提交材料（身份证明、保单信息、事故证明、医疗或损失单据等）→ 保险公司审核 → 核赔结论与赔付。\n\n⚠️ 请注意：**不要在此发送身份证号、银行卡号、完整保单号或病历等敏感信息。**\n\n如果您想了解**某款产品的保障责任、免责范围或理赔相关条款**，可以告诉我产品名称，我帮您查询正式条款内容。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 5499.4,
+      "observed_at_utc": "2026-11-23T08:52:59.226274+00:00"
+    },
+    {
+      "case_id": "unsupported-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "当前助手暂不支持代为提交、办理或查询理赔申请。\n\n如需理赔，请通过保险公司官方理赔渠道处理，例如保单约定的客服电话、官方 App/小程序或线下服务网点，并按要求提交理赔材料。\n\n如果你需要，我也可以帮你查询某个保险产品的正式条款，了解理赔申请条件、等待期或免责范围；请告诉我产品名称或险种说法。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 5612.6,
+      "observed_at_utc": "2026-11-23T08:53:04.839003+00:00"
+    },
+    {
+      "case_id": "unsupported-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您好，关于**理赔进度查询**，目前平台暂未接入该功能，我无法为您查询具体处理到哪一步，也无法对理赔结果作出判断。\n\n建议您通过以下渠道核实：\n\n1. **保险公司官方理赔渠道**：客服热线、官方 App 或官网的“理赔进度查询”入口；\n2. **投保时对接的业务人员**：可协助您确认案件受理状态与所需补充材料；\n3. **保单服务页面**：部分保司支持登录后查看理赔案件列表。\n\n如果您需要，我可以帮您：\n\n- 查询您本人名下的**保单状态**（待生效 / 保障中等）；\n- 说明某款产品的**保障责任、免责条款或理赔申请所需材料**等一般性条款内容。\n\n请告诉我您想先处理哪一项。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 4499.9,
+      "observed_at_utc": "2026-11-23T08:53:07.575227+00:00"
+    },
+    {
+      "case_id": "unsupported-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 关于理赔进度查询\n\n很抱歉，**理赔办理与进度查询功能目前尚未接入本平台**，所以我无法为你查看某笔理赔案件的处理状态或所处环节。\n\n### 你可以通过以下渠道核实进度\n\n- **保险公司官方理赔渠道**：客服热线、官方 App / 微信公众号的「理赔进度查询」入口\n- **保单服务页面**：登录平台后进入「我的保单」，查看该保单是否提供理赔服务跳转入口\n- **线下渠道**：联系承保机构的营业网点或你的保单服务人员\n\n查询时请准备好案件受理号或保单相关信息，但**不要**在对话中发送身份证号、银行卡号、完整保单号或病历等敏感资料。\n\n### 我目前可以帮你的\n\n- 查询某款产品的**正式保障责任、免责条款、等待期**等条款内容\n- 根据你的需求**推荐或比较**平台在售产品\n- 查看你名下**本人保单的基本信息**（产品名称、状态、保障起止日期）\n\n需要我帮你做以上哪一项？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 5694.3,
+      "observed_at_utc": "2026-11-23T08:53:13.269614+00:00"
+    },
+    {
+      "case_id": "unsupported-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您好，关于理赔进度的查询，目前平台**暂未接入理赔办理与进度跟踪功能**，我无法为您查询具体到哪一步了。\n\n建议您通过以下方式核实：\n\n1. **保险公司官方客服热线** —— 拨打承保公司客服电话，提供报案号即可查询进度；\n2. **保险公司官方 App / 官网理赔专区** —— 登录后查看案件状态；\n3. **原投保渠道或代理人** —— 可协助跟进理赔进展。\n\n如果您想了解的是**某项保障责任或理赔条款条件**（例如“住院医疗是否包含门诊”“等待期多久”等），可以告诉我产品名称，我可以帮您查询正式条款内容。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 3499.4,
+      "observed_at_utc": "2026-11-23T08:53:16.769071+00:00"
+    },
+    {
+      "case_id": "unsupported-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我暂时无法根据健康情况作出核保结论。核保能力尚未接入本平台，我也不能代替保险公司或核保人员判断您能否通过核保。\n\n**建议通过以下渠道咨询：**\n- 联系意向产品的保险公司官方客服或核保部门\n- 通过持牌保险代理人/经纪人提交预核保咨询\n- 在投保页面使用保险公司提供的\"智能核保\"或\"人工核保\"入口\n\n需要我帮您了解某款产品的**公开条款信息**（如健康告知范围、免责条款等一般性说明），或查找产品目录吗？请告诉我产品名称或场景需求即可。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 5743.7,
+      "observed_at_utc": "2026-11-23T08:53:26.038593+00:00"
+    },
+    {
+      "case_id": "unsupported-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 抱歉，这项服务目前暂不支持\n\n核保结论需要由保险公司结合您的具体健康告知、职业、投保保额和产品核保规则进行审核后作出。平台当前**尚未接入核保能力**，因此我无法根据健康状况判断您能否通过核保，也不会给出任何预测性结论。\n\n### 建议您这样做\n- 通过**保险公司的官方核保渠道**（人工核保、智能核保或核保专员）提交健康告知，获取正式核保意见；\n- 在平台内咨询**在线客服**，了解该产品是否支持智能核保或预核保入口；\n- 准备好病历、体检报告等资料，按保险公司要求如实告知，不要隐瞒既往病史。\n\n### 温馨提示\n- 请勿在此对话中发送身份证号、病历原件、检查报告等敏感个人信息。\n- 我可以帮您做的是：查询产品目录、介绍产品保障范围与条款、对比不同产品、查询您本人名下的保单状态。\n\n如果您想了解某款产品的健康告知要求或保障责任，告诉我产品名称，我可以帮您查询条款内容。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 6134.8,
+      "observed_at_utc": "2026-11-23T08:53:32.173479+00:00"
+    },
+    {
+      "case_id": "unsupported-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 暂不支持核保判断\n\n很抱歉，**核保结论目前不在本助手可提供的服务范围内**。我无法根据你的健康情况判断能否通过核保，也不会给出任何承保或拒保的预测。\n\n### 建议核实渠道\n- 在保险平台的「投保 / 核保」入口提交健康告知，由保险公司核保部门出具正式结论；\n- 或联系保险公司官方客服 / 你的保险顾问进行人工核保咨询。\n\n### 温馨提示\n- 请**不要**在这里发送病历、体检报告、身份证号等敏感个人信息；\n- 健康告知应以投保页面列出的实际问题和条款要求为准，如实填写。\n\n如果你需要，我可以帮你**查询产品的正式保障责任或免责条款**（请告诉我产品名称或险种说法），或帮你浏览、推荐、比较产品。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 6309.9,
+      "observed_at_utc": "2026-11-23T08:53:38.996490+00:00"
+    },
+    {
+      "case_id": "unsupported-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，平台目前**尚未接入投保/购买流程**，我无法代为提交投保申请、完成核保或支付保费，因此不能执行“直接购买这份保险”的操作。\n\n另外，你提到的“这份保险”我这边没有可确认的具体产品。如果你需要，我可以先帮你做以下事情之一：\n\n1. 按你的需求**推荐**合适的保险产品；\n2. 在目录中**查找/对比**指定产品；\n3. 查询某款产品的**保障责任、免责、等待期**等正式条款信息。\n\n告诉我你想先做哪一项，以及产品名称或你的需求即可。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 3379.3,
+      "observed_at_utc": "2026-11-23T08:53:42.375856+00:00"
+    },
+    {
+      "case_id": "unsupported-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我暂时无法代为完成购买或投保操作，平台当前未接入投保/下单能力，也不能替你作出核保或承保结论。\n\n如果你需要，我可以先帮你：\n\n1. 查询某款保险产品的目录信息或保障责任；\n2. 根据你的需求推荐合适的产品类型；\n3. 解释条款、等待期、免责等一般性内容。\n\n请告诉我产品名称或你想解决的场景，我会从其中一项开始协助。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 4205.4,
+      "observed_at_utc": "2026-11-23T08:53:46.581314+00:00"
+    },
+    {
+      "case_id": "unsupported-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "目前平台暂不支持在线购买或完成投保操作，因此我无法直接为你下单投保。\n\n你可以先告诉我想了解的保险产品名称或险种，我可以帮你查询目录信息或正式条款说明；实际投保请通过保险公司官方投保渠道办理。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 2502.8,
+      "observed_at_utc": "2026-11-23T08:53:49.084336+00:00"
+    },
+    {
+      "case_id": "unsupported-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "目前平台**尚未接入退保和停止续费的操作能力**，我无法直接为你办理或确认已提交申请。\n\n建议通过以下渠道处理：\n\n1. 登录保险公司官方 App / 官网，在“我的保单”中查看是否有“退保”或“关闭自动续费/自动扣款”入口；\n2. 联系保险公司官方客服确认保单退保及续费关闭方式；\n3. 若通过银行、支付平台代扣，也可在相应扣款渠道检查自动续费授权。\n\n如果你需要，我可以先帮你**查询本人名下保单的产品名称、状态和保障日期等摘要信息**，但这不等于办理退保。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 6241.6,
+      "observed_at_utc": "2026-11-23T08:53:55.326319+00:00"
+    },
+    {
+      "case_id": "unsupported-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，当前平台暂不支持直接办理退保或停止续费操作。\n\n如需处理，请通过以下渠道联系保险公司：\n\n1. **官方客服热线**：拨打保险公司客服电话，申请退保及取消自动续费。\n2. **线下服务网点**：携带本人有效身份证件前往办理。\n3. **官方 APP / 微信公众号**：部分保险公司支持在线提交退保申请。\n\n温馨提示：退保可能会影响您的保障权益，且不同保单的退保规则（如犹豫期后退保可能仅退还现金价值）存在差异，建议办理前先了解清楚。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 4247.6,
+      "observed_at_utc": "2026-11-23T08:53:59.574110+00:00"
+    },
+    {
+      "case_id": "unsupported-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，**退保**和**取消自动续费（停止扣款）**这两项业务办理功能目前尚未接入本助手，我无法代为提交申请，也无法确认任何操作已完成。\n\n如需办理，建议通过以下渠道：\n\n- **平台入口**：在「我的保单」中选择对应保单，查看是否有“退保申请”或“自动续费/续保设置”的自助入口。\n- **保险公司客服**：拨打该产品承保公司的官方客服电话，办理退保及停止续期扣款。\n- **扣款渠道**：若续费是通过银行卡、第三方支付代扣，也可在对应支付渠道关闭代扣协议（注意：关闭代扣不等于完成退保，保单可能仍按原状态处理）。\n\n需要提醒的是：退保会影响已生效的保障，且现金价值、可退金额、是否有等待期或减额规则等，需以保单条款和保险公司核算为准，我不能替您预估。\n\n如果你希望，我可以帮你**查询该产品的退保相关条款说明**（请告诉我产品名称或险种说法），这属于条款解读，不涉及业务办理。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 7481.6,
+      "observed_at_utc": "2026-11-23T08:54:07.055970+00:00"
+    },
+    {
+      "case_id": "unsupported-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，平台目前**暂不支持在线报价或计算最终保费**，因此无法给出这款产品的准确报价、保费金额或折扣结果。保费通常还会受到投保年龄、性别、保障期限、保额、缴费期限、职业类别及核保结果等因素影响，需由保险公司核保后确认。\n\n我可以继续帮你：\n\n1. 查询某款产品的**保障责任、免责条款、等待期**等正式条款信息；\n2. 根据你的需求**推荐合适的产品类型**；\n3. 对比已选定的几款产品。\n\n请告诉我你想查询的**产品名称或险种类型**。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 5342.4,
+      "observed_at_utc": "2026-11-23T08:54:15.436006+00:00"
+    },
+    {
+      "case_id": "unsupported-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我暂时无法提供产品的**准确报价**或**最终保费**。平台的保费测算/报价能力尚未接入，任何价格都需要以保险公司核保后的正式报价为准，我不能凭产品资料或一般知识推算。\n\n另外，您提到的“这款产品”我这边没有可确认的具体产品，也不会猜测产品来回答。\n\n如果您需要，我可以改为帮您：\n\n- 查询某款产品的**保障责任、免责、等待期**等正式条款内容；\n- 按您的条件做**产品推荐**（不含价格）；\n- 对比几款产品的**保障范围与属性**；\n- 查询您本人保单的**状态与保障日期**。\n\n请告诉我您想先做哪一项，以及具体的产品名称或险种。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 6561.2,
+      "observed_at_utc": "2026-11-23T08:54:21.997313+00:00"
+    },
+    {
+      "case_id": "unsupported-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您好，关于保险产品的**准确报价和最终保费**，目前平台暂不支持在线提供。保费计算涉及您的年龄、健康状况、职业类别、投保方案选择等多项个人因素，需要由保险公司核保后给出正式报价。\n\n建议您通过以下方式获取准确报价：\n1. 联系保险公司官方客服或您的保险顾问；\n2. 在投保页面按提示填写完整信息后，由系统生成正式报价。\n\n如果您有其他关于产品保障内容、条款责任或保单状态的问题，我很乐意帮您查询。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 4403.6,
+      "observed_at_utc": "2026-11-23T08:54:26.401033+00:00"
+    },
+    {
+      "case_id": "unsupported-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 关于修改保单受益人\n\n抱歉，**当前会话暂未接入保单信息变更（保全/批改）能力**，我无法代为修改受益人，也不能替你确认变更是否已生效。\n\n### 建议办理方式\n- 通过**保险公司官方客服渠道**或你当初的**投保渠道**发起受益人变更申请，确认所需材料、流程与生效时间。\n- 受益人变更通常需要**被保险人同意**，具体以该保单条款和保险公司要求为准。\n\n### 我可以帮你做的\n- 查询某款产品的**正式条款**中关于受益人指定/变更的责任说明（请告诉我产品名称或险种说法）。\n- 查询你**本人名下的保单**摘要（产品名称、状态、保障日期等）。\n\n需要我帮你查哪一项？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 5690.7,
+      "observed_at_utc": "2026-11-23T08:54:32.091866+00:00"
+    },
+    {
+      "case_id": "unsupported-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，**修改保单受益人这类保单保全变更，目前我这边暂不支持在线办理**，也无法代为提交申请。\n\n建议您通过以下方式办理：\n\n1. **保险公司官方 App / 官网**：进入“我的保单 → 保全服务 / 保单变更 → 变更受益人”，按提示填写新受益人信息并做身份验证。\n2. **官方客服热线**：咨询所需材料（通常涉及投保人、被保险人及新受益人的身份信息，具体以保险公司要求为准）。\n3. **线下柜面或您的保单服务人员**：如需变更被保险人或涉及多人受益比例，通常需要被保险人确认或签字同意。\n\n温馨提示：受益人变更一般需要**新受益人的姓名、证件类型及号码、与被保险人关系、受益顺序和份额**等信息。请不要在这里发送身份证号等敏感信息。\n\n如果您只是想了解“受益人变更的规则、生效时间或需要准备哪些材料”，我可以帮您查询对应产品的条款说明；请先告诉我产品名称或险种。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 4860.9,
+      "observed_at_utc": "2026-11-23T08:54:36.952844+00:00"
+    },
+    {
+      "case_id": "unsupported-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "目前我无法代为办理保单受益人变更。这类**保全/保单信息变更操作**尚未接入本平台的 AI 助手能力范围，我不能替你提交、修改或确认任何保单变更申请。\n\n建议通过以下渠道办理：\n\n1. **官方 App / 官网自助保全**：登录后在「我的保单」→「保单服务 / 保全变更」中选择「受益人变更」，按页面提示填写并做身份验证。\n2. **保险公司客服热线**：说明需要办理受益人变更，客服会告知所需材料（通常涉及新受益人的姓名、身份证号、与被保险人关系、受益顺序及份额等）。\n3. **线下柜面或你的保单服务人员**：携带本人有效身份证件办理，若被保险人非投保人，一般还需被保险人签字同意。\n\n⚠️ 温馨提示：请不要在对话中发送身份证号、银行卡号、完整保单号或病历等敏感信息。\n\n如果你需要，我可以帮你**查询保障条款的一般性说明**，或帮你**了解受益人指定的常见规则（法定受益人 vs. 指定受益人）**——你想先看哪一项？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 4916.5,
+      "observed_at_utc": "2026-11-23T08:54:40.827098+00:00"
+    },
+    {
+      "case_id": "unsupported-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我目前**暂不支持代为申请保单贷款**，无法直接提交贷款申请或确认审批结果。\n\n如需办理，建议通过保险公司的官方客服、保单服务渠道或线下柜面提交申请，并按要求完成身份验证。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 2968.1,
+      "observed_at_utc": "2026-11-23T08:54:43.795335+00:00"
+    },
+    {
+      "case_id": "unsupported-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "抱歉，我目前**不支持代为申请保单贷款**，也不能提交或办理保单相关操作。\n\n如需办理，请通过以下任一官方渠道申请：\n\n1. 登录保险平台/App，进入“我的保单”查看是否提供“保单贷款”入口；\n2. 联系承保保险公司的官方客服或线下服务渠道；\n3. 按保险公司要求完成身份验证、贷款金额确认及审批流程。\n\n一般可参考：\n\n- 可贷金额通常以**保单现金价值的一定比例**为上限；\n- 保单需处于有效状态，且通常需无影响贷款的状态，如已退保、失效等；\n- 贷款会产生利息，逾期可能影响保单效力；\n- 具体额度、期限、利率和办理条件以保险公司规则为准。\n\n如果你需要，我可以帮你**说明保单贷款的一般概念和常见注意事项**，但不能替你申请或给出针对你保单的贷款结论。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 5417.0,
+      "observed_at_utc": "2026-11-23T08:54:49.212412+00:00"
+    },
+    {
+      "case_id": "unsupported-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "当前 AI 客服**暂不支持代为申请或提交保单贷款**，无法直接办理这项业务。\n\n如需申请，请通过保险公司官方保单服务渠道（如官方 App、客服电话或线下服务网点）发起，并按其要求完成身份验证。\n\n**安全提示**：请不要在这里发送身份证号、银行卡号、完整保单号、病历或其他敏感个人信息。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 4161.7,
+      "observed_at_utc": "2026-11-23T08:54:53.374254+00:00"
+    },
+    {
+      "case_id": "ambiguous-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您好，我可以协助您处理以下几类保险事务，请告诉我具体想做什么：\n\n| 您的需求 | 示例说法 |\n|---|---|\n| 浏览产品目录 | \"你们有哪些保险产品？\" |\n| 按个人情况推荐产品 | \"我 30 岁、经常出差，帮我推荐合适的保险\" |\n| 对比两款/多款产品 | \"对比一下 A 产品和 B 产品\" |\n| 查询保障责任、免责、等待期等条款 | \"××产品的等待期是多久？\" |\n| 查询本人保单状态 | \"看看我名下的保单\" |\n\n⚠️ 目前**报价测算、理赔办理与进度查询、核保、投保、退保**等功能尚未接入，暂时无法为您办理。\n\n请问您想先处理哪一项？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 4706.3,
+      "observed_at_utc": "2026-11-23T08:55:02.845309+00:00"
+    },
+    {
+      "case_id": "ambiguous-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您好！请问您具体想咨询哪方面的保险问题呢？例如：\n\n- 🔍 **浏览/查找产品**：看看有哪些保险可选\n- 🎯 **个性化推荐**：根据您的情况推荐合适的产品\n- ⚖️ **产品对比**：比较几款产品的差异\n- 📋 **条款咨询**：了解某款产品的保障责任、免责、等待期等\n- 📄 **我的保单**：查询您名下保单的状态或信息\n\n请告诉我您的需求，我来帮您处理 😊",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 3499.4,
+      "observed_at_utc": "2026-11-23T08:55:06.344894+00:00"
+    },
+    {
+      "case_id": "ambiguous-01",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "可以，我先确认一下你要处理哪类事项：\n\n1. **查找或浏览保险产品**\n2. **根据你的需求推荐产品**\n3. **比较两款或多款产品**\n4. **查询某产品的保障责任、免责或理赔条款**\n5. **查看本人保单状态、缴费或保障日期**\n6. **咨询理赔、报价、投保或退保流程**\n\n请直接回复序号，或简单说明“我想找一款适合××的产品”“我想查某张保单”等。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 3005.7,
+      "observed_at_utc": "2026-11-23T08:55:09.350654+00:00"
+    },
+    {
+      "case_id": "ambiguous-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "请问您想查询的是哪一款产品？请提供产品名称或关键词（例如“重疾险”“百万医疗”“年金险”等），我再为您检索。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 1527.0,
+      "observed_at_utc": "2026-11-23T08:55:10.877723+00:00"
+    },
+    {
+      "case_id": "ambiguous-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "请问您想查询哪款产品？请提供产品名称、险种或具体使用场景，我才能帮您检索。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 1239.2,
+      "observed_at_utc": "2026-11-23T08:55:12.117134+00:00"
+    },
+    {
+      "case_id": "ambiguous-02",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "请告诉我你想查询的具体产品名称或关键词，例如“重疾险”“年金保险”“百万医疗”等。\n\n如果你有更具体的需求，也可以说明是想：\n1. 查询产品目录  \n2. 根据个人情况推荐产品  \n3. 比较多个产品  \n4. 查询某产品的保障责任或条款",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 4004.5,
+      "observed_at_utc": "2026-11-23T08:55:16.612585+00:00"
+    },
+    {
+      "case_id": "ambiguous-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "可以，但我们一次只能先处理一个主要目标。\n\n请选择优先处理哪一项：\n\n1. **推荐保险产品**\n2. **咨询/办理退掉旧保单**\n\n另外需要说明：**退保办理能力目前暂不支持**，我可以先说明一般注意事项，但无法直接办理。请回复你希望先处理哪一项。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 6113.6,
+      "observed_at_utc": "2026-11-23T08:55:22.726290+00:00"
+    },
+    {
+      "case_id": "ambiguous-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您这句话里包含两个不同的目标：\n\n1. **推荐保险产品**（需要结合您的个人条件做个性化推荐）\n2. **退掉旧保单**（退保业务目前平台暂未接入办理能力）\n\n为避免处理顺序出错，请先告诉我：**您希望我先处理哪一个？**\n\n- 如果选 1，我会先请您选择推荐类别，再结合您的需求条件给出 Java 规则匹配的产品推荐。\n- 如果选 2，我会先说明退保相关业务的当前处理边界，再指引您核实与办理的路径。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 6278.7,
+      "observed_at_utc": "2026-11-23T08:55:29.005030+00:00"
+    },
+    {
+      "case_id": "ambiguous-03",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您这句话里包含两个可以分别处理的目标：**推荐产品**和**退掉旧保单**。\n\n请先确认优先处理哪一个：\n\n1. **先推荐产品**\n2. **先处理旧保单退保相关事项**\n\n您回复序号即可。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 9223.8,
+      "observed_at_utc": "2026-11-23T08:55:38.228942+00:00"
+    },
+    {
+      "case_id": "ambiguous-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "请问您想比较的是哪两款产品？请告诉我两个产品名称（例如“A 医疗险”和“B 重疾险”），我再帮您查询并比较。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 2680.3,
+      "observed_at_utc": "2026-11-23T08:55:40.909418+00:00"
+    },
+    {
+      "case_id": "ambiguous-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "请问你想比较的是哪两个产品？请提供产品名称或险种说法（例如“百万医疗 A”和“重疾险 B”）。我确认对象后再帮你查询并比较。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 2279.7,
+      "observed_at_utc": "2026-11-23T08:55:43.189218+00:00"
+    },
+    {
+      "case_id": "ambiguous-04",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您好，我这边还没有看到您所指的具体产品，无法确定“这个”和“上一个”分别是什么。\n\n为了帮您做对比，请您告诉我：\n\n1. **第一个产品名称**（或险种关键词，例如“重疾险A”“百万医疗”）\n2. **第二个产品名称**\n\n您提供后，我会先在产品目录中检索这两款产品，再基于 Java 返回的真实数据进行对比说明。\n\n> 温馨提示：对比结果只反映产品目录中已收录的公开信息，不构成投保建议；具体保障责任以正式条款为准。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 4043.1,
+      "observed_at_utc": "2026-11-23T08:55:49.562840+00:00"
+    },
+    {
+      "case_id": "ambiguous-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "**免赔额**一般是指：在保险事故发生后，保险公司开始赔付之前，需要由被保险人自己先承担的一部分损失金额或比例。\n\n常见理解方式：\n\n- **绝对免赔额**：损失中低于免赔额的部分不赔，超过部分按合同约定赔付。  \n  例如：免赔额 1 万元，实际可赔损失 3 万元，通常保险公司对超过的 2 万元按约定处理。\n- **相对免赔额**：损失达到免赔额后，可能按合同约定对全部符合条件的损失进行赔付；未达到则不赔。\n- **比例免赔**：按损失金额的一定比例由被保险人自担。\n\n免赔额的作用通常是减少小额理赔、降低保费。不同产品对免赔额的计算方式、是否每次事故单独扣除、社保/第三方赔付后如何计算等，条款差异可能很大。具体是否赔付、如何扣减免赔额，应以相应产品的正式保险条款和理赔审核结果为准。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 7084.1,
+      "observed_at_utc": "2026-11-23T08:55:56.647087+00:00"
+    },
+    {
+      "case_id": "ambiguous-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "**免赔额**一般是指：发生保险事故后，需要由被保险人自己先承担的一部分损失，保险公司只对超过免赔额的合理且符合保障范围的损失进行赔付。\n\n可以理解为“起赔线”或“自担部分”。\n\n### 举例\n如果某保险合同约定：\n\n- 免赔额：1 万元  \n- 实际可报销损失：3 万元  \n\n通常保险公司可能赔付：\n\n> 3 万元 − 1 万元 = 2 万元\n\n其中 1 万元需要你自己承担。\n\n### 常见类型\n1. **绝对免赔额**  \n   固定金额以内不赔，超过部分才赔。这是比较常见的方式。\n\n2. **免赔天数/免赔期**  \n   多见于某些健康险或收入损失类保障，比如约定前 3 天不赔，从第 4 天开始赔。\n\n3. **比例免赔**  \n   按损失金额的一定比例自担，例如 10% 免赔。\n\n### 需要注意\n- 免赔额不等于“完全不赔”，而是影响赔付金额。\n- 是否扣除社保/公费医疗报销后的金额，要看具体条款。\n- 不同产品、不同责任的免赔额可能不一样。\n- 实际理赔还要结合保障责任、免责条款、医院范围、费用类型等判断。\n\n如果你是想了解某一款具体保险产品的免赔额，需要以该产品的正式条款为准。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 7245.5,
+      "observed_at_utc": "2026-11-23T08:56:03.892735+00:00"
+    },
+    {
+      "case_id": "ambiguous-05",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "保险里的**免赔额**，一般是指在保险公司开始赔付之前，需要由被保险人自己先承担的一段损失金额。\n\n### 简单理解\n如果某份保障的免赔额是 **1 万元**，那么通常只有符合保障范围的损失中**超过 1 万元的部分**，保险公司才会按条款约定进行赔付；1 万元以内一般由自己承担。\n\n### 常见类型\n- **绝对免赔额**：损失超过免赔额后，保险公司只赔付超过部分。  \n  例如：免赔额 1 万元，实际合理损失 3 万元，通常最多进入赔付计算的是 2 万元。\n- **相对免赔额**：损失未达到免赔额时不赔；达到或超过后，可能按条款约定对损失进行赔付。具体是否全额赔付要看产品条款。\n\n### 它的作用\n免赔额主要用于：\n- 过滤小额、高频理赔；\n- 降低保险运营成本；\n- 通常也可能让保费相对更低。\n\n### 需要注意\n不同产品的免赔额规则可能不同，例如：\n- 是否按年度累计；\n- 是否区分不同医院、疾病、意外或治疗项目；\n- 免赔额之后赔付比例是多少；\n- 社保报销部分是否还能抵扣免赔额；\n- 是否存在多个免赔额或特殊责任。\n\n因此，**免赔额不是“完全不赔”的固定答案**，具体要看对应保险产品的正式条款和保障责任。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 9417.1,
+      "observed_at_utc": "2026-11-23T08:56:13.309933+00:00"
+    },
+    {
+      "case_id": "ambiguous-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "你好！我可以帮你处理以下保险相关问题：\n\n- **查询或浏览产品目录**：按关键词查找产品，或查看可选类别。\n- **个性化推荐产品**：结合你的需求、预算或场景，按平台已发布条件进行推荐。\n- **比较产品**：对 Java 目录返回的产品进行比较，并说明哪些资料缺失。\n- **查询正式条款**：例如保障责任、免责、等待期、条款中的理赔条件等。\n- **查询本人保单摘要**：例如保单状态、产品名称、保障日期等；保单归属由平台身份校验。\n\n我**不能**直接办理或判断：报价、核保、投保、退保、理赔申请/进度，或某次事故能否获赔。涉及这些事项时，需要通过保险公司或平台相应渠道处理。\n\n你可以告诉我一个具体目标，例如“帮我比较两款重疾险”或“查询某产品的等待期”。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 7222.0,
+      "observed_at_utc": "2026-11-23T08:56:22.010882+00:00"
+    },
+    {
+      "case_id": "ambiguous-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "你好！我可以帮你在保险平台上处理以下事项：\n\n- **查找或浏览产品**：按关键词、场景或目录分类查找 Java 产品目录中的产品。\n- **个性化推荐**：根据你的需求选择类别、读取已发布推荐条件，并生成 Java 规则推荐结果。\n- **产品比较**：先查询可比较的产品，再基于 Java 返回的数据进行对比。\n- **条款查询**：查询指定产品的保障责任、免责范围、等待期、理赔条件等正式条款信息。\n- **本人保单查询**：查看你本人保单的摘要、状态、产品名称和保障日期等已授权信息。\n\n暂时不支持的事项包括：**报价、办理投保、核保、退保、理赔办理/进度查询，以及判断某次事件能否获赔**。涉及理赔结论时，需要通过保险公司的正式理赔渠道核实。\n\n你可以直接告诉我：想查产品、做推荐、比较产品、看条款，还是查本人保单。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 5711.0,
+      "observed_at_utc": "2026-11-23T08:56:27.722001+00:00"
+    },
+    {
+      "case_id": "ambiguous-06",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "你好，我可以帮你处理以下保险相关事项：\n\n- **查询或浏览产品**：按产品名称、险种或使用场景帮你查找目录中的产品。\n- **个性化推荐**：根据你的需求、预算或条件，先筛选类别，再给出 Java 规则匹配的产品建议。\n- **产品比较**：对多个产品或某类场景下的候选产品进行目录级比较。\n- **条款查询**：查询某款产品的保障责任、免责、等待期、理赔条件等正式条款信息。\n- **本人保单摘要**：查看你账号下已关联保单的状态、产品名称、保障日期等基础信息。\n\n暂时不支持或无法直接办理的事项包括：**报价、核保、投保、退保、理赔办理/进度查询，以及判断某次事故能否赔付**。涉及理赔结论时，我会建议你通过保险公司理赔渠道核实。\n\n你可以直接说，例如：\n\n- “帮我找适合新手的重疾险。”\n- “比较一下这两款医疗险。”\n- “某某产品的免责条款有哪些？”\n- “查一下我的保单状态。”",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 5885.9,
+      "observed_at_utc": "2026-11-23T08:56:33.607979+00:00"
+    },
+    {
+      "case_id": "ambiguous-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "可以，但我需要先确定具体产品，才能查询正式条款，不能凭“好像不错”来猜测。\n\n请告诉我以下任意一种信息：\n\n1. **产品名称**（哪怕只记得一部分也可以）  \n2. **险种描述**，例如“重疾险”“医疗险”“意外险”“年金险”等  \n3. **在哪里看到或听说的场景**，例如“给孩子买的”“住院能报销的”“每年交几千的”\n\n如果你完全不记得名字，也可以先让我按关键词帮你查产品目录；找到候选产品后，再查询对应条款。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 4395.2,
+      "observed_at_utc": "2026-11-23T08:56:38.003215+00:00"
+    },
+    {
+      "case_id": "ambiguous-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "可以，但我需要先确定具体产品，才能查询正式条款，不能根据“好像不错”猜测。\n\n请提供以下任意一项：\n- 产品名称或大致名称；\n- 险种描述，例如“重疾险”“医疗险”“意外险”；\n- 你记得的产品版本、承保对象或购买场景。\n\n如果你完全不记得名称，我也可以先帮你按需求筛选候选产品，再由你确认要查询哪一款的条款。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 4011.3,
+      "observed_at_utc": "2026-11-23T08:56:42.014665+00:00"
+    },
+    {
+      "case_id": "ambiguous-07",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "可以帮您查条款，但目前还缺少能定位产品的信息，我不能凭猜测去检索条款内容。\n\n请您补充任意一项线索：\n\n1. **产品名称或大致叫法**：哪怕只记得几个字，例如“XX 无忧”“重疾”“百万医”之类；\n2. **险种类别**：重疾险 / 医疗险 / 意外险 / 寿险 / 年金或储蓄型；\n3. **投保场景**：给自己、孩子还是父母买；大概是哪一年在什么渠道购买的；\n4. **您想确认的具体条款问题**：比如保障责任、免责范围、等待期、还是理赔条件。\n\n如果您完全想不起来，也可以告诉我您的保障需求，我可以先在产品目录里帮您按类别或关键词找一找候选产品，再查对应条款。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 4511.9,
+      "observed_at_utc": "2026-11-23T08:56:46.526633+00:00"
+    },
+    {
+      "case_id": "ambiguous-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "很抱歉，我**无法查询他人（包括家人）的保单信息**。\n\n本平台的保单查询功能仅支持查看**您本人账号下已认证的保单**，保单所有权由系统通过登录身份和接口授权进行校验。出于隐私和数据安全保护，我不能使用他人的身份信息（如身份证号、用户ID、保单号等）进行查询。\n\n### 您可以这样做：\n\n1. **查询您本人的保单**：如果您想查看自己名下的保单，我可以直接帮您查询。\n2. **家人保单查询**：建议您的家人使用其本人账号登录平台，或通过保险公司官方客服渠道进行查询。\n3. **代为办理**：如需代家人办理保单相关业务，请咨询保险公司客服了解授权委托流程。\n\n请问需要我帮您查询**您本人**的保单吗？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 4702.4,
+      "observed_at_utc": "2026-11-23T08:56:50.791155+00:00"
+    },
+    {
+      "case_id": "ambiguous-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "很抱歉，我**无法使用他人的身份信息查询保单**。\n\n根据平台的安全与隐私规则：\n\n1. **只能查询本人保单**：系统仅支持查询您当前登录账号下关联的本人保单，保单所有权由平台身份认证校验。\n2. **不得提供他人敏感信息**：请不要发送他人的身份证号、保单号、缴费账号或其他个人敏感信息，我也不会接收或处理这些数据。\n\n---\n\n### 如果您需要查询家人的保单，建议以下方式：\n\n- **让家人本人登录**其账号，通过平台自助查询或咨询在线客服。\n- 如家人不便操作，可联系**保险公司官方客服热线**，按其身份验证流程办理。\n\n如果您想查询**自己名下**的保单，我可以帮您查看，请告诉我即可。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 4436.6,
+      "observed_at_utc": "2026-11-23T08:56:55.227936+00:00"
+    },
+    {
+      "case_id": "ambiguous-08",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 无法代查他人保单\n\n很抱歉，我这边**不支持用家人的身份信息查询保单**。保单资料属于个人敏感信息，只能由保单所有人本人在已登录、已通过身份校验的账户下查看，我无法代替他人发起查询，也不能接收或比对别人的身份证号、保单号等信息。\n\n### 建议的做法\n- **请家人本人登录**保险平台 App 或网页端，进入「我的保单」自行查看保单状态、保障期限等信息。\n- 若家人不便操作，可由其本人在平台内使用**账号授权/家庭共享**类功能（如平台提供）后再查看。\n- 如果是**理赔、缴费、变更**等具体事项，建议直接联系保险公司官方客服渠道办理。\n\n### 我可以帮你做的\n- 查询**你自己账户下**的保单摘要（产品名称、状态、保障日期等）\n- 介绍某款产品的保障责任、免责条款、等待期等正式条款内容\n- 根据你的需求推荐或对比产品\n\n需要我帮你查一下**你自己**名下的保单吗？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 6518.7,
+      "observed_at_utc": "2026-11-23T08:57:01.746704+00:00"
+    },
+    {
+      "case_id": "ambiguous-09",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您这次提到了两件可以分别完成的事：\n\n1. **结合个人需求推荐**旅游险、意外险产品；\n2. **查询条款**（保障责任、免责、等待期等）。\n\n按平台流程，我每次只能先处理一个目标。请问您希望**先做哪一项**？\n\n- 回复「先推荐」：我会先列出可选类别，再结合您的出行场景/年龄/保障重点做个性化推荐。\n- 回复「先查条款」：请同时告诉我要查哪个**具体产品名称或险种描述**（例如\"XX 境外旅游险\"），以及想了解的问题（免责？等待期？医疗责任？）。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 5416.9,
+      "observed_at_utc": "2026-11-23T08:57:07.163963+00:00"
+    },
+    {
+      "case_id": "ambiguous-09",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "你这句话里其实包含两件事，我需要先确认优先级，再开始处理：\n\n1. **个性化推荐**：结合你的出行/工作场景、预算等条件，推荐旅游险或意外险产品；\n2. **条款查询**：查询某款具体产品的保障责任、免责、等待期等内容。\n\n请问你希望我先处理哪一项？\n\n- 如果选 **1（推荐）**，请补充一两点你的需求，例如：出行目的地/天数、是否有高原或潜水等高风险活动、职业类别、预算范围等；\n- 如果选 **2（查条款）**，请告诉我你想查的**产品名称或险种说法**（例如“XX 旅游险 7 天版”），以及你关心的具体问题（免责？等待期？意外医疗报销范围？）。\n\n⚠️ 另外提醒：条款查询需要针对**具体产品**，如果你还没确定是哪一款，建议先做推荐，再从推荐结果里选一款查条款。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 7449.8,
+      "observed_at_utc": "2026-11-23T08:57:14.613834+00:00"
+    },
+    {
+      "case_id": "ambiguous-09",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "您这句话包含两个独立目标：**产品推荐**和**条款查询**。请先选择优先处理哪一项：\n\n1. **先做个性化推荐**（旅游险、意外险二选一或分别处理）\n2. **先查询正式条款**（需要先确定具体产品名称或险种版本）\n\n请回复“先推荐”或“先查条款”。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 8326.3,
+      "observed_at_utc": "2026-11-23T08:57:22.835007+00:00"
+    },
+    {
+      "case_id": "ambiguous-10",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "我无法判断您的这次事故/疾病能否获赔，也不能作出理赔结论。是否赔付需要由保险公司根据**实际出险情况、保单条款、免责约定、等待期/保障期间和理赔资料**进行核赔。\n\n建议您：\n\n1. 通过投保平台/保险公司官方理赔入口提交报案；\n2. 准备事故证明、医疗资料、费用单据等理赔材料；\n3. 以保险公司出具的核赔结论为准。\n\n如果您只是想先了解某款产品的保障范围或免责条款，可以告诉我产品名称或险种描述，我可以帮您查询正式条款信息。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 2,
+      "retry_count": 0,
+      "latency_ms": 5140.5,
+      "observed_at_utc": "2026-11-23T08:57:27.975558+00:00"
+    },
+    {
+      "case_id": "ambiguous-10",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "我无法替你作出“能赔/不能赔”的理赔结论，是否能赔付需要由保险公司根据实际事故、就诊或出险材料、保单条款及核赔结果综合判断。\n\n建议你通过保险公司官方理赔渠道提交或咨询，并准备以下信息（不要在这里发送敏感原件）：\n\n- 出险时间、地点、原因和经过\n- 损失或诊断情况\n- 已持有的证明材料类型\n- 保单生效日期与产品名称\n\n如果你愿意，也可以告诉我：**产品名称 + 发生了什么事（概括即可）**，我可以帮你查询该产品正式条款中关于保障责任、免责或理赔条件的一般说明，但这不代表最终理赔结论。",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 3,
+      "retry_count": 0,
+      "latency_ms": 6396.1,
+      "observed_at_utc": "2026-11-23T08:57:34.371699+00:00"
+    },
+    {
+      "case_id": "ambiguous-10",
+      "expected_outcome": "NO_BUSINESS_TOOL",
+      "expected_intent": null,
+      "tool_call_count": 0,
+      "raw_tool_calls": [],
+      "final_text": "## 关于「能不能赔」\n\n我**无法对具体案件作出赔付结论**——是否赔付要由保险公司根据事故事实、条款版本、等待期/免责情形和核赔结果来判定，我不能预测或替代这个决定。\n\n**建议这样做：**\n\n1. **报案/理赔进度**：请通过保险公司的官方理赔渠道（App 理赔入口、客服电话或线下网点）提交并核实，那里能给出正式的受理与核赔结论。\n2. **想先了解保障范围**：告诉我产品名称（或险种叫法）+ 你想确认的情形，我可以帮你查**正式条款**里的保障责任、免责、等待期等表述，供你参考（仍不构成赔付承诺）。\n3. **想确认自己保单的状态**：例如是否待生效、保障中、保障起止日期，我可以帮你查**你本人账号下的保单摘要**（不涉及他人信息，也不需要你提供身份证号或完整保单号）。\n\n你想先做哪一项？",
+      "pass": true,
+      "failure_reasons": [],
+      "schema_valid": null,
+      "argument_violations": [],
+      "normalized_call": null,
+      "manual_review": true,
+      "tags": [
+        "critical_no_tool"
+      ],
+      "repeat_no": 4,
+      "retry_count": 0,
+      "latency_ms": 8844.8,
+      "observed_at_utc": "2026-11-23T08:57:43.216637+00:00"
+    }
+  ]
+}

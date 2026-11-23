@@ -14,6 +14,12 @@ class RecommendationStatus(StrEnum):
     NO_MATCH = "NO_MATCH"
 
 
+class ProductMatchType(StrEnum):
+    EXACT_NAME = "EXACT_NAME"
+    APPROVED_ALIAS = "APPROVED_ALIAS"
+    RELATED = "RELATED"
+
+
 class MissingCriterion(StrEnum):
     PRODUCT_CATEGORY = "PRODUCT_CATEGORY"
 
@@ -63,6 +69,10 @@ class ProductCandidate(ContractModel):
         default_factory=list,
         validation_alias=AliasChoices("match_reasons", "matchReasons"),
         max_length=10,
+    )
+    match_type: ProductMatchType = Field(
+        default=ProductMatchType.RELATED,
+        validation_alias=AliasChoices("match_type", "matchType"),
     )
     product_version: int | None = Field(
         default=None,

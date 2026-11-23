@@ -16,6 +16,8 @@ public class AiProductCandidateVO {
     private String categoryCode;
     private String categoryName;
     private List<String> matchReasons;
+    /** EXACT_NAME, APPROVED_ALIAS, or RELATED. */
+    private String matchType;
     private Integer productVersion;
     private String verificationStatus;
     private List<AiRecommendationFactVO> facts;

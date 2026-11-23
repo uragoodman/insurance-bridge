@@ -74,4 +74,16 @@ public interface AiProductSearchTagMapper {
             ")",
             "</script>"})
     List<Long> findActiveProductIdsMatchingKeywords(@Param("keywords") List<String> keywords);
+
+    @Select({"<script>",
+            "SELECT id FROM tab_insurance WHERE data_state = '0' AND insurance_state = '0'",
+            "AND ai_recommend_enabled = 1 AND ((",
+            "<foreach collection='ngrams' item='gram' separator=' + '>",
+            "CASE WHEN insurance_name LIKE CONCAT('%', #{gram}, '%') THEN 1 ELSE 0 END",
+            "</foreach>",
+            ") &gt;= #{minimumMatches})",
+            "</script>"})
+    List<Long> findActiveProductIdsMatchingNameNgrams(
+            @Param("ngrams") List<String> ngrams,
+            @Param("minimumMatches") int minimumMatches);
 }

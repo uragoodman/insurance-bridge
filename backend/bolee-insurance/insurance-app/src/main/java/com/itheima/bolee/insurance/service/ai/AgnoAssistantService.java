@@ -588,6 +588,7 @@ public class AgnoAssistantService {
             AiAssistantChatResponseVO response = objectMapper.readValue(json, AiAssistantChatResponseVO.class);
             AiMessageStructuredDataDTO structured = new AiMessageStructuredDataDTO();
             structured.setRecommendations(response.getRecommendations());
+            structured.setTermCitations(response.getTermCitations());
             structured.setProductComparison(response.getProductComparison());
             structured.setOwnPolicySummary(response.getOwnPolicySummary());
             structured.setOwnPolicyDetail(response.getOwnPolicyDetail());

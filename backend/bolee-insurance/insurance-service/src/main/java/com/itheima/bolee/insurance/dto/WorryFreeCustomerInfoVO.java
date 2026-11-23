@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * WorryFreeCustomerInfoDTO
  *
- *{income=6000, cityNo=1, childNum=1, idCard=[REDACTED], sex=男, seriousScore=0, eduNo=3, dieScore=0, expensesMonth=5000, applicationAmount=250000, this$0=com.itheima.bolee.insurance.service.impl.RuleServiceImpl@50dc169c, jobNo=JOB_01_02, name=张三, liabilities=25000, checkList=[], deposit=20000, accidentScore=0, riskItem=[], id=1234564878, repaymentCycle=2, medicalScore=0, age=21}
+ *{income=6000, cityNo=1, childNum=1, idCard=430203199206251018, sex=男, seriousScore=0, eduNo=3, dieScore=0, expensesMonth=5000, applicationAmount=250000, this$0=com.itheima.bolee.insurance.service.impl.RuleServiceImpl@50dc169c, jobNo=JOB_01_02, name=张三, liabilities=25000, checkList=[], deposit=20000, accidentScore=0, riskItem=[], id=1234564878, repaymentCycle=2, medicalScore=0, age=21}
  *         map.put("jobNo","JOB_01_02");
  *         map.put("riskItem",new ArrayList<>());
  * @author: wgl

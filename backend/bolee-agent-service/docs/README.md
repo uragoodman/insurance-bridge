@@ -1,6 +1,6 @@
 # AI 客服文档索引
 
-本目录按“当前实现、总体设计、专项计划、数据契约”组织 AI 客服资料。**文档中的计划和契约不代表对应功能已经落地**；判断当前行为以 当前仓库 Java/Python 代码和下面的实现状态文档为准。
+本目录按“当前实现、总体设计、专项计划、数据契约”组织 AI 客服资料。**文档中的计划和契约不代表对应功能已经落地**；判断当前行为以 `full_with_agent` 分支 Java/Python 代码和下面的实现状态文档为准。
 
 ## 从这里开始
 
@@ -10,6 +10,9 @@
 4. [OAuth2 服务认证配置](oauth2-service-auth.md)：双向 client-credentials 客户端、scope 和部署配置。
 5. [已实现的 Java 产品目录切片](java-ai-implementation-slice.md)：分类目录工具现有接口、数据边界和 Python 调用结果。
 6. [Java AI 功能总实施计划](java-feature-implementation-plan.md)：产品推荐和本人保单两条 Java 纵向切片及其依赖关系。
+7. [保险条款知识库引入方案](insurance-terms-rag-plan.md)：条款来源、版本治理、合成语料、pgvector 检索隔离和验收规则。
+8. [Python 保险条款 RAG 实施设计](python-terms-rag-design.md)：Python 任务 worker、pgvector 数据模型、硬过滤检索、引用契约和部署配置；当前代码实现状态见下方状态说明。
+9. [条款 RAG 本地配置与迁移](insurance-terms-rag-operations.md)：环境变量、数据库 schema 初始化和本地 worker 启动要求。
 
 ## 功能与实施计划
 

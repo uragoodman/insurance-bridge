@@ -3,6 +3,7 @@ package com.itheima.bolee.insurance.dto.ai.contract;
 import com.itheima.bolee.insurance.dto.ai.AiOwnPolicyChatSummaryResponseVO;
 import com.itheima.bolee.insurance.dto.ai.AiOwnPolicyChatDetailResponseVO;
 import com.itheima.bolee.insurance.dto.ai.AiProductCandidateVO;
+import com.itheima.bolee.insurance.dto.ai.AiTermCitationVO;
 import com.itheima.bolee.insurance.dto.ai.recommendation.AiRecommendationUnresolvedCriteriaVO;
 import com.itheima.bolee.insurance.dto.ai.recommendation.AiProductComparisonResponseVO;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class AiMessageStructuredDataDTO {
     private List<String> unsupportedCriteria = new ArrayList<String>();
     private List<AiRecommendationUnresolvedCriteriaVO> unresolvedCriteria =
             new ArrayList<AiRecommendationUnresolvedCriteriaVO>();
+    private List<AiTermCitationVO> termCitations = new ArrayList<AiTermCitationVO>();
     private Integer excludedProductCount;
     private String catalogVersion;
     private Integer ruleVersion;

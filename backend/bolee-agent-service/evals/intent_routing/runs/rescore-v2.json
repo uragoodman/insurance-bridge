@@ -1,0 +1,1379 @@
+{
+  "rubric_version": "intent-routing-rubric-v2-case-audit",
+  "source_report": "/tmp/intent-eval/runs/baseline-v1.json",
+  "model_observations_reused": 131,
+  "new_llm_calls": 0,
+  "all_observations": {
+    "FOLLOW_UP_REQUIRED": 3,
+    "PASS_MANUAL_REVIEW": 14,
+    "FAIL": 16,
+    "PASS": 98
+  },
+  "baseline_once": {
+    "FOLLOW_UP_REQUIRED": 3,
+    "PASS_MANUAL_REVIEW": 6,
+    "FAIL": 14,
+    "PASS": 45
+  },
+  "repeat_observations": {
+    "FAIL": 2,
+    "PASS_MANUAL_REVIEW": 8,
+    "PASS": 53
+  },
+  "baseline_scored_pass_rate": {
+    "passed": 51,
+    "scored": 65
+  },
+  "repeat_scored_pass_rate": {
+    "passed": 61,
+    "scored": 63
+  },
+  "follow_up_case_observations": [
+    {
+      "case_id": "catalog-01",
+      "repeat_no": 1,
+      "status": "FOLLOW_UP_REQUIRED",
+      "reason": "LIST_CATEGORIES may be a safe preliminary step; this one-call baseline cannot show whether product search follows.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "catalog-05",
+      "repeat_no": 1,
+      "status": "FOLLOW_UP_REQUIRED",
+      "reason": "LIST_CATEGORIES may be a safe preliminary step; this one-call baseline cannot show whether product search follows.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "catalog-07",
+      "repeat_no": 1,
+      "status": "FOLLOW_UP_REQUIRED",
+      "reason": "LIST_CATEGORIES may be a safe preliminary step; this one-call baseline cannot show whether product search follows.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    }
+  ],
+  "remaining_failures": [
+    {
+      "case_id": "catalog-03",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "catalog-04",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "catalog-09",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_first_action;schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "recommend-08",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent"
+      ]
+    },
+    {
+      "case_id": "compare-02",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "compare-04",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "compare-05",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent;wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "compare-07",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent;wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "compare-09",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "compare-10",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent;wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "terms-03",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "No accepted route/clarification, or tool arguments failed contract validation.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "argument_contract_violation",
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "terms-05",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "terms-08",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "No accepted route/clarification, or tool arguments failed contract validation.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "unexpected_business_tool_call;empty_final_response",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call",
+        "empty_final_response"
+      ]
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 2,
+      "status": "FAIL",
+      "reason": "No accepted route/clarification, or tool arguments failed contract validation.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 2,
+      "status": "FAIL",
+      "reason": "argument_contract_violation;schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "argument_contract_violation",
+        "schema_invalid"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "case_id": "catalog-01",
+      "repeat_no": 1,
+      "status": "FOLLOW_UP_REQUIRED",
+      "reason": "LIST_CATEGORIES may be a safe preliminary step; this one-call baseline cannot show whether product search follows.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "catalog-02",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "catalog-03",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "catalog-04",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "catalog-05",
+      "repeat_no": 1,
+      "status": "FOLLOW_UP_REQUIRED",
+      "reason": "LIST_CATEGORIES may be a safe preliminary step; this one-call baseline cannot show whether product search follows.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "catalog-06",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "catalog-07",
+      "repeat_no": 1,
+      "status": "FOLLOW_UP_REQUIRED",
+      "reason": "LIST_CATEGORIES may be a safe preliminary step; this one-call baseline cannot show whether product search follows.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "catalog-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "catalog-09",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_first_action;schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "catalog-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent"
+      ]
+    },
+    {
+      "case_id": "recommend-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-08",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent"
+      ]
+    },
+    {
+      "case_id": "recommend-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "recommend-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "compare-02",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "compare-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "compare-04",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "compare-05",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent;wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "compare-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "compare-07",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent;wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "compare-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "compare-09",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "compare-10",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "wrong_intent;wrong_first_action;argument_contract_violation",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "terms-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "terms-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "terms-03",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "No accepted route/clarification, or tool arguments failed contract validation.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "argument_contract_violation",
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "terms-04",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "wrong_first_action",
+        "argument_contract_violation"
+      ]
+    },
+    {
+      "case_id": "terms-05",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "terms-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "terms-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "No-tool clarification matches audited expectation.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "expected_exactly_one_tool_call"
+      ]
+    },
+    {
+      "case_id": "terms-08",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "No accepted route/clarification, or tool arguments failed contract validation.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "terms-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "terms-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-09",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-10",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 1,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 1,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 1,
+      "status": "FAIL",
+      "reason": "unexpected_business_tool_call;empty_final_response",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call",
+        "empty_final_response"
+      ]
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 2,
+      "status": "FAIL",
+      "reason": "No accepted route/clarification, or tool arguments failed contract validation.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent",
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 3,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent"
+      ]
+    },
+    {
+      "case_id": "recommend-01",
+      "repeat_no": 4,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "wrong_intent"
+      ]
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 2,
+      "status": "FAIL",
+      "reason": "argument_contract_violation;schema_invalid",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "argument_contract_violation",
+        "schema_invalid"
+      ]
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "compare-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "policy-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-02",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-03",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-04",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-05",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-06",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-07",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "unsupported-08",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-01",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-02",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 2,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 3,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-03",
+      "repeat_no": 4,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-04",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-05",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-06",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-07",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-08",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 2,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 3,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-09",
+      "repeat_no": 4,
+      "status": "PASS_MANUAL_REVIEW",
+      "reason": "Allowed first action; inspect final response manually.",
+      "original_v1_pass": false,
+      "failure_reasons_v1": [
+        "unexpected_business_tool_call"
+      ]
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 2,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 3,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    },
+    {
+      "case_id": "ambiguous-10",
+      "repeat_no": 4,
+      "status": "PASS",
+      "reason": "Matches frozen v1 label.",
+      "original_v1_pass": true,
+      "failure_reasons_v1": []
+    }
+  ]
+}
