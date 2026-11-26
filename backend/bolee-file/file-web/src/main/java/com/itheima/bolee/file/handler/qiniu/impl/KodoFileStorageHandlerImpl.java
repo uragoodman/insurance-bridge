@@ -1,6 +1,5 @@
 package com.itheima.bolee.file.handler.qiniu.impl;
 
-import com.aliyun.oss.ClientException;
 import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.itheima.bolee.file.handler.qiniu.properties.QiniuProperties;
@@ -71,9 +70,6 @@ public class KodoFileStorageHandlerImpl extends AbsFileStorageHandler implements
             }
         } catch (QiniuException oe) {
             log.error("七牛Kodo文件上传错误：{}", oe);
-            throw new ProjectException(FileEnum.UPLOAD_FAIL);
-        } catch (ClientException ce) {
-            log.error("七牛Kodo文件上传客户端错误：{}", ce);
             throw new ProjectException(FileEnum.UPLOAD_FAIL);
         }
         return pathUrl;

@@ -68,6 +68,15 @@ public class InsuranceTermSourceAdminController {
         return ResponseResultBuild.successBuild(sourceService.list(productId, profileVersionId, status, page, pageSize));
     }
 
+    @GetMapping("/products/{productId}/versions")
+    @ApiOperation("查询产品可维护条款的档案版本")
+    public ResponseResult<List<com.itheima.bolee.insurance.dto.ai.terms.InsuranceTermProductVersionVO>> versions(
+            @PathVariable Long productId, HttpServletResponse response) {
+        requireOperator();
+        response.setHeader(HttpHeaders.CACHE_CONTROL, "no-store, private");
+        return ResponseResultBuild.successBuild(sourceService.listProductVersionsForAdmin(productId));
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("上传产品条款来源文件并登记为草稿")
     public ResponseResult<InsuranceTermSourceVO> upload(

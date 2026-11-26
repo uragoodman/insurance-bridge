@@ -41,7 +41,8 @@ class ContextAwareChatApplicationService:
             task_runtime = dependencies.get("customer_task_runtime")
             if isinstance(task_runtime, CustomerTaskRuntime):
                 task_runtime.begin_turn(plan.memory.active_task)
-            result = self._agent_runner.run(
+        # 应用层不自行判断意图；它把消息交给 AgentRunner，由 Agent/模型选择业务工具。
+        result = self._agent_runner.run(
                 message,
                 user_id=user_id,
                 session_id=session_id,
@@ -68,7 +69,8 @@ class ContextAwareChatApplicationService:
             task_runtime = dependencies.get("customer_task_runtime")
             if isinstance(task_runtime, CustomerTaskRuntime):
                 task_runtime.begin_turn(plan.memory.active_task)
-            stream = self._agent_runner.run(
+        # 流式聊天同样走 AgentRunner；意图识别仍由 Agent 的工具选择完成。
+        stream = self._agent_runner.run(
                 message,
                 user_id=user_id,
                 session_id=session_id,

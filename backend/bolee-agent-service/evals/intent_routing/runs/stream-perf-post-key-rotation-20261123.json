@@ -1,0 +1,54 @@
+{
+  "measured_at": "2026-11-23",
+  "model": "qwen3.8-flash",
+  "entrypoint": "Agent internal /internal/chat/stream",
+  "auth": "Java OAuth client_credentials",
+  "scenario": "short no-tool greeting",
+  "tool_execution_included": false,
+  "java_business_api_included": false,
+  "warmup_ok": true,
+  "sequential": {
+    "requests": 5,
+    "successes": 5,
+    "errors": 0,
+    "ttft_ms": {
+      "mean": 1363.3,
+      "p50": 1401.5,
+      "p95": 1723.9,
+      "max": 1723.9
+    },
+    "end_to_end_ms": {
+      "mean": 1720.3,
+      "p50": 1646.0,
+      "p95": 2311.3,
+      "max": 2311.3
+    }
+  },
+  "concurrency_3": {
+    "requests": 9,
+    "waves": 3,
+    "successes": 9,
+    "errors": 0,
+    "wall_seconds": 8.87,
+    "throughput_rps": 1.015,
+    "ttft_ms": {
+      "mean": 2043.6,
+      "p50": 2082.9,
+      "p95": 3197.6,
+      "max": 3197.6
+    },
+    "end_to_end_ms": {
+      "mean": 2452.5,
+      "p50": 2528.9,
+      "p95": 3651.8,
+      "max": 3651.8
+    }
+  },
+  "answers_nonempty": 14,
+  "limitations": [
+    "Local one-user synthetic no-tool workload.",
+    "RPS is for three concurrent streaming requests only; it is not a capacity limit.",
+    "Provider token usage/cost was not returned by the response.",
+    "Does not measure Java public chat ingress or business tool execution."
+  ]
+}

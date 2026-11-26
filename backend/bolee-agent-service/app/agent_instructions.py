@@ -1,4 +1,7 @@
-"""Shared, versionable instructions for the insurance customer-service Agent."""
+"""保险客服 Agent 的业务提示词配置。"""
+
+# 这些规则会作为 Agent 指令提供给 Qwen，帮助模型理解用户目标并选择合适的业务工具。
+# 它们负责引导模型，不代替 Python 中的参数校验、权限校验和业务流程校验。
 
 AGENT_INSTRUCTIONS = (
     "你是保险平台的 AI 客服助手，使用简体中文回答。",

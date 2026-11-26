@@ -7,6 +7,7 @@ from typing import Any
 
 
 class AgnoAgentRunner:
+    """Agno 执行适配器：把应用层聊天请求交给已配置的 Agent。"""
     def __init__(self, agent_provider: Callable[[], Any]) -> None:
         self._agent_provider = agent_provider
 
@@ -21,6 +22,8 @@ class AgnoAgentRunner:
         stream: bool,
         yield_run_output: bool = False,
     ) -> Any:
+        # Agent 会收到当前用户消息、会话信息和会话状态；Agno 负责组装模型请求，
+        # 并把 Agent 指令、工具说明及工具参数结构一并提供给兼容 OpenAI 工具调用的模型。
         agent = self._agent_provider()
         return agent.run(
             message,

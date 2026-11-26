@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itheima.bolee.framework.commons.dto.security.UserVO;
 import com.itheima.bolee.insurance.dto.ai.AiAssistantChatRequestVO;
 import com.itheima.bolee.insurance.dto.ai.AiAssistantChatResponseVO;
+import com.itheima.bolee.insurance.dto.ai.contract.AiConversationMessagesResponseDTO;
 import com.itheima.bolee.insurance.pojo.ai.AiTurnDO;
 import com.itheima.bolee.insurance.pojo.ai.AiTurnStatus;
 import org.junit.Before;
@@ -45,7 +46,8 @@ public class AgnoAssistantIdempotencyTest {
         AiTurnDO turn = new AiTurnDO();
         turn.setTurnId(TURN_ID);
         turn.setStatus(AiTurnStatus.PROCESSING);
-        when(conversationService.startTurn(eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello")))
+        when(conversationService.startTurn(
+                eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello"), isNull()))
                 .thenReturn(new AiTurnStartResult(AiTurnStartResult.Outcome.EXISTING, turn));
         AiAssistantChatResponseVO response = service.chat(request(), user());
 
@@ -68,7 +70,8 @@ public class AgnoAssistantIdempotencyTest {
         turn.setTurnId(TURN_ID);
         turn.setStatus(AiTurnStatus.COMPLETED);
         turn.setEncryptedResponse(cipher.encrypt(objectMapper.writeValueAsString(original), "7:" + TURN_ID));
-        when(conversationService.startTurn(eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello")))
+        when(conversationService.startTurn(
+                eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello"), isNull()))
                 .thenReturn(new AiTurnStartResult(AiTurnStartResult.Outcome.EXISTING, turn));
 
         AiAssistantChatResponseVO replay = service.chat(request(), user());
@@ -84,7 +87,8 @@ public class AgnoAssistantIdempotencyTest {
         AiTurnDO turn = new AiTurnDO();
         turn.setTurnId(TURN_ID);
         turn.setStatus(AiTurnStatus.FAILED);
-        when(conversationService.startTurn(eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello")))
+        when(conversationService.startTurn(
+                eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello"), isNull()))
                 .thenReturn(new AiTurnStartResult(AiTurnStartResult.Outcome.EXISTING, turn));
 
         AiAssistantChatResponseVO response = service.chat(request(), user());
@@ -98,7 +102,8 @@ public class AgnoAssistantIdempotencyTest {
         AiTurnDO turn = new AiTurnDO();
         turn.setTurnId(TURN_ID);
         turn.setStatus(AiTurnStatus.PROCESSING);
-        when(conversationService.startTurn(eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello")))
+        when(conversationService.startTurn(
+                eq(7L), eq("session"), eq(CLIENT_MESSAGE_ID), anyString(), eq("hello"), isNull()))
                 .thenReturn(new AiTurnStartResult(AiTurnStartResult.Outcome.EXISTING, turn));
         ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -119,6 +124,19 @@ public class AgnoAssistantIdempotencyTest {
         } catch (RuntimeException expected) {
             verify(conversationService, never()).startTurn(anyLong(), anyString(), anyString(), anyString(), anyString());
         }
+    }
+
+    @Test
+    public void historyForConversationNotOwnedByCurrentUserNeverReachesAgentService() {
+        when(conversationService.findReadableConversation(7L, "session")).thenReturn(null);
+
+        AiConversationMessagesResponseDTO response =
+                service.getConversationMessages("session", null, 25, user());
+
+        assertEquals("session", response.getSessionId());
+        assertTrue(response.getMessages().isEmpty());
+        verify(conversationService).findReadableConversation(7L, "session");
+        verifyNoInteractions(oauthClientCredentials);
     }
 
     private AiAssistantChatRequestVO request() {

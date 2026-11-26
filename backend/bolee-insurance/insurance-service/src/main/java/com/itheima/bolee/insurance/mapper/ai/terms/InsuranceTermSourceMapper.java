@@ -22,6 +22,17 @@ public interface InsuranceTermSourceMapper {
     Integer findProductVersion(@Param("insuranceId") Long insuranceId,
                                @Param("profileVersionId") Long profileVersionId);
 
+    @Select("SELECT id AS profile_version_id, product_version, effective_from, effective_to "
+            + "FROM tab_ai_product_profile_version WHERE product_id = #{insuranceId} "
+            + "AND data_state = '0' ORDER BY product_version DESC, id DESC")
+    @Results(id = "adminProductVersionMap", value = {
+            @Result(column = "profile_version_id", property = "profileVersionId", id = true),
+            @Result(column = "product_version", property = "productVersion"),
+            @Result(column = "effective_from", property = "effectiveFrom"),
+            @Result(column = "effective_to", property = "effectiveTo")
+    })
+    List<InsuranceTermProductVersionVO> listProductVersionsForAdmin(@Param("insuranceId") Long insuranceId);
+
     @Insert("INSERT INTO tab_insurance_term_source "
             + "(id, insurance_id, profile_version_id, product_version, source_type, title, source_uri, "
             + "original_file_name, content_type, file_size, sha256, storage_provider, bucket_name, object_key, "
@@ -166,6 +177,34 @@ public interface InsuranceTermSourceMapper {
     List<InsuranceTermSourceDO> listActivePublished(@Param("insuranceId") Long insuranceId,
                                                     @Param("profileVersionId") Long profileVersionId,
                                                     @Param("includeSynthetic") boolean includeSynthetic);
+
+    @Select({"<script>",
+            "SELECT ts.* FROM tab_insurance_term_source ts",
+            "JOIN tab_ai_product_profile_version pv ON pv.id = ts.profile_version_id",
+            "AND pv.product_id = ts.insurance_id AND pv.status = 'PUBLISHED' AND pv.data_state = '0'",
+            "AND (pv.effective_from IS NULL OR pv.effective_from &lt;= CURRENT_TIMESTAMP)",
+            "AND (pv.effective_to IS NULL OR pv.effective_to &gt;= CURRENT_TIMESTAMP)",
+            "WHERE ts.insurance_id IN",
+            "<foreach collection='insuranceIds' item='insuranceId' open='(' separator=',' close=')'>",
+            "#{insuranceId}",
+            "</foreach>",
+            "AND pv.id = (SELECT current_pv.id FROM tab_ai_product_profile_version current_pv",
+            "WHERE current_pv.product_id = ts.insurance_id AND current_pv.status = 'PUBLISHED'",
+            "AND current_pv.data_state = '0'",
+            "AND (current_pv.effective_from IS NULL OR current_pv.effective_from &lt;= CURRENT_TIMESTAMP)",
+            "AND (current_pv.effective_to IS NULL OR current_pv.effective_to &gt;= CURRENT_TIMESTAMP)",
+            "ORDER BY current_pv.product_version DESC, current_pv.id DESC LIMIT 1)",
+            "AND ts.status = 'PUBLISHED' AND (ts.source_type = 'OFFICIAL_PRODUCT_TERM'",
+            "OR (#{includeSynthetic} = 1 AND ts.source_type = 'SYNTHETIC')) AND ts.data_state = '0'",
+            "AND ts.index_status = 'INDEXED' AND ts.indexed_sha256 = ts.sha256",
+            "AND (ts.effective_from IS NULL OR ts.effective_from &lt;= CURRENT_DATE())",
+            "AND (ts.effective_to IS NULL OR ts.effective_to &gt;= CURRENT_DATE())",
+            "ORDER BY ts.insurance_id, ts.profile_version_id DESC, ts.id DESC",
+            "</script>"})
+    @ResultMap("insuranceTermSourceResultMap")
+    List<InsuranceTermSourceDO> listActivePublishedForProducts(
+            @Param("insuranceIds") List<Long> insuranceIds,
+            @Param("includeSynthetic") boolean includeSynthetic);
 
     @Select("SELECT DISTINCT pv.id AS profile_version_id, pv.product_version, "
             + "pv.effective_from, pv.effective_to FROM tab_ai_product_profile_version pv "

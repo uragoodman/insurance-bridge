@@ -27,6 +27,8 @@ ProviderNullSentinel = Annotated[
     Field(description="Optional provider compatibility sentinel; omit or use the literal null."),
 ]
 
+# 工具集级提示词：进一步告诉模型每种用户诉求应选哪个窄化工具，以及各工具的调用顺序。
+# Agent 的总规则见 app/agent_instructions.py；最终能否执行仍由 Python 校验和策略代码决定。
 CUSTOMER_TASK_TOOL_INSTRUCTIONS = (
     "Route by the customer's primary intent, using exactly one matching narrow tool for the "
     "first step. If a message requests two independent goals (for example recommend a product "
@@ -55,7 +57,7 @@ CUSTOMER_TASK_TOOL_INSTRUCTIONS = (
 
 
 class CustomerTaskTools(Toolkit):
-    """Model-facing task facade; dispatcher remains the single business-policy boundary."""
+    """提供给大模型选择的业务工具门面，负责把模型选中的工具转换为统一任务请求。"""
 
     def __init__(
         self,
@@ -111,7 +113,7 @@ class CustomerTaskTools(Toolkit):
         keyword: CustomerTaskKeyword,
         category_id: OptionalProductCategoryId = None,
     ) -> dict[str, Any]:
-        """Search enabled catalog products by the user's product/scenario keyword.
+        """按用户给出的产品或场景关键词查询可售产品。
 
         Omit category_id unless Java returned a category ID; never send an empty string. The service
         returns at most three products. Do not use this for terms, recommendations, or claims.
@@ -131,7 +133,7 @@ class CustomerTaskTools(Toolkit):
         keyword: CustomerTaskKeyword,
         category_id: OptionalProductCategoryId = None,
     ) -> dict[str, Any]:
-        """First step for every request to compare products or to find products for comparison.
+        """比较产品请求的第一步：先按用户提到的产品查询 Java 目录。
 
         Search using the user's scenario or product terms, then compare only IDs returned by this
         search. Never use a recommendation-category tool for a comparison request. Omit category_id
@@ -194,7 +196,7 @@ class CustomerTaskTools(Toolkit):
         product_name: Annotated[str, Field(min_length=1, max_length=200)],
         question: Annotated[str, Field(min_length=1, max_length=1000)],
     ) -> dict[str, Any]:
-        """Search formal terms for a named product and a specific coverage question."""
+        """根据明确的产品描述和具体问题检索正式保险条款。"""
         return self._dispatch(
             run_context,
             CustomerTaskIntent.TERMS_QA,
@@ -247,6 +249,8 @@ class CustomerTaskTools(Toolkit):
         action: CustomerTaskAction,
         **arguments: Any,
     ) -> dict[str, Any]:
+        # 模型只选择工具并填写参数；每个工具方法已固定对应的意图和动作。
+        # 这里规范兼容性参数、校验请求结构，再交给统一 Dispatcher 处理。
         # OpenAI-compatible models sometimes serialize an omitted optional argument as "".
         # Treat that as absent so it cannot become an invalid Java category filter.
         if action == CustomerTaskAction.SEARCH_PRODUCTS:

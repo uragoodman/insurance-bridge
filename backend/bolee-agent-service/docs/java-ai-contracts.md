@@ -177,6 +177,6 @@ HTTP 错误响应统一包含 `code`、安全可公开的 `message`、`traceId`�
 6. 再实现 `policy.own.read`，使用 owner-scoped 查询和条款版本映射完成本人保单问答。
 7. 理赔查询和人工转接作为后续独立范围；先确认权威案件系统、人工客服接口与审批/确认流程，再定义 OpenAPI。
 
-当前已有客户聊天入口、Java 到 Python HTTP 调用、短时 Redis 授权上下文和内部工具路径保护。Java 目录查询切片包括动态分类列表、按分类查询最多三项上架产品、白名单 DTO 映射和 `product.catalog.read` scope 强制校验；Python Agent 已调用这两个只读端点，并将 Java 校验过的候选作为聊天响应的 `recommendations` 返回。它只支持分类目录检索，不是完整个性化推荐，前端卡片尚未完成。AI DTO、会话/轮次/清理任务 DO、owner 范围 Mapper、事务服务和清理 outbox/调度骨架已加入；V01、V02 表结构已在本机开发库执行。AgentOS 删除接口适配尚未实现，未配置适配器时 worker 不领取任务；因此该骨架不等于已完成清理，也不能据此启用持久化。当前还未将新持久化服务接入客户聊天 Controller/Agno 调用链。产品推荐规则、报价、保单查询和理赔工具仍未完成。条款来源管理与 Python 索引/检索代码已加入，包含结构化 citation Java 映射；但数据库迁移、OAuth/embedding 配置、端到端验证和前端引用展示仍待处理。开发数据库分类含测试项；健康筛选不暴露给第一阶段 Agent。价格币种及通用年预算换算未定义，地区字段也未确认。Agno PostgreSQL 使用持久卷，Python 侧自动清理/TTL 尚未实现；启用真实会话写入前必须落实 Java 和 Python 两侧删除策略。本文其余建议路径和字段仍需在对应切片实施前作为 OpenAPI/DTO 冻结。
+实现状态的唯一汇总见[Agent 功能范围与当前状态](agent-capabilities.md)，下文方案不等于功能缺失清单。当前已有客户聊天入口、Java 到 Python HTTP/SSE 调用、短时 Redis 授权上下文、五类任务策略、产品目录/推荐/比较、本人保单查询、条款来源管理与 Python 索引/检索，以及会话上下文压缩和 AgentOS 管理接口保护。条款 RAG 正常链路为 Java 审核发布、Java 任务 API、Python 索引 worker、PostgreSQL/pgvector，再通过 Java 产品/版本/来源元数据硬过滤召回。本地演示语料共有 28 个已索引合成来源；其中最近增加的 24 个通过显式 `LOCAL_DEMO_SEED` 路径激活，没有执行人工审核，详见状态页。报价、核保、投保、退保、保全和理赔动作尚未接入。推荐与条款可用性仍受本地发布数据和身份认证状态影响。
 
-当前分类目录切片已将至多三条 Java 候选通过聊天响应的 `recommendations` 返回。Python 客户端 `app.clients.java_internal_api.JavaInternalApiClient` 已增加只允许访问推荐 POST 路径的 `post_json`；`app.schemas.product_recommendation` 和 `app.services.product_recommendation.ProductRecommendationService` 负责条件目录读取、请求校验、Java 推荐调用及响应校验。这只是客户端/用例层，尚未注册 Agno 工具，也未接入聊天结构化响应。后续仍需把工具结果采集、澄清交互和前端结果卡片接通；会话能力还需完成留存、删除语义和幂等结果回读。
+产品目录、推荐和比较已经注册到单一 `customer_task` Agent 工具链；实际响应及未实现能力以状态页为准。此前的“后续仍需”内容属于早期切片计划，不应解读为当前代码仍未接通。

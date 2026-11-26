@@ -80,18 +80,34 @@ public class AgnoAssistantService {
     @Autowired
     private AiOwnPolicyQueryService ownPolicyQueryService;
 
+    /**
+     * Spring 创建本服务时调用一次：读取配置、接收其他 Spring 服务，并准备访问 Python Agent 的 HTTP 客户端。
+     * 这里不处理用户消息，也不做意图识别；用户消息由下面的 chat/streamChat 方法处理。
+     */
     public AgnoAssistantService(
+            // 是否启用 Agent 客服功能。
             @Value("${agno.enabled:false}") boolean enabled,
+            // Python Agent 服务的地址，例如 http://agno-agent:8000。
             @Value("${agno.service-url:http://127.0.0.1:8000}") String serviceUrl,
+            // 建立到 Python 服务的连接时，最多等待多久。
             @Value("${agno.connect-timeout-ms:3000}") int connectTimeoutMs,
+            // 等待 Python 服务返回数据时，最多等待多久。
             @Value("${agno.read-timeout-ms:120000}") int readTimeoutMs,
+            // 是否启用了 AI 对话持久化；Agent 启用时也必须开启。
             @Value("${ai.persistence.enabled:false}") boolean aiPersistenceEnabled,
+            // 用于加密保存 AI 响应幂等记录的密钥。
             @Value("${ai.idempotency.encryption-key:}") String responseEncryptionKey,
+            // 生成并校验传给 Python Agent 的用户授权上下文。
             AgnoAuthorizationContextService authorizationContextService,
+            // 负责向 Python Agent 请求 OAuth 服务凭证。
             AgnoOAuthClientCredentials oauthClientCredentials,
+            // 按需获取对话持久化服务；该服务可能因配置未启用而不存在。
             ObjectProvider<AiConversationService> conversationServiceProvider,
+            // Spring 提供的 JSON 序列化/反序列化组件。
             ObjectMapper objectMapper) {
         this.enabled = enabled;
+
+        // 清理服务地址末尾的斜杠，避免后续拼接接口路径时出现双斜杠。
         String normalizedServiceUrl = serviceUrl == null ? "" : serviceUrl.trim().replaceAll("/+$", "");
         URI serviceUri;
         try {
@@ -99,25 +115,34 @@ public class AgnoAssistantService {
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException("agno.service-url must be a valid HTTP(S) URL", exception);
         }
+        // 启动时就检查服务地址，避免配置错误直到用户发起聊天才暴露。
         if (!("http".equalsIgnoreCase(serviceUri.getScheme())
                 || "https".equalsIgnoreCase(serviceUri.getScheme()))
                 || !StringUtils.hasText(serviceUri.getHost())) {
             throw new IllegalArgumentException("agno.service-url must be a valid HTTP(S) URL");
         }
+        // 连接超时和读取超时必须为正数。
         if (connectTimeoutMs <= 0 || readTimeoutMs <= 0) {
             throw new IllegalArgumentException("Agno HTTP timeouts must be greater than zero");
         }
+
+        // 保存经过校验的配置和 Spring 注入的协作者，供后续聊天请求使用。
         this.serviceUrl = normalizedServiceUrl;
         this.authorizationContextService = authorizationContextService;
         this.oauthClientCredentials = oauthClientCredentials;
         this.conversationServiceProvider = conversationServiceProvider;
         this.objectMapper = objectMapper;
+
+        // Agent 会保存会话数据，因此启用客服功能时要求同时配置持久化和数据保留策略。
         if (enabled && !aiPersistenceEnabled) {
             throw new IllegalStateException(
                     "Agno customer chat requires AI conversation persistence and retention configuration");
         }
+
+        // 仅在功能启用时创建响应加密器；功能关闭时不需要加密密钥。
         this.responseCipher = enabled ? new AiResponseCipher(responseEncryptionKey) : null;
 
+        // 创建后续用于调用 Python Agent 的 HTTP 客户端，并设置连接和读取超时。
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(connectTimeoutMs);
         requestFactory.setReadTimeout(readTimeoutMs);

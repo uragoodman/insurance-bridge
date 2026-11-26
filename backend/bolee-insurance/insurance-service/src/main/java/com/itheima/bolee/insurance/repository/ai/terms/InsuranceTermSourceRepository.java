@@ -22,6 +22,10 @@ public class InsuranceTermSourceRepository {
         return mapper.findProductVersion(insuranceId, profileVersionId);
     }
 
+    public List<InsuranceTermProductVersionVO> listProductVersionsForAdmin(Long insuranceId) {
+        return mapper.listProductVersionsForAdmin(insuranceId);
+    }
+
     public void insert(InsuranceTermSourceDO source) {
         if (mapper.insertSource(source) != 1) {
             throw new IllegalStateException("Insurance source metadata was not saved");
@@ -73,6 +77,12 @@ public class InsuranceTermSourceRepository {
     public List<InsuranceTermSourceDO> listActivePublished(Long insuranceId, Long profileVersionId,
                                                             boolean includeSynthetic) {
         return mapper.listActivePublished(insuranceId, profileVersionId, includeSynthetic);
+    }
+
+    public List<InsuranceTermSourceDO> listActivePublishedForProducts(List<Long> insuranceIds,
+                                                                       boolean includeSynthetic) {
+        if (insuranceIds == null || insuranceIds.isEmpty()) return java.util.Collections.emptyList();
+        return mapper.listActivePublishedForProducts(insuranceIds, includeSynthetic);
     }
 
     public List<InsuranceTermProductVersionVO> listActivePublishedVersions(Long insuranceId,

@@ -5,6 +5,8 @@ import io.minio.MinioClient;
 import io.minio.GetObjectArgs;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import io.minio.StatObjectArgs;
+import io.minio.errors.ErrorResponseException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +48,23 @@ public class MinioInsuranceTermObjectStorage implements InsuranceTermObjectStora
                     .bucket(properties.getBucket()).object(objectKey).build());
         } catch (Exception exception) {
             throw new IllegalStateException("Could not read insurance source document", exception);
+        }
+    }
+
+    @Override
+    public boolean exists(String objectKey) {
+        try {
+            minioClient.statObject(StatObjectArgs.builder()
+                    .bucket(properties.getBucket()).object(objectKey).build());
+            return true;
+        } catch (ErrorResponseException exception) {
+            String code = exception.errorResponse() == null ? null : exception.errorResponse().code();
+            if ("NoSuchKey".equals(code) || "NoSuchObject".equals(code) || "NotFound".equals(code)) {
+                return false;
+            }
+            throw new IllegalStateException("Could not inspect insurance source document", exception);
+        } catch (Exception exception) {
+            throw new IllegalStateException("Could not inspect insurance source document", exception);
         }
     }
 

@@ -25,7 +25,7 @@ class CustomerTaskAction(StrEnum):
 
 
 class CustomerTaskRequest(ContractModel):
-    """Flat, bounded schema supported by OpenAI-compatible tool calling."""
+    """大模型工具调用进入业务层时使用的统一、有限参数结构。"""
 
     intent: CustomerTaskIntent
     action: CustomerTaskAction
@@ -78,6 +78,7 @@ class CustomerTaskRequest(ContractModel):
 
     @model_validator(mode="after")
     def validate_action_payload(self) -> CustomerTaskRequest:
+        # 防止意图与动作不匹配，并检查该动作必需的参数是否齐全。
         allowed_intents = self._ACTION_INTENTS[self.action]
         if self.intent not in allowed_intents:
             raise ValueError("intent does not match the requested action")

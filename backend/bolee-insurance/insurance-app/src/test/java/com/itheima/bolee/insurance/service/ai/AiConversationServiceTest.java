@@ -124,6 +124,17 @@ public class AiConversationServiceTest {
     }
 
     @Test
+    public void foreignOwnerCannotResolveConversationForHistoryRead() {
+        when(conversationMapper.findOwned(8L, "session-1")).thenReturn(null);
+
+        AiConversationDO readable = service.findReadableConversation(8L, "session-1");
+
+        assertNull(readable);
+        verify(conversationMapper).findOwned(8L, "session-1");
+        verifyNoInteractions(turnMapper, cleanupTaskMapper);
+    }
+
+    @Test
     public void deleteMarksOwnerScopedConversationAndEnqueuesTask() {
         when(conversationMapper.findOwnedForUpdate(7L, "session-1")).thenReturn(conversation);
         when(conversationMapper.markDeletePending(eq(101L), eq(7L), any(LocalDateTime.class))).thenReturn(1);

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Lists;
 import com.itheima.bolee.framework.commons.exception.ProjectException;
 import com.itheima.bolee.framework.commons.utils.BeanConv;
@@ -11,6 +12,7 @@ import com.itheima.bolee.framework.commons.utils.EmptyUtil;
 import com.itheima.bolee.framework.commons.utils.ExceptionsUtil;
 import com.itheima.bolee.insurance.constant.InsurancePlanCacheConstant;
 import com.itheima.bolee.insurance.dto.InsurancePlanVO;
+import com.itheima.bolee.insurance.dto.JsonAttribute;
 import com.itheima.bolee.insurance.dto.PlanEarningsVO;
 import com.itheima.bolee.insurance.dto.PlanSafeguardVO;
 import com.itheima.bolee.insurance.enums.InsurancePlanEnum;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 /**
@@ -167,7 +170,9 @@ public class InsurancePlanServiceImpl extends ServiceImpl<InsurancePlanMapper, I
                         ipv.getPlanEarningsVO().setPalnId(ip.getId());
                     }
                 });
-                planEarningsVOs.add(ipv.getPlanEarningsVO());
+                if (hasPlanEarningsContent(ipv.getPlanEarningsVO())) {
+                    planEarningsVOs.add(ipv.getPlanEarningsVO());
+                }
                 planSafeguardVOs.addAll(ipv.getPlanSafeguardVOs());
             });
             //保存方案保障项
@@ -175,17 +180,52 @@ public class InsurancePlanServiceImpl extends ServiceImpl<InsurancePlanMapper, I
             if (!flag){
                 throw new RuntimeException("保存保险方案保障项失败");
             }
-            //保存方案给付计划
-            if (!EmptyUtil.isNullOrEmpty(planEarningsVOs)){
-                flag =planEarningsService.saveBatch(BeanConv.toBeanList(planEarningsVOs,PlanEarnings.class));
-                if (!flag){
-                    throw new RuntimeException("保存保险方案给付失败");
-                }
-            }
+            //给付计划是可选项；没有给付内容时不执行空批量保存。
+            savePlanEarningsIfPresent(planEarningsVOs);
             return flag;
         }catch (Exception e){
             log.error("保存保险方案异常：{}", ExceptionsUtil.getStackTraceAsString(e));
             throw new ProjectException(InsurancePlanEnum.SAVE_FAIL);
+        }
+    }
+
+    void savePlanEarningsIfPresent(List<PlanEarningsVO> planEarningsVOs) {
+        if (EmptyUtil.isNullOrEmpty(planEarningsVOs)) {
+            return;
+        }
+
+        List<PlanEarningsVO> nonNullPlanEarnings = planEarningsVOs.stream()
+                .filter(this::hasPlanEarningsContent)
+                .collect(Collectors.toList());
+        if (nonNullPlanEarnings.isEmpty()) {
+            return;
+        }
+
+        boolean saved = planEarningsService.saveBatch(
+                BeanConv.toBeanList(nonNullPlanEarnings, PlanEarnings.class));
+        if (!saved) {
+            throw new RuntimeException("保存保险方案给付失败");
+        }
+    }
+
+    private boolean hasPlanEarningsContent(PlanEarningsVO planEarningsVO) {
+        if (planEarningsVO == null || EmptyUtil.isNullOrEmpty(planEarningsVO.getEarningsJson())) {
+            return false;
+        }
+
+        // The admin form initializes an empty payout template even for products that do not
+        // use payout schedules. Ignore templates whose entries have no values; keep malformed
+        // non-empty JSON so the normal persistence/validation path can report it explicitly.
+        try {
+            List<JsonAttribute> earnings = JSONArray.parseArray(
+                    planEarningsVO.getEarningsJson(), JsonAttribute.class);
+            long filledEntryCount = earnings == null ? 0 : earnings.stream()
+                    .filter(Objects::nonNull)
+                    .filter(item -> !EmptyUtil.isNullOrEmpty(item.getVal()))
+                    .count();
+            return filledEntryCount > 0;
+        } catch (RuntimeException exception) {
+            return true;
         }
     }
 

@@ -1,8 +1,8 @@
 # 保险条款知识库引入方案
 
-**状态：设计基线 + 一份未入库的模拟样例；Java 来源管理和 Python 条款 RAG 首版代码已落地，尚未完成依赖配置、迁移及端到端验证。**本文规定保险条款与保险知识进入当前 Java + Python Agent 项目的方式。当前不能把“代码已落地”描述成线上条款问答已可用。
+**状态：设计与治理基线。**截至 2026-11-25，本地演示环境已完成 Java 任务 → Python 索引 → PostgreSQL/pgvector 的联调，28 份 `SYNTHETIC` 演示来源已索引；最近新增的 24 份以明确标记 `LOCAL_DEMO_SEED` 的本地种子路径激活，未走人工审核。此状态不代表保险公司正式条款，也不等于线上生产发布。准确的代码边界与本地数据状态见[Agent 当前能力](agent-capabilities.md)。
 
-首份待导入的模拟条款结构稿为[无忧综合意外险模拟条款 v1](../knowledge/synthetic/insurance-1721437008821260290-v1.md)。它采用常见条款章节结构，数据库可确认字段和虚构设定逐项区分；尚未写入向量库，也不是正式保险合同。
+首份模拟条款结构稿为[无忧综合意外险模拟条款 v1](../knowledge/synthetic/insurance-1721437008821260290-v1.md)。它采用常见条款章节结构，数据库可确认字段和模拟设定逐项区分；当前已作为演示来源索引，不是正式保险合同。
 
 ## 目标与边界
 
@@ -123,8 +123,8 @@ pgvector 官方说明指出，近似 HNSW/IVFFlat 查询的过滤条件可能在
 - Java 内部只读 API 通过现有 OAuth scope `product.terms.read` 和逐轮授权上下文保护；可先列出产品当前有效且有索引的档案版本，再按精确 `profileVersionId` 读取条款来源/原件。未指定版本而存在多个有效版本时拒绝返回混合结果；原件读取校验产品、档案版本与 SHA-256。
 - MinIO 由 `insurance.terms.storage.enabled` 显式启用。目标 bucket 必须由本地 Compose/部署基础设施预先创建；Java 条款服务账户不具备列举或创建 bucket 的权限，只允许对该 bucket 的条款对象执行读、写、删。凭证只放本机 `.env` 或部署密钥配置，不提交仓库。
 - 数据库迁移为 `V20261121_01`（来源表）、`V20261122_01`（工作流与索引任务）和 `V20261122_02`（任务租约 fencing token 与追加式审计表），必须按仓库流程手动执行，应用启动不会自动建表。
-- Python 首版已包含 Java leased task 消费、PDF/DOCX/DOC/MD/TXT 解析、条款感知切分、embedding、pgvector staging/active batch、Java 白名单检索、证据约束回答、结构化 citations 和 Agent 工具。扫描 PDF 暂不做 OCR，会返回明确失败。迁移需人工执行，外部 embedding 服务、OAuth 凭证和真实 Java/MinIO/PostgreSQL 联调尚未完成。管理端 Vue 源码也不在此仓库。模拟文件须标记为 `SYNTHETIC`，不可发布为正式条款。
+- Python 已包含 Java leased task 消费、PDF/DOCX/DOC/MD/TXT 解析、条款感知切分、embedding、pgvector staging/active batch、Java 白名单检索、证据约束回答、结构化 citations 和 Agent 工具。扫描 PDF 暂不做 OCR，会返回明确失败。当前本地演示环境的 migration、OAuth、MinIO、embedding 与索引 worker 已完成联调；24 份新增数据由本地演示种子路径激活，Java 管理端正常人工审核发布入口仍可用，但本地 admin 登录异常时本轮未走该入口。管理端 Vue 源码不在此仓库。模拟文件必须保持 `SYNTHETIC` 标记，不得冒充正式保险条款。
 
 启用前需先按仓库流程手动执行上述 Flyway migration，再将 MinIO 连接参数注入 `insurance-mgt` 与 `insurance-app` 进程环境（变量名见根目录 `.env.example`），并设置 `INSURANCE_TERMS_STORAGE_ENABLED=true`。根目录 `.env` 不会被 Spring Boot 自动读取；IDE 启动时应在 Run Configuration 中配置环境变量，或从本地密钥管理方式注入。配置授权服务时，`bolee-agno-tools` 需获批 `product.terms.read`，另外创建仅有 `product.terms.index` 的 `bolee-agno-terms-indexer`。迁移未应用时保持功能关闭。
 
-真实产品条款的正确性与合法使用必须以产品权威来源及负责人审核为准。完成手工迁移、设置独立数据库权限、配置 Java OAuth 和 embedding provider，并通过 Python/Java/客户端三侧验证前，不应对外称端到端 RAG 已可用。
+真实产品条款的正确性与合法使用必须以产品权威来源及负责人审核为准。本地演示链路已验证索引完成；如果要将真实条款用于客户服务，仍须导入正式来源、完成独立审核，并在目标环境验证授权、发布、撤回和引用链路。

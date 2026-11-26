@@ -6,11 +6,14 @@ package com.itheima.bolee.framework.commons.constant.file;
  */
 public class FileConstant {
 
-    //阿里云OSS对象存储
+    // Legacy marker sent by the prebuilt admin client. The file service reroutes new uploads to MinIO.
     public static final String ALIYUN_OSS = "ALIYUN_OSS";
 
     //七牛KODO对象存储
     public static final String QINIU_KODO = "QINIU_KODO";
+
+    // MinIO object storage used for local insurance source documents.
+    public static final String MINIO = "MINIO";
 
     //状态：成功
     public static final String STATUS_SUCCEED = "SUCCEED";

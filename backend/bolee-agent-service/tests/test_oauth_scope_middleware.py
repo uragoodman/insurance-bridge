@@ -65,6 +65,12 @@ class AgentOSRouteScopePolicyTests(unittest.TestCase):
         self.assertEqual(frozenset({"AGENT_ADMIN"}), mutation.required_roles)
         self.assertEqual("agent.chat", chat.required_scope)
 
+    def test_customer_history_requires_the_chat_service_scope(self) -> None:
+        access = self.policy.resolve("GET", "/internal/sessions/session-1/messages")
+
+        self.assertEqual("agent.chat", access.required_scope)
+        self.assertFalse(access.public)
+
     def test_unknown_route_is_not_mapped_to_an_authorization_grant(self) -> None:
         access = self.policy.resolve("GET", "/unreviewed-route")
 
@@ -137,6 +143,15 @@ class AgentOSOAuthScopeMiddlewareTests(unittest.TestCase):
 
     def test_customer_chat_scope_does_not_accept_management_role_token(self) -> None:
         status, body = self.run_request("POST", "/internal/chat", "admin-token")
+
+        self.assertEqual(403, status)
+        self.assertIn(b"OAuth client is not permitted", body)
+        self.assertEqual(0, self.downstream_calls)
+
+    def test_customer_history_does_not_accept_management_role_token(self) -> None:
+        status, body = self.run_request(
+            "GET", "/internal/sessions/session-1/messages", "admin-token"
+        )
 
         self.assertEqual(403, status)
         self.assertIn(b"OAuth client is not permitted", body)

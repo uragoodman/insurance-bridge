@@ -422,17 +422,6 @@
                 <artifactId>qiniu-java-sdk</artifactId>
                 <version>${qiniu.version}</version>
             </dependency>
-            <!---spring-cloud-alibaba-oss配置-->
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-starter-alicloud-oss</artifactId>
-                <version>2.2.0.RELEASE</version>
-            </dependency>
-            <dependency>
-                <groupId>com.aliyun.oss</groupId>
-                <artifactId>aliyun-sdk-oss</artifactId>
-                <version>3.10.2</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

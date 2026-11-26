@@ -7,9 +7,10 @@ from agno.tools.function import Function
 
 from app.contexts.customer_task import CustomerTaskRuntime
 from app.contexts.tool import AgentToolResultCollector
-from app.domain.customer_task import ActiveTaskState
-from app.schemas.customer_task import CustomerTaskRequest
+from app.domain.customer_task import ActiveTaskState, CustomerTaskIntent
+from app.schemas.customer_task import CustomerTaskAction, CustomerTaskRequest
 from app.services.customer_task_dispatcher import CustomerTaskDispatcher
+from app.services.customer_task_policy import CustomerTaskExecutionPolicy
 from app.tools.customer_task import CustomerTaskTools
 from app.tools.registry import build_agent_tools
 
@@ -120,6 +121,58 @@ class CustomerTaskDispatcherTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "TASK_CONFLICT")
         self.assertEqual(self.catalog.calls, [])
+
+    def test_execution_policy_rejects_action_intent_mismatch_before_dispatch(self) -> None:
+        # Exercise the runtime policy independently of Pydantic's request validation.
+        request = CustomerTaskRequest.model_construct(
+            intent=CustomerTaskIntent.TERMS_QA,
+            action=CustomerTaskAction.SEARCH_PRODUCTS,
+            keyword="旅游险",
+        )
+
+        result = self.dispatcher.dispatch(request, self.run_context)
+
+        self.assertEqual(result["status"], "BLOCKED_BY_POLICY")
+        self.assertEqual(self.catalog.calls, [])
+        self.assertEqual(self.terms.calls, [])
+
+    def test_execution_policy_and_request_schema_have_the_same_action_matrix(self) -> None:
+        schema_pairs = {
+            (intent, action)
+            for action, intents in CustomerTaskRequest._ACTION_INTENTS.items()
+            for intent in intents
+        }
+        runtime_pairs = {
+            (intent, action)
+            for intent, actions in CustomerTaskExecutionPolicy._ALLOWED_ACTIONS.items()
+            for action in actions
+        }
+
+        self.assertEqual(runtime_pairs, schema_pairs)
+
+    def test_single_policy_read_requires_a_policy_from_this_turns_list(self) -> None:
+        request = CustomerTaskRequest.model_validate(
+            {
+                "intent": "OWN_POLICY",
+                "action": "GET_MY_POLICY",
+                "policy_id": "12345",
+            }
+        )
+
+        result = self.dispatcher.dispatch(request, self.run_context)
+
+        self.assertEqual(result["status"], "BLOCKED_BY_WORKFLOW")
+        self.assertEqual(self.own_policy.calls, [])
+
+    def test_selected_policy_read_requires_java_validated_selection(self) -> None:
+        request = CustomerTaskRequest.model_validate(
+            {"intent": "OWN_POLICY", "action": "GET_SELECTED_POLICY"}
+        )
+
+        result = self.dispatcher.dispatch(request, self.run_context)
+
+        self.assertEqual(result["status"], "BLOCKED_BY_WORKFLOW")
+        self.assertEqual(self.own_policy.calls, [])
 
     def test_agent_registry_exposes_narrow_action_tool_schemas(self) -> None:
         toolkits = build_agent_tools()

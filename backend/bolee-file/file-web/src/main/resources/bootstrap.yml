@@ -51,3 +51,11 @@ spring:
             refresh: false
 logging:
   config: classpath:logback.xml
+bolee:
+  file:
+    minio:
+      enabled: ${INSURANCE_TERMS_MINIO_ENABLED:false}
+      endpoint: ${INSURANCE_TERMS_MINIO_ENDPOINT:}
+      access-key: ${INSURANCE_TERMS_MINIO_ACCESS_KEY:}
+      secret-key: ${INSURANCE_TERMS_MINIO_SECRET_KEY:}
+      bucket: ${INSURANCE_TERMS_MINIO_BUCKET:insurance-source-files}

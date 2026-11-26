@@ -23,6 +23,8 @@ import com.itheima.bolee.insurance.pojo.Insurance;
 import com.itheima.bolee.insurance.pojo.InsuranceCondition;
 import com.itheima.bolee.insurance.pojo.SearchRecord;
 import com.itheima.bolee.insurance.service.*;
+import com.itheima.bolee.insurance.dto.ai.terms.InsuranceTermSourceVO;
+import com.itheima.bolee.insurance.service.ai.terms.InsuranceTermSourceService;
 import com.itheima.bolee.security.feign.CompanyFeign;
 import io.seata.spring.annotation.GlobalTransactional;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -50,6 +52,9 @@ public class InsuranceServiceImpl extends ServiceImpl<InsuranceMapper, Insurance
 
     @Autowired
     private FileBusinessFeign fileBusinessFeign;
+
+    @Autowired(required = false)
+    private InsuranceTermSourceService insuranceTermSourceService;
 
     @Autowired(required = false)
     private MeterRegistry meterRegistry;
@@ -405,17 +410,53 @@ public class InsuranceServiceImpl extends ServiceImpl<InsuranceMapper, Insurance
         //=======================================封装附件=============================================
         //调用fileBusinessFeign附件信息
         List<FileVO> fileVOs = findFiles(insuranceIds);
-        if(!EmptyUtil.isNullOrEmpty(fileVOs)) {
-            Map<Long, List<FileVO>> filesByBusinessId = fileVOs.stream()
+        Map<Long, List<FileVO>> filesByBusinessId = new HashMap<>();
+        if (!EmptyUtil.isNullOrEmpty(fileVOs)) {
+            filesByBusinessId.putAll(fileVOs.stream()
                     .filter(fileVO -> fileVO.getBusinessId() != null)
-                    .collect(Collectors.groupingBy(FileVO::getBusinessId));
-            insuranceVOs.forEach(insuranceVOHandler -> {
-                insuranceVOHandler.setFileVOs(
-                        filesByBusinessId.getOrDefault(insuranceVOHandler.getId(), Lists.newArrayList()));
-            });
+                    .collect(Collectors.groupingBy(FileVO::getBusinessId)));
         }
+        Map<Long, List<FileVO>> minioTermsByInsuranceId = findPublishedTermAttachments(insuranceIds);
+        insuranceVOs.forEach(insuranceVOHandler -> {
+            List<FileVO> productFiles = new ArrayList<>(filesByBusinessId.getOrDefault(
+                    insuranceVOHandler.getId(), Lists.newArrayList()));
+            if (insuranceTermSourceService != null) {
+                // Type 3 is the customer-facing "insurance terms" attachment. Once MinIO terms are
+                // enabled, discard stale OSS links and expose only the currently published version.
+                productFiles.removeIf(file -> "3".equals(file.getBusinessType()));
+                productFiles.addAll(minioTermsByInsuranceId.getOrDefault(
+                        insuranceVOHandler.getId(), Collections.emptyList()));
+            }
+            insuranceVOHandler.setFileVOs(productFiles);
+        });
         //====================================================================================
         return insuranceVOs;
+    }
+
+    private Map<Long, List<FileVO>> findPublishedTermAttachments(List<Long> insuranceIds) {
+        if (insuranceTermSourceService == null || insuranceIds == null || insuranceIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return insuranceTermSourceService.listActivePublishedForProducts(insuranceIds).stream()
+                .filter(source -> source.getInsuranceId() != null && source.getProfileVersionId() != null
+                        && source.getId() != null)
+                .map(this::toMinioTermAttachment)
+                .collect(Collectors.groupingBy(FileVO::getBusinessId));
+    }
+
+    private FileVO toMinioTermAttachment(InsuranceTermSourceVO source) {
+        String url = "/api/insurance-terms/products/" + source.getInsuranceId()
+                + "/versions/" + source.getProfileVersionId()
+                + "/sources/" + source.getId() + "/document.pdf";
+        return FileVO.builder()
+                .id(source.getId())
+                .businessId(source.getInsuranceId())
+                .businessType("3")
+                .suffix(".pdf")
+                .fileName("保险条款.pdf")
+                .pathUrl(url)
+                .storeFlag("MINIO")
+                .build();
     }
 
     private List<FileVO> findFiles(List<Long> insuranceIds) {

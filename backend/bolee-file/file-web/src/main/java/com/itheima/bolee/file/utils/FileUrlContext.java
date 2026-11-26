@@ -1,6 +1,5 @@
 package com.itheima.bolee.file.utils;
 
-import com.itheima.bolee.file.handler.aliyun.properties.OssAliyunConfigProperties;
 import com.itheima.bolee.file.handler.qiniu.properties.QiniuProperties;
 import com.itheima.bolee.framework.commons.constant.file.FileConstant;
 import com.itheima.bolee.framework.commons.enums.file.FileEnum;
@@ -25,9 +24,6 @@ import java.util.Map;
 public class FileUrlContext {
 
     @Autowired
-    private OssAliyunConfigProperties ossAliyunConfigProperties;
-
-    @Autowired
     private QiniuProperties qiniuProperties;
 
     private static Map<String,String> fileStoreUrlHandler =new HashMap<>();
@@ -35,12 +31,10 @@ public class FileUrlContext {
     @PostConstruct
     public void initMap() {
         // 初始化各个对象存储的文件访问路径地址
-        String ossPrefixUrl = "https://" + ossAliyunConfigProperties.getBucketName() + "." +
-                ossAliyunConfigProperties.getEndpoint() + "/";
         String kodoPrefixUrl = "http://" + qiniuProperties.getKodo().getEndpoint()  + "/";
 
-        fileStoreUrlHandler.put(FileConstant.ALIYUN_OSS,ossPrefixUrl);
         fileStoreUrlHandler.put(FileConstant.QINIU_KODO,kodoPrefixUrl);
+        fileStoreUrlHandler.put(FileConstant.MINIO,"/api/file-web/file/public-minio/");
     }
 
     /**
@@ -50,6 +44,11 @@ public class FileUrlContext {
      * @return String 资源文件对应的完整路径地址
      */
     public  String getFileUrl(String storeFlag, String pathUrl) {
+        if (FileConstant.ALIYUN_OSS.equalsIgnoreCase(storeFlag)) {
+            // Historical OSS objects are no longer accessible through this service. Keep their
+            // metadata readable without generating or returning an Aliyun URL.
+            return "";
+        }
         String prefix = fileStoreUrlHandler.get(storeFlag);
         if (StringUtils.isEmpty(prefix)) {
             throw new ProjectException(FileEnum.FILE_PREFIX_NOT_FOUND);

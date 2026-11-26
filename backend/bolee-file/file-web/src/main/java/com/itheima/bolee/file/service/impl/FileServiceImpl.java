@@ -1,7 +1,6 @@
 package com.itheima.bolee.file.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.oss.model.UploadPartResult;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
@@ -51,6 +50,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -253,26 +253,46 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     @Caching(evict = {@CacheEvict(value = FileCacheConstant.PAGE,allEntries = true),
             @CacheEvict(value = FileCacheConstant.BASIC,allEntries = true),
             @CacheEvict(value = FileCacheConstant.LIST,allEntries = true),
-            @CacheEvict(value = FileCacheConstant.BUSINESS_KEY,key = "#fileVOs.get(0).getBusinessId()")})
+            @CacheEvict(value = FileCacheConstant.BUSINESS_KEY,
+                    key = "#fileVOs != null && !#fileVOs.isEmpty() ? #fileVOs.get(0).getBusinessId() : null")})
     public Boolean replaceBindBatchFile(List<FileVO> fileVOs) {
         try {
+            if (EmptyUtil.isNullOrEmpty(fileVOs)) {
+                return true;
+            }
+            Long businessId = fileVOs.stream()
+                    .map(FileVO::getBusinessId)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("businessId is required"));
+
             //查询当前业务图片
             QueryWrapper<File> queryWrapper = new QueryWrapper<>();
-            queryWrapper.lambda().eq(File::getBusinessId,fileVOs.get(0).getBusinessId());
+            queryWrapper.lambda().eq(File::getBusinessId, businessId);
             List<File> oldList = list(queryWrapper);
             List<Long> oldIds = oldList.stream().map(File::getId).collect(Collectors.toList());
-            List<Long> newIds = fileVOs.stream().map(FileVO::getId).collect(Collectors.toList());
+
+            // The insurance service also returns virtual MinIO term attachments. They are not
+            // rows in tab_file and must not be rebound through the generic file service.
+            List<Long> requestedIds = fileVOs.stream()
+                    .map(FileVO::getId)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .collect(Collectors.toList());
+            List<File> persistedFiles = findPersistedFilesForBinding(requestedIds, businessId);
+            List<Long> newIds = persistedFiles.stream().map(File::getId).collect(Collectors.toList());
+
             //删除：老图片对新图片的差集
-            List<Long> delIds = oldIds.stream().filter(n -> {
-                return !newIds.contains(n);
-            }).collect(Collectors.toList());
+            List<Long> delIds = oldIds.stream().filter(id -> !newIds.contains(id)).collect(Collectors.toList());
             if (!EmptyUtil.isNullOrEmpty(delIds)){
                 deleteInIds(delIds);
             }
-            //绑定新图片
-            List<FileVO> newFiles = fileVOs.stream().filter(n -> {
-                return !oldIds.contains(n.getId());
-            }).collect(Collectors.toList());
+
+            //绑定新上传的、真实存在于附件表中的文件；虚拟条款附件由保险服务单独合成返回。
+            List<FileVO> newFiles = fileVOs.stream()
+                    .filter(fileVO -> fileVO.getId() != null && newIds.contains(fileVO.getId()))
+                    .filter(fileVO -> !oldIds.contains(fileVO.getId()))
+                    .collect(Collectors.toList());
             if (!EmptyUtil.isNullOrEmpty(newFiles)){
                 List<FileVO> fileVOsResult = bindBatchFile(newFiles);
                 return !EmptyUtil.isNullOrEmpty(fileVOsResult);
@@ -282,6 +302,26 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             log.error("查询文件分页异常：{}", ExceptionsUtil.getStackTraceAsString(e));
             throw new ProjectException(FileEnum.BIND_FAIL);
         }
+    }
+
+    private List<File> findPersistedFilesForBinding(List<Long> fileIds, Long businessId) {
+        if (EmptyUtil.isNullOrEmpty(fileIds)) {
+            return Lists.newArrayList();
+        }
+        QueryWrapper<File> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda()
+                .in(File::getId, fileIds)
+                .eq(File::getStatus, FileConstant.STATUS_SUCCEED)
+                .and(wrapper -> wrapper.isNull(File::getBusinessId).or().eq(File::getBusinessId, businessId));
+        return list(queryWrapper);
+    }
+
+    private void deleteStoredObjectIfEnabled(String storeFlag, String bucketName, String pathUrl) {
+        if (FileConstant.ALIYUN_OSS.equalsIgnoreCase(storeFlag)) {
+            log.info("Skipping remote deletion for a legacy Aliyun OSS file; OSS storage is disabled.");
+            return;
+        }
+        fileStorageAdapter.delete(storeFlag, bucketName, pathUrl);
     }
 
     @Override
@@ -317,13 +357,10 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             if (!flag){
                 throw new ProjectException(FileEnum.DELETE_FAIL);
             }
-            //删除OSS中的图片
+            //删除业务对应附件；已停用的 OSS 对象只清理本地记录，不再访问 OSS。
             if (!EmptyUtil.isNullOrEmpty(files)){
-                List<String> getPathUrls = files.stream().map(FileVO::getPathUrl).collect(Collectors.toList());
-                FileVO fileVO = files.get(0);
-                String bucketName = fileVO.getBucketName();
-                String storeFlag = fileVO.getStoreFlag();
-                fileStorageAdapter.deleteBatch(storeFlag,bucketName,getPathUrls);
+                files.forEach(fileVO -> deleteStoredObjectIfEnabled(
+                        fileVO.getStoreFlag(), fileVO.getBucketName(), fileVO.getPathUrl()));
             }
             return flag;
         }catch (Exception e){
@@ -346,9 +383,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             if (!flag){
                 throw new ProjectException(FileEnum.DELETE_FAIL);
             }
-            //移除对象存储数据
+            //移除对象存储数据；Aliyun OSS 已停用，历史对象不再发起远程删除请求。
             for (File file : files) {
-                fileStorageAdapter.delete(file.getStoreFlag(),file.getBucketName(),file.getPathUrl());
+                deleteStoredObjectIfEnabled(file.getStoreFlag(), file.getBucketName(), file.getPathUrl());
             }
             return flag;
         }catch (Exception e){
@@ -372,9 +409,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             List<Long> fileListIds = fileList.stream().map(FileVO::getId).collect(Collectors.toList());
             //移除数据库信息
             Boolean flag =  removeByIds(fileListIds);
-            //移除对象存储数据
+            //移除对象存储数据；Aliyun OSS 已停用，历史对象不再发起远程删除请求。
             for (FileVO fileVO : fileList) {
-                fileStorageAdapter.delete(fileVO.getStoreFlag(),fileVO.getBucketName(),fileVO.getPathUrl());
+                deleteStoredObjectIfEnabled(fileVO.getStoreFlag(), fileVO.getBucketName(), fileVO.getPathUrl());
             }
             return flag;
         }catch (Exception e){
@@ -400,7 +437,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             }
             //删除OSS中的图片
             if (!EmptyUtil.isNullOrEmpty(fileVO)){
-                fileStorageAdapter.delete(fileVO.getStoreFlag(),fileVO.getBucketName(),fileVO.getPathUrl());
+                deleteStoredObjectIfEnabled(fileVO.getStoreFlag(), fileVO.getBucketName(), fileVO.getPathUrl());
             }
             return flag;
         }catch (Exception e){
@@ -456,18 +493,9 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
             pathUrl = fileUrlContext.getFileUrl(fileVO.getStoreFlag(), pathUrl);
             fileVO.setId(file.getId());
             fileVO.setPathUrl(pathUrl);
-            //发送延迟信息:上传如果超过10分钟不进行文件业务绑定则会被消息队列清空
-            Long messageId = (Long) identifierGenerator.nextId(fileVO);
-            MqMessage mqMessage = MqMessage.builder()
-                .id(messageId)
-                .title("file-message")
-                .content(JSONObject.toJSONString(fileVO))
-                .messageType("file-request")
-                .produceTime(Timestamp.valueOf(LocalDateTime.now()))
-                .sender("system")
-                .build();
-            Message<MqMessage> message = MessageBuilder.withPayload(mqMessage).setHeader("x-delay", fileDelayTime).build();
-            fileSource.fileOutput().send(message);
+            // Do not publish the delayed cleanup message on the request thread. The scheduled
+            // clear-file job already removes unbound files after fileDelayTime; synchronously
+            // connecting to RabbitMQ here can outlast the browser's upload request timeout.
             return fileVO;
         }catch (Exception e) {
             log.error("文件上传异常：{}", ExceptionsUtil.getStackTraceAsString(e));

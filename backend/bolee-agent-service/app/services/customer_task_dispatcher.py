@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Any, Callable
 
 from app.contexts.customer_task import CustomerTaskRuntime
-from app.contexts.tool import AgentToolContext
 from app.domain.customer_task import CustomerTaskStatus
 from app.schemas.customer_task import CustomerTaskAction, CustomerTaskRequest
 from app.schemas.product_catalog import ProductMatchType
+from app.services.customer_task_policy import CustomerTaskExecutionPolicy
 from app.tools.insurance_terms import InsuranceTermsTools
 from app.tools.own_policy import OwnPolicyTools
 from app.tools.product_catalog import ProductCatalogTools
@@ -17,7 +17,7 @@ from app.tools.product_recommendation import ProductRecommendationTools
 
 
 class CustomerTaskDispatcher:
-    """Route validated actions to existing Agno adapters and Python services."""
+    """将校验通过的任务动作分发给对应业务适配器。"""
 
     _HANDLERS: dict[CustomerTaskAction, tuple[str, str]] = {
         CustomerTaskAction.LIST_CATEGORIES: ("catalog", "list_product_categories"),
@@ -52,6 +52,7 @@ class CustomerTaskDispatcher:
         comparison: ProductComparisonTools | None = None,
         terms: InsuranceTermsTools | None = None,
         own_policy: OwnPolicyTools | None = None,
+        policy: CustomerTaskExecutionPolicy | None = None,
     ) -> None:
         self._tool_adapters = {
             "catalog": catalog or ProductCatalogTools(),
@@ -60,8 +61,10 @@ class CustomerTaskDispatcher:
             "terms": terms or InsuranceTermsTools(),
             "own_policy": own_policy or OwnPolicyTools(),
         }
+        self._policy = policy or CustomerTaskExecutionPolicy()
 
     def dispatch(self, request: CustomerTaskRequest, run_context: Any) -> dict[str, Any]:
+        # 顺序：取得本轮任务状态 -> 执行策略检查 -> 调用适配器 -> 更新任务状态 -> 返回结果给 Agent。
         from app.tools.runtime import resolve_tool_context
 
         tool_context = resolve_tool_context(run_context)
@@ -70,11 +73,12 @@ class CustomerTaskDispatcher:
             return self._outcome(request, "INVALID_RUNTIME", "当前任务状态不可用。")
 
         with runtime.lock:
-            if runtime.claimed_intent is not None and runtime.claimed_intent != request.intent:
+            decision = self._policy.evaluate(request, tool_context, runtime)
+            if decision is not None:
                 return self._outcome(
                     request,
-                    "TASK_CONFLICT",
-                    "本轮已开始处理另一个主要任务。请先完成当前任务，或请用户分开提出另一个请求。",
+                    decision.status,
+                    decision.detail,
                     runtime.active_task.task_id,
                     runtime.active_task.stage,
                 )
@@ -89,16 +93,6 @@ class CustomerTaskDispatcher:
                         status=CustomerTaskStatus.IN_PROGRESS,
                         stage="STARTED",
                     )
-
-            blocked = self._validate_workflow(request, tool_context, runtime)
-            if blocked is not None:
-                return self._outcome(
-                    request,
-                    "BLOCKED_BY_WORKFLOW",
-                    blocked,
-                    runtime.active_task.task_id,
-                    runtime.active_task.stage,
-                )
 
             adapter_name, method_name = self._HANDLERS[request.action]
             adapter = self._tool_adapters[adapter_name]
@@ -124,51 +118,6 @@ class CustomerTaskDispatcher:
                 "missing_slots": list(runtime.active_task.missing_slots),
                 "result": result,
             }
-
-    def _validate_workflow(
-        self,
-        request: CustomerTaskRequest,
-        context: AgentToolContext,
-        runtime: CustomerTaskRuntime,
-    ) -> str | None:
-        if (
-            request.action == CustomerTaskAction.RECOMMEND_PRODUCTS
-            and CustomerTaskAction.GET_RECOMMENDATION_CRITERIA not in runtime.actions_this_run
-        ):
-            return "推荐前必须先读取 Java 当前发布的条件目录，并按该目录组织参数。"
-
-        if request.action == CustomerTaskAction.COMPARE_PRODUCTS:
-            if CustomerTaskAction.SEARCH_PRODUCTS not in runtime.actions_this_run:
-                return "比较前必须先通过 Java 产品目录确认本轮比较对象。"
-            catalog_result = context.result_collector.product_catalog_search
-            returned_ids = {
-                product.product_id for product in catalog_result.candidates
-            } if catalog_result is not None else set()
-            if not request.product_ids or not set(request.product_ids).issubset(returned_ids):
-                return "比较对象必须来自本轮 Java 产品目录结果。"
-            if catalog_result is not None and any(
-                product.category_id != request.category_id
-                for product in catalog_result.candidates
-                if product.product_id in request.product_ids
-            ):
-                return "比较产品类别必须与 Java 产品目录结果一致。"
-
-        if request.action == CustomerTaskAction.GET_MY_POLICY:
-            if CustomerTaskAction.GET_MY_POLICIES not in runtime.actions_this_run:
-                return "查询单份本人保单前必须先读取当前登录人的保单列表。"
-            summary = context.result_collector.own_policy_summary
-            returned_ids = {
-                policy.policy_id for policy in summary.policies
-            } if summary is not None else set()
-            if request.policy_id not in returned_ids:
-                return "保单 ID 必须来自本轮 Java 返回的本人保单列表。"
-
-        if (
-            request.action == CustomerTaskAction.GET_SELECTED_POLICY
-            and not context.selected_policy_id
-        ):
-            return "当前请求没有经过 Java 校验的已选保单。"
-        return None
 
     @classmethod
     def _task_status(

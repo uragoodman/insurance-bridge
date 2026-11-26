@@ -166,6 +166,13 @@ public class InsuranceTermSourceService {
         return new InsuranceTermSourcePageVO(page, pageSize, total, records);
     }
 
+    public List<InsuranceTermProductVersionVO> listProductVersionsForAdmin(Long insuranceId) {
+        if (insuranceId == null || insuranceId <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A valid productId is required");
+        }
+        return repository.listProductVersionsForAdmin(insuranceId);
+    }
+
     public InsuranceTermSourceVO get(Long id) { return toView(requireSource(id)); }
 
     public InputStream download(Long id) {
@@ -369,6 +376,14 @@ public class InsuranceTermSourceService {
                 .map(this::toView).collect(Collectors.toList());
     }
 
+    public List<InsuranceTermSourceVO> listActivePublishedForProducts(List<Long> insuranceIds) {
+        if (insuranceIds == null || insuranceIds.isEmpty()) return java.util.Collections.emptyList();
+        return repository.listActivePublishedForProducts(insuranceIds, properties.isSyntheticSourcesEnabled())
+                .stream().filter(source -> isRetrievableSourceType(source.getSourceType()))
+                .filter(this::hasPublishedPdfRendition)
+                .map(this::toView).collect(Collectors.toList());
+    }
+
     public List<InsuranceTermProductVersionVO> listActivePublishedVersions(Long insuranceId) {
         if (insuranceId == null || insuranceId <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
@@ -390,6 +405,45 @@ public class InsuranceTermSourceService {
         } catch (IllegalStateException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Could not retrieve source document");
         }
+    }
+
+    public InputStream downloadPublishedPdf(Long sourceId, Long insuranceId, Long profileVersionId) {
+        if (!repository.isActivePublished(sourceId, insuranceId, profileVersionId,
+                properties.isSyntheticSourcesEnabled())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Published source was not found");
+        }
+        InsuranceTermSourceDO source = requireSource(sourceId);
+        if (!isRetrievableSourceType(source.getSourceType())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Published source was not found");
+        }
+        String originalName = source.getOriginalFileName();
+        if (originalName != null && originalName.toLowerCase(Locale.ROOT).endsWith(".pdf")) {
+            if (!objectStorage.exists(source.getObjectKey())) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Published PDF was not found");
+            }
+            return downloadPublished(sourceId, insuranceId, profileVersionId);
+        }
+        if (originalName == null || !originalName.toLowerCase(Locale.ROOT).endsWith(".md")) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "PDF rendition was not found");
+        }
+        String pdfObjectKey = source.getObjectKey() + ".pdf";
+        if (!objectStorage.exists(pdfObjectKey)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "PDF rendition was not found");
+        }
+        try {
+            return objectStorage.open(pdfObjectKey);
+        } catch (IllegalStateException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "PDF rendition was not found");
+        }
+    }
+
+    private boolean hasPublishedPdfRendition(InsuranceTermSourceDO source) {
+        String originalName = source.getOriginalFileName();
+        if (originalName == null || source.getObjectKey() == null) return false;
+        String normalizedName = originalName.toLowerCase(Locale.ROOT);
+        if (normalizedName.endsWith(".pdf")) return objectStorage.exists(source.getObjectKey());
+        if (normalizedName.endsWith(".md")) return objectStorage.exists(source.getObjectKey() + ".pdf");
+        return false;
     }
 
     public InsuranceTermSourceVO getPublished(Long id) {

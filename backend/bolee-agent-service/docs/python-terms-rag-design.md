@@ -1,8 +1,8 @@
 # Python 保险条款 RAG 实施设计
 
-> 实施状态（2026-11-22）：核心 Python 索引与检索链路、Agno 工具和 Java 引用 DTO 已实现。仍需配置数据库迁移/角色、OAuth、embedding provider 并完成集成验证；该状态不代表当前环境已可问答。
+> 实施状态（2026-11-25）：核心 Python 索引与检索链路、Agno 工具和 Java 引用 DTO 已实现；本地 Java 任务消费、MinIO 原件读取、embedding、pgvector 写入已联通。本地演示库共有 28 个已索引的合成来源，最近新增的 24 个通过明确标记的 `LOCAL_DEMO_SEED` 路径激活，没有人工审核。请以[Agent 当前能力](agent-capabilities.md)为状态汇总；本文其余内容是设计边界，不代表生产正式条款已发布。
 
-**状态：实现前设计。** Java 条款来源、审核发布和索引任务接口已存在；Python 消费者、条款专用向量表和 Agent 检索工具尚未实现。本文将现有 Python 分层和 Java v1 API 固定为实施边界，先做离线/集成测试，再接入客户 Agent。
+**文档类型：实施设计基线。**其中部分“实施前”文字保留为设计过程记录；代码是否落地和运行状态以本文件顶部状态说明及[Agent 当前能力](agent-capabilities.md)为准。
 
 ## 目标与非目标
 
